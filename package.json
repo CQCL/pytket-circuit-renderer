@@ -13,7 +13,8 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "build-lib": "vue-cli-service build --target lib --name pytket-circuit-renderer src/main.js",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "test": "node test/init.js"
   },
   "main": "./dist/pytket-circuit-render.common.js",
   "dependencies": {
