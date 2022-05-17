@@ -1,4 +1,13 @@
-import { createApp } from 'vue'
-import App from './App.vue'
+import { teleportTo, teleportFrom, teleportContainer } from "@/components/teleport/init"
+import { circuitDisplayContainer, circuitDisplay, infoModal } from "@/components/circuitDisplay/init"
+import mathJaxContent from "@/components/mathjaxContent/mathjaxContent"
 
-createApp(App).mount('#app')
+export {
+    circuitDisplayContainer as default,
+    circuitDisplay,
+    mathJaxContent,
+    infoModal,
+    teleportTo,
+    teleportFrom,
+    teleportContainer,
+};
