@@ -78,9 +78,9 @@ export default  {
     </div>
 
     <table v-if="hasClassicalTable">
-      <tr v-for="name in classicalTable" :key="name">
-        <th>[[# name #]]</th>
-        <td>[[# classicalTable[name] #]]</td>
+      <tr v-for="key in Object.keys(classicalTable)" :key="key">
+        <th>[[# key #]]</th>
+        <td>[[# classicalTable[key] #]]</td>
       </tr>
     </table>
     <table v-if="'classical' in op">

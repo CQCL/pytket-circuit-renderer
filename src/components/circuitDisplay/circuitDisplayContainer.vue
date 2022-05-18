@@ -103,7 +103,6 @@ export default  {
 .display-options-container {
   display: flex;
   flex-direction: column;
-  flex-wrap: wrap;
   align-content: flex-start;
   justify-content: flex-start;
   align-items: center;

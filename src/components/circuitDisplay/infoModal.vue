@@ -43,8 +43,8 @@ export default {
   computed: {
     modalStyle() {
       return {
-        "max-height": (this.height - 80) + "px",
-        "max-width": (this.width - 80) + "px",
+        "max-height": `calc(${this.height}px - 5%)`,
+        "max-width": `calc(${this.width}px - 5%)`,
         left: `calc(50% - ${this.modalWidth / 2}px)`,
         top: `calc(50% - ${this.modalHeight / 2}px)`,
       };

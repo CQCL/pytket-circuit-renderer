@@ -1,12 +1,13 @@
 {
   "name": "pytket-circuit-renderer",
   "description": "A Vue 3 component for rendering pytket circuits.",
-  "version": "0.1.0",
+  "version": "0.0.1",
   "private": false,
   "author": {
     "name": "Tiffany Duneau",
     "email": "tiffany.duneau@cambridgequantum.com"
   },
+  "license": "Apache-2.0",
   "repository": "https://github.com/CQCL/pytket-circuit-renderer",
   "files": ["dist/*"],
   "scripts": {
