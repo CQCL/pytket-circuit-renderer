@@ -100,19 +100,7 @@ export default {
           let lastArg = sortedArgs[sortedArgs.length - 1].order;
 
           // If we can't fit this command onto the current layer:
-          // Either we are condensing classical wires, and already have an op on the condensed wire:
-          if (this.renderOptions.condenseCBits && currentPos > classicalThreshold) {
-            // Start a new layer straight away
-            layers.push(layer);
-
-            // Fill with ID up to the first arg, or start of classical layer if args are all classical
-            let args = registerOrder.slice(0, Math.min(firstArg, classicalThreshold))
-            layer = [{
-              command: {args: args, op: {type: "ID"}},
-              args: args,
-            }];
-            currentPos = firstArg;
-          } else if (firstArg < currentPos) { // Or the ops overlap normally
+          if (firstArg < currentPos) {
             // Fill the previous layer with ID so we can start a new one.
             let args = registerOrder.slice(currentPos)
             layer.push({
@@ -125,7 +113,10 @@ export default {
           }
           // now fill with id up to start of current command.
           if (currentPos < firstArg) {
-            let args = registerOrder.slice(currentPos, firstArg)
+            let args = registerOrder.slice(
+                currentPos,
+                this.renderOptions.condenseCBits ? Math.min(firstArg, classicalThreshold) : firstArg
+            )
             layer.push({
               command: {args: args, op: {type: "ID"}},
               args: args,
@@ -138,12 +129,22 @@ export default {
             args: registerOrder.slice(firstArg, lastArg + 1),
           });
 
-          currentPos = lastArg + 1 % registerOrder.length; // circle round if necessary
+          // Adjust current pos to next wire to be filled. Wrap around if necessary:
+          currentPos = lastArg + 1 % registerOrder.length;
+          // If condensing classical args, and this op was classical, must circle around:
+          if (this.renderOptions.condenseCBits && currentPos > classicalThreshold) {
+            currentPos = 0;
+          }
+          // If we wrapped around, push the layer we just completed
+          if (currentPos === 0) {
+            layers.push(layer);
+            layer = [];
+          }
         });
 
-        // Complete the remaining layer
-        if (currentPos > 0 && !(this.renderOptions.condenseCBits && currentPos > classicalThreshold + 1)) {
-          let args = registerOrder.slice(currentPos, this.renderOptions.condenseCBits ? classicalThreshold + 1 : registerOrder.length)
+        // Complete the last layer.
+        if (currentPos > 0) {
+          let args = registerOrder.slice(currentPos, registerOrder.length);
           layer.push({
             command: {args: args, op: {type: "ID"}},
             args: args,
