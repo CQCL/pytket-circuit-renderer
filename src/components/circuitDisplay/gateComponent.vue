@@ -87,7 +87,7 @@ export default {
       let params = "params" in op && op.params ? op.params : [];
       params = params.concat("box" in op && op.box.params ? op.box.params : []);
       params = params.map((p) => {
-        const num = 0 + p;
+        const num = Number(p);
         if (isNaN(p)){
           return p.length > 5 ? p.slice(0, 4) + "..." : p;
         } else {
