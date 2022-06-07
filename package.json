@@ -9,9 +9,7 @@
   },
   "license": "Apache-2.0",
   "repository": "https://github.com/CQCL/pytket-circuit-renderer",
-  "files": [
-    "dist/*"
-  ],
+  "files": ["dist/*"],
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
