@@ -39,6 +39,7 @@ export default  {
         "ExplicitPredicate", "ExplicitModifier",
         "ClassicalTransform", "SetBits", "CopyBits",
         "MultiBit", "RangePredicate",
+        "UnitaryTableauBox",
       ],
       visible: false,
     };
@@ -189,6 +190,33 @@ export default  {
                 <tr v-for="(stab, i) in displayOp.box.stabilisers" :key="i">
                   <td>[[# stab.string #]]</td>
                   <td>[[# stab.coeff #]]</td>
+                </tr>
+              </table>
+            </div>
+
+            <div v-if="displayOp.type === 'UnitaryTableauBox'">
+              <h4>Tableau</h4>
+              <table class="hover-highlight">
+                <tr>
+                  <th>X</th>
+                  <td>
+                    <chart-matrix :matrix="displayOp.box.tab.xmat" :display-title="false" entry-type="complex">
+                    </chart-matrix>
+                  </td>
+                </tr>
+                <tr>
+                  <th>Z</th>
+                  <td>
+                    <chart-matrix :matrix="displayOp.box.tab.zmat" :display-title="false" entry-type="complex">
+                    </chart-matrix>
+                  </td>
+                </tr>
+                <tr>
+                  <th>Phase</th>
+                  <td>
+                    <chart-matrix :matrix="displayOp.box.tab.phase" :display-title="false" entry-type="complex">
+                    </chart-matrix>
+                  </td>
                 </tr>
               </table>
             </div>
