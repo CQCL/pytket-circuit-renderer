@@ -33,7 +33,7 @@ export default  {
       contentOps: [
         "Unitary1qBox", "Unitary2qBox", "Unitary3qBox",
         "ExpBox", "PauliExpBox", "ClassicalExpBox",
-        "PhasePolyBox", "CircBox",
+        "PhasePolyBox", "CircBox", "Conditional",
         "Custom", "CustomGate", "Composite", "CompositeGate",
         "ProjectorAssertionBox", "StabiliserAssertionBox",
         "ExplicitPredicate", "ExplicitModifier",
@@ -57,13 +57,19 @@ export default  {
       return false;
     },
     displayOp () {
-       return this.hasNestedContent ? this.op.box.op : this.op;
+       return this.hasNestedContent ? (
+           this.isCondition ? this.op.conditional.op : this.op.box.op
+       ): this.op;
+    },
+    isCondition () {
+      return ["Condition", "Conditional"].includes(this.opType)
     },
     hasNestedContent () {
-      return (["Condition", "Control", "QControlBox"].includes(this.opType)
+      return (
+          ["Condition", "Conditional", "Control", "QControlBox"].includes(this.opType)
           && "box" in this.op && "op" in this.op.box
-          && this.contentOps.includes(this.op.box.op.type))
-        || (this.opType === "Condition" && this.contentOps.includes(this.op.conditional.op.type));
+          && this.contentOps.includes(this.op.box.op.type)
+        ) || this.isCondition && this.contentOps.includes(this.op.conditional.op.type);
     },
     hasContent () {
       return (this.contentOps.includes(this.opType)
@@ -79,7 +85,7 @@ export default  {
       let params = "params" in this.op && this.op.params ? this.op.params : [];
       return params.concat(
           "box" in this.op && this.op.box.params ? this.op.box.params : [],
-          this.opType === "Condition" && this.op.conditional.op.params ? this.op.conditional.op.params : [],
+          this.isCondition && this.op.conditional.op.params ? this.op.conditional.op.params : [],
       );
     }
   },
@@ -170,10 +176,10 @@ export default  {
               </tr>
             </table>
 
-            <table v-if="displayOp.type === 'Condition'">
+            <table v-if="isCondition">
               <tr>
                 <th>Condition value</th>
-                <td>[[# displayOp.conditional.value #]]</td>
+                <td>[[# op.conditional.value #]]</td>
               </tr>
             </table>
 
