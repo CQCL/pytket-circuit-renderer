@@ -1,19 +1,19 @@
 <script>
 import { extractSubCircuit, extractControlledCommand } from "./utils";
 
-export default  {
+export default {
   name: "gate-info-sub-circuit",
   components: {},
   props: {
-    op: {type: Object, required: true},
-    renderOptions: {type: Object, required: true},
+    op: { type: Object, required: true },
+    renderOptions: { type: Object, required: true },
   },
   computed: {
-    opType () {
+    opType() {
       return this.op.type;
     },
-    subCircuit () {
-      let newRenderOptions = {...this.renderOptions};
+    subCircuit() {
+      let newRenderOptions = { ...this.renderOptions };
       newRenderOptions.condensed = true;
       newRenderOptions.nested = true;
       newRenderOptions.recursive = false;
@@ -32,7 +32,7 @@ export default  {
       circuit = extractSubCircuit(
         extractControlledCommand({
           op: this.op,
-          args: []
+          args: [],
         })
       );
       if (circuit) {
@@ -40,29 +40,29 @@ export default  {
           circuit: circuit,
           type: "Controlled",
           renderOptions: newRenderOptions,
-        }
+        };
       }
       return false;
     },
   },
-  beforeCreate () {
-    this.$options.components["circuit-display"] = require('./circuitDisplay.vue').default;
+  beforeCreate() {
+    this.$options.components["circuit-display"] =
+      require("./circuitDisplay.vue").default;
   },
-}
+};
 </script>
 
 <template>
-  <div v-if="subCircuit" style="overflow: auto;width: 100%">
+  <div v-if="subCircuit" style="overflow: auto; width: 100%">
     <h4>[[# subCircuit.type #]] Circuit</h4>
     <div class="gate_container nested">
       <circuit-display
-          :circuit="subCircuit.circuit"
-          :render-options="subCircuit.renderOptions"
+        :circuit="subCircuit.circuit"
+        :render-options="subCircuit.renderOptions"
       >
       </circuit-display>
     </div>
   </div>
 </template>
 
-<style>
-</style>
+<style scoped></style>
