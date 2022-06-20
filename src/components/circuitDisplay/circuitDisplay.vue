@@ -217,7 +217,7 @@ export default {
   </teleport-container>
 </template>
 
-<style>
+<style scoped>
 /* FOR DISPLAYING CIRCUITS */
 /* Main preview container */
 .circuit-preview {
