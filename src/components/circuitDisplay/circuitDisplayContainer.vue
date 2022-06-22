@@ -81,7 +81,7 @@ export default  {
   </div>
 </template>
 
-<style scoped>
+<style>
 .circuit-display-container {
   margin: 1em;
   display: flex;

@@ -14,5 +14,5 @@ export default {
   <div class="wire" :class="{classical: classical, condensed: condensed}"></div>
 </template>
 
-<style scoped>
+<style>
 </style>
