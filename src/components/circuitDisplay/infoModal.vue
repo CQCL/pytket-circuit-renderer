@@ -91,3 +91,47 @@ export default {
     </div>
   </div>
 </template>
+
+<style scoped>
+.vue-modal-backdrop{
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.2);
+    z-index: 999999;
+}
+.vue-modal-container{
+    position: absolute;
+    bottom: 10%;
+    right: 10%;
+    width: -moz-fit-content;
+    width: fit-content;
+    margin: auto;
+    z-index: 1000000;
+    border-radius: 8px;
+    -webkit-box-shadow: 0 0 20px 10px var(--faint-col-overlay);
+    -moz-box-shadow: 0 0 20px 10px var(--faint-col-overlay);
+    box-shadow: 0 0 20px 10px var(--faint-col-overlay);
+    background: var(--main-bg);
+}
+
+.close-modal-btn{
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    color: var(--mid-col);
+    font-weight: bold;
+    font-size: 0.75em;
+    z-index: 1;
+    cursor: pointer;
+}
+.modal-title{
+    margin: 0;
+    padding-top: 0;
+}
+.modal-content{
+    padding: 10px 20px;
+}
+</style>

@@ -231,5 +231,29 @@ export default  {
   </div>
 </template>
 
-<style>
+<style scoped>
+.tool-tip-container{
+    margin: calc(0px - var(--block-height)) auto 0;
+    padding-top: var(--block-height);
+    position: relative;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 0;
+    width: 100%;
+    z-index: 4;
+    overflow: hidden;
+}
+.tool-tip-container:hover {
+    cursor: pointer;
+}
+.tool-tip-content{
+    cursor: auto;
+}
+.tool-tip-content > .gate_container.nested{
+    width: 100%;
+    min-width: unset;
+    max-width: 400px;
+    overflow: scroll;
+}
 </style>

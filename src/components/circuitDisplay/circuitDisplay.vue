@@ -227,9 +227,6 @@ export default {
     color: black;
     font-size: 1rem;
 }
-.circuit-preview * {
-    box-sizing: border-box !important;
-}
 .circuit_variables {
     /* Define some variables */
     --block-height: 3em;
@@ -251,32 +248,6 @@ export default {
     flex-wrap: nowrap;
 }
 
-/* Box colours */
-.h {
-    --box-col: #ffee00;
-    --box-col-overlay: rgba(255, 255, 0, 0.2);
-    --c-box-col: #ffee88;
-    --index-col: #ffcc00;
-}
-.x {
-    --box-col: #ff8888;
-    --box-col-overlay: rgba(255, 0, 0, 0.2);
-    --c-box-col: #e8a6a6;
-    --index-col: red;
-}
-.y {
-    --box-col: #6699ff;
-    --box-col-overlay: rgba(0, 0, 255, 0.2);
-    --c-box-col: #86c6f6;
-    --index-col: blue;
-}
-.z {
-    --box-col: #ccffcc;
-    --box-col-overlay: rgba(0, 255, 0, 0.2);
-    --c-box-col: #e2ffe2;
-    --index-col: green;
-}
-
 /* Circuits */
 .circuit-container{
     max-width: 100%;
@@ -291,6 +262,14 @@ export default {
 .circuit-preview.condensed > .circuit-container{
     flex-wrap: nowrap;
     min-width: fit-content;
+}
+.tool-tip-content > .gate_container.nested > .nested-circuit-container,
+.circuit-preview.condensed > .nested-circuit-container{
+    background: transparent;
+    box-shadow: none;
+    width: 100%;
+    min-width: unset;
+    max-width: unset;
 }
 .circuit-container.nested{
     position: relative;
@@ -314,16 +293,6 @@ export default {
     margin: auto;
 }
 
-.circuit-layer{
-    min-width: var(--block-height);
-    width: max-content;
-    display: flex;
-    flex-flow: column nowrap;
-    flex-grow: 1;
-    justify-content: space-between;
-    align-items: stretch;
-    margin-bottom: 20px;
-}
 .circuit-container:not(.nested) > .circuit-layer:nth-child(2),
 .circuit-container:not(.nested) > .circuit-layer:nth-last-child(2),
 .circuit-container.nested > .circuit-layer:nth-child(2),
@@ -333,78 +302,123 @@ export default {
 .gate_container.nested > .circuit-layer:last-child{
     min-width: 10px;
 }
-.nested .circuit-layer{
-    margin-bottom: 0px;
+</style>
+
+<style lang="scss">
+.circuit-preview * {
+    box-sizing: border-box !important;
 }
 
-/* Display qubit names at start of circuit */
-.circuit-layer.qubits{
-    flex-grow: 0;
-}
-.qubit{
+.circuit-container {
+  /* Box colours */
+  .h {
+    --box-col: #ffee00;
+    --box-col-overlay: rgba(255, 255, 0, 0.2);
+    --c-box-col: #ffee88;
+    --index-col: #ffcc00;
+  }
+
+  .x {
+    --box-col: #ff8888;
+    --box-col-overlay: rgba(255, 0, 0, 0.2);
+    --c-box-col: #e8a6a6;
+    --index-col: red;
+  }
+
+  .y {
+    --box-col: #6699ff;
+    --box-col-overlay: rgba(0, 0, 255, 0.2);
+    --c-box-col: #86c6f6;
+    --index-col: blue;
+  }
+
+  .z {
+    --box-col: #ccffcc;
+    --box-col-overlay: rgba(0, 255, 0, 0.2);
+    --c-box-col: #e2ffe2;
+    --index-col: green;
+  }
+
+  .nested .circuit-layer{
+      margin-bottom: 0px;
+  }
+
+  /* Display qubit names at start of circuit */
+  .qubit {
     height: var(--block-height);
     padding: calc((var(--block-height) - 1em) / 2) 0.5em;
     text-align: center;
     font-family: monospace;
-}
+  }
 
-/* WIRES */
-.wire {
+  /* WIRES */
+  .wire {
     height: var(--wire-height);
     top: calc((var(--block-height) - var(--wire-height)) / 2);
-}
-.wire,
-.link-top,
-.link-bottom {
+  }
+
+  .wire,
+  .link-top,
+  .link-bottom {
     --wire-height: var(--base-wire-height);
     background: var(--wire-col);
     position: relative;
-}
-.wire.classical,
-.link-top.classical,
-.link-bottom.classical {
+  }
+
+  .wire.classical,
+  .link-top.classical,
+  .link-bottom.classical {
     --wire-height: calc(var(--base-wire-height) / 2);
     background: var(--c-wire-col) !important;
-}
-.wire.classical.condensed {
+  }
+
+  .wire.classical.condensed {
     --wire-height: calc(var(--base-wire-height) * 2);
-}
-.wire.wire_in {
+  }
+
+  .wire.wire_in {
     width: var(--box-margin);
     margin: calc((var(--block-height) - var(--wire-height)) / 2) 0;
     top: 0;
-}
-.wire.flex_wire{
-    flex-grow: 1;
-}
-.wire.transparent-wire {
-    background: transparent;
-}
+  }
 
-/* Generic base for our gates */
-.gate_container {
+  .wire.flex_wire {
+    flex-grow: 1;
+  }
+
+  .wire.transparent-wire {
+    background: transparent;
+  }
+
+  /* Generic base for our gates */
+  .gate_container {
     display: flow-root;
     position: relative;
     min-width: fit-content;
     height: var(--block-height);
-}
-.gate_container.nested {
+  }
+
+  .gate_container.nested {
     display: flex;
     flex-wrap: nowrap;
     height: fit-content;
-}
-.gate_container.generic {
+  }
+
+  .gate_container.generic {
     flex-grow: 1;
-}
-.gate_container.nested:after{
+  }
+
+  .gate_container.nested:after {
     display: flex;
     flex-wrap: nowrap;
-}
-.gate_container .classical{
+  }
+
+  .gate_container .classical {
     background: var(--c-box-col);
     border-color: var(--index-col);
-}
-.gate{
+  }
+
+  .gate {
     --border: var(--box-border) solid var(--wire-col);
     position: relative;
     height: var(--block-height);
@@ -416,136 +430,143 @@ export default {
     background: var(--box-col);
     display: flex;
     z-index: 1;
-}
-.gate.connected {
+  }
+
+  .gate.connected {
     margin-left: 0;
     margin-right: 0;
-}
-.wire-label{
+  }
+
+  .wire-label {
     color: var(--index-col);
     width: -moz-fit-content;
     width: fit-content;
     padding-right: 0.4em;
-}
-.gate_top > .wire-label,
-.gate_bottom > .wire-label {
-    padding-top: 0;
-}
-.nested-label-layer{
-    background: var(--box-col);
-    padding: 0 0.4em;
-}
-.nested-label-layer .wire-label{
-    padding: var(--box-margin) 0;
-    height: var(--block-height);
-}
+  }
 
-/* Multi-qubit gates */
-.gate_bottom{
+  .gate_top > .wire-label,
+  .gate_bottom > .wire-label {
+    padding-top: 0;
+  }
+
+  /* Multi-qubit gates */
+  .gate_bottom {
     height: calc(var(--box-height) + var(--box-margin));
     margin-bottom: var(--box-margin);
     padding-bottom: 0;
     border-bottom: var(--border);
-}
-.gate_top{
+  }
+
+  .gate_top {
     height: calc(var(--box-height) + var(--box-margin));
     margin-top: var(--box-margin);
     padding-top: 0;
     border-top: var(--border);
-}
-.gate_name{
+  }
+
+  .gate_name {
     text-align: center;
     flex-grow: 1;
-}
-/* Single qubit gate*/
-.gate_box{
+  }
+
+  /* Single qubit gate*/
+  .gate_box {
     height: calc(var(--box-height) + var(--box-border));
     margin: var(--box-margin) 0;
     padding: 0 0.4em;
     border: var(--border);
     text-align: center;
-}
+  }
 
-/* Special gates */
-.gate_connection {
+  /* Special gates */
+  .gate_connection {
     border: none;
     margin: 0;
     padding: 0;
     width: 0;
-}
-.gate_swap,
-.gate_measure {
+  }
+
+  .gate_swap,
+  .gate_measure {
     position: absolute;
     left: calc(50% - var(--box-height) / 2);
     height: var(--box-height);
     width: var(--box-height);
     margin: var(--box-margin) 0;
     background: transparent;
-}
-.gate_swap > svg,
-.gate_measure > svg {
+  }
+
+  .gate_swap > svg,
+  .gate_measure > svg {
     width: 100%;
     height: 100%;
     padding: 0;
-}
-.gate_control {
+  }
+
+  .gate_control {
     position: absolute;
     top: 0;
     left: 0;
     border-radius: 50%;
     width: 0.5em;
     height: 0.5em;
-    margin: calc(var(--block-height)/2 - 0.25em) calc(50% - 0.25em);
+    margin: calc(var(--block-height) / 2 - 0.25em) calc(50% - 0.25em);
     padding: 0;
     border: var(--box-border) solid var(--wire-col);
     background: var(--wire-col);
-}
-.gate_control.classical{
+  }
+
+  .gate_control.classical {
     background: var(--c-wire-col);
     border-color: var(--c-wire-col);
-}
-.control_index{
+  }
+
+  .control_index {
     position: absolute;
     right: calc(50% - 1em);
     top: calc(50% - 1.4em);
     color: var(--c-wire-col);
     font-size: 0.8em;
-}
-.control_index.measure{
+  }
+
+  .control_index.measure {
     right: calc(50% - 1.2em);
     color: var(--index-col);
-}
-.gate_reset{
+  }
+
+  .gate_reset {
     margin-left: 0;
     margin-right: 0;
     padding: 0 0 0 10px;
     border: none !important;
     border-left: var(--base-wire-height) solid var(--wire-col) !important;
     background: transparent;
-}
-.gate_reset_spider{
+  }
+
+  .gate_reset_spider {
     width: calc(var(--box-height) - 24px);
     height: calc(var(--box-height) - 24px);
     background: var(--box-col);
     border-radius: 50%;
     font-size: 0.75em;
-}
+  }
 
-
-/* Special ZX style gates */
-.zx-spider{
+  /* Special ZX style gates */
+  .zx-spider {
     border: var(--base-wire-height) solid var(--wire-col);
     border-radius: calc(var(--box-height) / 2);
     height: var(--box-height);
     min-width: var(--box-height);
     width: fit-content;
-}
-.zx-cz > .zx-hadamard{
+  }
+
+  .zx-cz > .zx-hadamard {
     top: calc(0px - var(--box-height));
     left: 0.2em; /* depends on the box internal padding */
     margin: 0;
-}
-.zx-hadamard{
+  }
+
+  .zx-hadamard {
     position: absolute;
     top: calc(var(--box-height) / 4);
     left: calc(0px - var(--box-height) / 4);
@@ -554,36 +575,43 @@ export default {
     padding: 0;
     border: var(--base-wire-height) solid var(--wire-col);
     background: var(--box-col);
-}
+  }
 
-/* Vertical wire links */
-.link-bottom, .link-top {
+  /* Vertical wire links */
+  .link-bottom, .link-top {
     height: var(--block-height);
     width: var(--wire-height);
     background: var(--wire-col);
     position: absolute;
-    left: calc(50% - var(--wire-height)/2);
-}
-.link-top{
-    top: calc(0px - var(--block-height)/2);
-}
-.link-bottom{
-    top: calc(var(--block-height)/2)
-}
-.edge-link {
+    left: calc(50% - var(--wire-height) / 2);
+  }
+
+  .link-top {
+    top: calc(0px - var(--block-height) / 2);
+  }
+
+  .link-bottom {
+    top: calc(var(--block-height) / 2)
+  }
+
+  .edge-link {
     height: calc(var(--block-height) - var(--box-margin));
-}
-.link-top.edge-link {
+  }
+
+  .link-top.edge-link {
     margin-bottom: var(--box-margin);
-}
-.link-bottom.edge-link {
+  }
+
+  .link-bottom.edge-link {
     margin-top: var(--box-margin);
-}
-.link-bottom.classical{
+  }
+
+  .link-bottom.classical {
     z-index: 1;
-}
-.link-top.barrier,
-.link-bottom.barrier {
+  }
+
+  .link-top.barrier,
+  .link-bottom.barrier {
     border-left: var(--wire-height) dashed var(--c-wire-col);
     border-right: none;
     border-top: none;
@@ -591,50 +619,15 @@ export default {
     background: transparent;
     width: 0;
     top: 0;
-}
+  }
 
-/* tool tips */
-.tool-tip-container{
-    margin: calc(0px - var(--block-height)) auto 0;
-    padding-top: var(--block-height);
-    position: relative;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 0;
-    width: 100%;
-    z-index: 4;
-    overflow: hidden;
-}
-.nested > .tool-tip-container{
+  .nested > .tool-tip-container {
     position: absolute;
     bottom: -10px;
-}
-.tool-tip-container:hover {
-    cursor: pointer;
-}
-.tool-tip-content{
-    cursor: auto;
-}
-.tool-tip .complex-number{
-    padding: 4px;
-}
-.tool-tip-content > .gate_container.nested{
-    width: 100%;
-    min-width: unset;
-    max-width: 400px;
-    overflow: scroll;
-}
-.nested-label-layer.as-height{
-    padding: 0;
-}
-.tool-tip-content > .gate_container.nested > .nested-circuit-container,
-.circuit-preview.condensed > .nested-circuit-container{
-    background: transparent;
-    box-shadow: none;
-    width: 100%;
-    min-width: unset;
-    max-width: unset;
-}
+  }
 
+  .tool-tip .complex-number{
+    padding: 4px;
+  }
+}
 </style>
