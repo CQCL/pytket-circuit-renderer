@@ -20,5 +20,18 @@ export default  {
   </div>
 </template>
 
-<style>
+<style scoped>
+.circuit-layer{
+    min-width: var(--block-height);
+    width: max-content;
+    display: flex;
+    flex-flow: column nowrap;
+    flex-grow: 1;
+    justify-content: space-between;
+    align-items: stretch;
+    margin-bottom: 20px;
+}
+.circuit-layer.qubits{
+    flex-grow: 0;
+}
 </style>

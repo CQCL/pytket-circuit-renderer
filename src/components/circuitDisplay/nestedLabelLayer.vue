@@ -19,5 +19,16 @@ export default {
     </div>
 </template>
 
-<style>
+<style scoped>
+.nested-label-layer{
+    background: var(--box-col);
+    padding: 0 0.4em;
+}
+.nested-label-layer:deep() .wire-label{
+    padding: var(--box-margin) 0;
+    height: var(--block-height);
+}
+.nested-label-layer.as-height{
+    padding: 0;
+}
 </style>
