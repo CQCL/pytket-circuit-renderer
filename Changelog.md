@@ -12,6 +12,13 @@ This is to allow user-facing information to be more easily extracted from this c
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
+### Fixed
+- Scoped styles now use sass.
+
+## [0.1.5] 2022-06-21
+### Added
+- Support for UnitaryTableau box types.
+- Scoped styles.
 
 ## [0.1.4] 2022-05-31
 ### Fixed
