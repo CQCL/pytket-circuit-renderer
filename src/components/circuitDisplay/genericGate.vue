@@ -121,7 +121,7 @@ export default {
       </circuit-layer>
       <nested-label-layer :args="renderIndexedArgs"></nested-label-layer>
 
-      <circuit-display v-if="nestedCircuit" :circuit="nestedCircuit" :renderOptions="nestedRenderOptions"></circuit-display>
+      <circuit-display v-if="nestedCircuit" :circuit="nestedCircuit" :render-options="nestedRenderOptions"></circuit-display>
 
       <nested-label-layer :args="renderIndexedArgs"></nested-label-layer>
       <circuit-layer :nested="true">

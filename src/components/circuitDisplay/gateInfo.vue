@@ -27,6 +27,7 @@ export default  {
     teleportParent: {required: true}, // ref to the parent. Undefined until parent is mounted.
     renderOptions: {type: Object, required: true},
   },
+  emits: ["register-teleport"],
   data () {
     return {
       controlledOps: CONTROLLED_OPS,
@@ -131,7 +132,11 @@ export default  {
 
     <!-- content to be rendered in the info modal -->
     <div style="display: none">
-      <teleport-from :to="visible ? teleportId : ''" :parent="teleportParent">
+      <teleport-from
+          :to="visible ? teleportId : ''"
+          :parent="teleportParent"
+          @register-teleport="(...args) => $emit('register-teleport', ...args)"
+      >
         <info-modal v-model="visible" class="tool-tip-content">
           <template #title>
             [[# opType #]]

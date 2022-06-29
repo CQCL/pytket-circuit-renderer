@@ -8,6 +8,7 @@ export default {
         parent: {required: true}, // Ref to teleport-container. Undefined until parent is mounted.
         disabled: {type: Boolean, default: false},
     },
+    emits: ["register-teleport"],
     data () {
         nTeleports++;
         return {
@@ -24,12 +25,23 @@ export default {
     },
     methods: {
         updateTo (next, prev) {
-            // Register this component as a child of the target
-            if (next) {
+            if (typeof this.parent !== "undefined") {
+              // Register this component as a child of the target
+              if (next) {
                 this.parent.registerTeleport(true, next, this);
-            }
-            if (prev) {
+              }
+              if (prev) {
                 this.parent.registerTeleport(false, prev, this);
+              }
+            } else {
+              // Fallback: propagate change via events instead.
+              // Ensure these are handled if teleport containers can become nested.
+              if (next) {
+                this.$emit("register-teleport", true, next, this);
+              }
+              if (prev) {
+                this.$emit("register-teleport", false, prev, this);
+              }
             }
         },
     }
