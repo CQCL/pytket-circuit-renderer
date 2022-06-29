@@ -70,8 +70,11 @@ export default  {
   <div class="circuit-display-container">
     <div class="display-options-container" v-if="circuit">
       <div v-for="(val, option) in renderOptions" :key="option">
-        <div :title="options[option].title" class="icon" :class="{'active': renderOptions[option]}"
-             role="checkbox" @click="renderOptions[option] = !renderOptions[option]"
+        <div v-if="option in options"
+             :title="options[option].title"
+             class="icon" :class="{'active': renderOptions[option]}"
+             role="checkbox"
+             @click="renderOptions[option] = !renderOptions[option]"
              @keyup.space="renderOptions[option] = !renderOptions[option]"
              v-html="options[option].icon">
         </div>

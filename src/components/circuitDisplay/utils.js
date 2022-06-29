@@ -4,20 +4,29 @@ const registerEquality = function (reg1, reg2) {
     return JSON.stringify(reg1) === JSON.stringify(reg2);
 }
 
-// Deal with potentially condensed classical wires
+// Deal with potentially condensed classical wires. Granularity is by register name.
 const getIndexedArgs = function () {
   let nClassicalBits = 0;
-  let classicalBitsPos = [];
-  let classicalBits = [];
+  let classicalBitsPos = { global: [], names: {} };
+  let classicalBitsOrder = {};
+  let classicalBits = { global: [], names: {} };
 
   let indexedArgs = this.args.map((arg, i) => {
-    let pos = this.command.args.findIndex(reg => registerEquality(reg, arg));
-    let classical = this.isClassicalWire(arg);
+    const argName = arg[0];
+    const pos = this.command.args.findIndex(reg => registerEquality(reg, arg));
+    const classical = this.isClassicalWire(arg);
     if (classical) {
-      classicalBits.push(arg);
+      if (!classicalBits.names[argName]) {
+        classicalBits.names[argName] = [];
+        classicalBitsPos.names[argName] = [];
+        classicalBitsOrder[argName] = i;
+      }
+      classicalBits.global.push(arg);
+      classicalBits.names[argName].push(arg);
       if (pos > -1) {
         nClassicalBits ++;
-        classicalBitsPos.push(pos);
+        classicalBitsPos.global.push(pos);
+        classicalBitsPos.names[argName].push(pos);
       }
     }
     return {
@@ -30,38 +39,61 @@ const getIndexedArgs = function () {
         single: this.command.args.length === 1,
         classical: classical,
         condensed: false,
+        globalClassical: false,
       },
     };
   });
 
   // Add condensed classical register if relevant
   if (nClassicalBits > 0) {
+    for (let registerName of Object.keys(classicalBits.names)) {
+      const nBits = classicalBits.names[registerName].length
+      indexedArgs.push({
+        name: [registerName, [nBits]],
+        pos: classicalBitsPos.names[registerName].length > 0 ? classicalBitsPos.names[registerName] : -1,
+        order: classicalBitsOrder[registerName],
+        bits: classicalBits.names[registerName],
+        flags: {
+          first: classicalBitsOrder[registerName] === 0,
+          last: classicalBitsOrder[registerName] >= this.args.length - nBits,
+          single: this.args.length === nBits,
+          classical: true,
+          condensed: true,
+          globalClassical: false,
+        },
+      });
+    }
+    // Global register
     indexedArgs.push({
       name: ["C", [nClassicalBits]],
-      pos: classicalBitsPos,
-      order: this.command.args.length - nClassicalBits,
-      bits: classicalBits,
+      pos: classicalBitsPos.global,
+      order: this.args.length, // classical bits are always last in display order
+      bits: classicalBits.global,
       flags: {
         first: this.command.args.length - nClassicalBits === 0,
         last: true, // bits displayed after qubits.
         single: this.command.args.length === nClassicalBits,
         classical: true,
         condensed: true,
+        globalClassical: true,
       },
     });
   }
+  // Need to sort the args according to order to ensure condensed registers are in the right place:
+  indexedArgs.sort((arg1, arg2) => arg1.order - arg2.order);
   return indexedArgs;
 }
 
 const renderIndexedArgs = function () {
-  return this.indexedArgs.reduce((filtered, arg) => {
-    if (this.renderOptions.condenseCBits) {
-      if (arg.flags.condensed || !arg.flags.classical) filtered.push(arg);
-    } else {
-      if (!arg.flags.condensed) filtered.push(arg);
-    }
-    return filtered;
-  }, []);
+  return this.indexedArgs.filter((arg) => {
+    return arg.flags.classical
+      ? (
+        this.renderOptions.condenseCBits
+          ? arg.flags.globalClassical  // Condensing to a single global classical wire
+          : this.condensedRegisters[arg.name[0]]  // Check if this particular register is to be condensed.
+            ? arg.flags.condensed : !arg.flags.condensed
+      ) : true;  // Quantum wire
+  });
 }
 
 // Deal with nested circuits.

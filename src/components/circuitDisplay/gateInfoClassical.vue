@@ -37,7 +37,8 @@ export default  {
       let formattedArgs = [];
       for (let arg of expression.args) {
         if (typeof arg == "number") formattedArgs.push(arg);  // constant
-        else if (Array.isArray(arg)) formattedArgs.push(`${arg[0]}[${arg[1][0]}]`);  // register
+        else if (Array.isArray(arg)) formattedArgs.push(`${arg[0]}[${arg[1][0]}]`);  // bit
+        else if ("name" in arg) formattedArgs.push(arg.name);  // bit register
         else formattedArgs.push(this.formatClassicalExp(arg));  // recursive expression
       }
       // Now get the operation display name
@@ -61,20 +62,6 @@ export default  {
     <div v-if="opType === 'ClassicalExpBox'">
       <h4>Expression</h4>
       <p>[[# formatClassicalExp(op.box.exp) #]]</p>
-      <table>
-        <tr>
-          <th>Input bits</th>
-          <td>[[# op.box.n_i #]]</td>
-        </tr>
-        <tr>
-          <th>Input/Output bits</th>
-          <td>[[# op.box.n_io #]]</td>
-        </tr>
-        <tr>
-          <th>Output bits</th>
-          <td>[[# op.box.n_o #]]</td>
-        </tr>
-      </table>
     </div>
 
     <table v-if="hasClassicalTable">

@@ -1,10 +1,19 @@
 <script>
 export default  {
   name: "circuit-layer",
+  emits: ["toggle"],
   props: {
     qubits: {type: Boolean, default: false},
     nested: {type: Boolean, default: false},
-    argList: {type: Array, default () { return []} },
+    argList: {type: Array, default () {return []}},
+    condensedRegisters: {type: Object, default () {return {}}},
+  },
+  methods: {
+    toggleRegister (name) {
+      if (name in this.condensedRegisters) {
+        this.$emit("toggle", name);
+      }
+    }
   }
 }
 </script>
@@ -16,7 +25,8 @@ export default  {
       <div
           v-for="(wire, i) in argList"
           :key="i"
-          :class="{'qubit': qubits}">
+          :class="{'qubit': qubits, 'toggle' : wire[0] in condensedRegisters}"
+          @click="toggleRegister(wire[0])">
         [[# wire[0] #]][[[# wire[1].join(',') #]]]
       </div>
     </slot>
@@ -36,5 +46,8 @@ export default  {
 }
 .circuit-layer.qubits{
     flex-grow: 0;
+}
+.toggle{
+    cursor: ns-resize;
 }
 </style>
