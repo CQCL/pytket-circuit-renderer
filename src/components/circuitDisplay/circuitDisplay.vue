@@ -171,6 +171,9 @@ export default {
     renderControlGate (opType) {
       return CONTROLLED_OPS.includes(opType) && !["CNOT", "CX", "CZ"].includes(opType);
     },
+    registerTeleport (...args) {
+      this.$refs.teleportParent.registerTeleport(...args);
+    },
   }
 }
 </script>
@@ -202,7 +205,8 @@ export default {
                   :op="command.command.op"
                   :teleport-id="infoModal.teleport.id"
                   :teleport-parent="$refs.teleportParent"
-                  :render-options="renderOptions">
+                  :render-options="renderOptions"
+                  @register-teleport="registerTeleport">
               </gate-info>
             </div>
           </circuit-layer>
