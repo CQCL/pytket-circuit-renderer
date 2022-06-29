@@ -40,7 +40,7 @@ export default  {
         "ExplicitPredicate", "ExplicitModifier",
         "ClassicalTransform", "SetBits", "CopyBits",
         "MultiBit", "RangePredicate",
-        "UnitaryTableauBox",
+        "UnitaryTableauBox", "WASM",
       ],
       visible: false,
     };
@@ -201,27 +201,55 @@ export default  {
 
             <div v-if="displayOp.type === 'UnitaryTableauBox'">
               <h4>Tableau</h4>
+              <table>
+                <thead>
+                  <tr>
+                    <th>X</th>
+                    <th>Z</th>
+                    <th>Phase</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>
+                      <chart-matrix :matrix="displayOp.box.tab.tab.xmat" :display-title="false" entry-type="boolStr">
+                      </chart-matrix>
+                    </td>
+                    <td>
+                      <chart-matrix :matrix="displayOp.box.tab.tab.zmat" :display-title="false" entry-type="boolStr">
+                      </chart-matrix>
+                    </td>
+                    <td>
+                      <chart-matrix :matrix="displayOp.box.tab.tab.phase" :display-title="false" entry-type="boolStr">
+                      </chart-matrix>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div v-if="displayOp.type === 'WASM'">
+              <h4>WASM</h4>
               <table class="hover-highlight">
                 <tr>
-                  <th>X</th>
-                  <td>
-                    <chart-matrix :matrix="displayOp.box.tab.xmat" :display-title="false" entry-type="complex">
-                    </chart-matrix>
-                  </td>
+                  <td>Function</td>
+                  <td>[[# op.wasm.func_name #]]</td>
                 </tr>
                 <tr>
-                  <th>Z</th>
-                  <td>
-                    <chart-matrix :matrix="displayOp.box.tab.zmat" :display-title="false" entry-type="complex">
-                    </chart-matrix>
-                  </td>
+                  <td>N</td>
+                  <td>[[# op.wasm.n #]]</td>
                 </tr>
                 <tr>
-                  <th>Phase</th>
-                  <td>
-                    <chart-matrix :matrix="displayOp.box.tab.phase" :display-title="false" entry-type="complex">
-                    </chart-matrix>
-                  </td>
+                  <td>Input vector</td>
+                  <td>[[# op.wasm.ni_vec #]]</td>
+                </tr>
+                <tr>
+                  <td>Output vector</td>
+                  <td>[[# op.wasm.no_vec #]]</td>
+                </tr>
+                <tr>
+                  <td>WASM uid</td>
+                  <td>[[# op.wasm.wasm_uid #]]</td>
                 </tr>
               </table>
             </div>

@@ -77,6 +77,15 @@ export default {
       if (this.opType === "MultiBit" && "classical" in op) {
         name = `Multi-${"name" in op.classical ?  op.classical.name : "Classical"}`;
       }
+      if (this.opType === "SetBits") {
+        name = `SetBits(${op.classical.values.map(val => val ? '1' : '0')})`;
+      }
+      if (this.opType === "RangePredicate") {
+        name = `Range[${op.classical.lower}, ${op.classical.upper}]`;
+      }
+      if (this.opType === "WASM") {
+        name = op.wasm.func_name;
+      }
 
       // If this should be a spider, return the phase to display.
       let phase = this.spiderPhase(this.opType, this.paramStr);

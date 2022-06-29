@@ -19,12 +19,14 @@ export default {
       if (this.entryType === "bool") {
         numToStr = (num) => num.toString();
       }
+      if (this.entryType === "boolStr") {
+        numToStr = (boolStr) => boolStr ? '1' : '0';
+      }
 
       let rows = this.matrix.map(row => {
         return row.reduce((prev, next, i) => {
-          let prevRow = i === 1 ? numToStr(...prev) : prev;
-          return `${prevRow} & ${numToStr(...next)}`;
-        });
+          return `${prev} ${i === 0 ? '' : '&'} ${numToStr(next)}`;
+        }, '');
       });
       let matrixString = rows.reduce((prev, next) => {
         return `${prev} \\\\ ${next}`;
@@ -33,7 +35,8 @@ export default {
     }
   },
   methods: {
-    formatComplexNumber (real, imag) {
+    formatComplexNumber (num) {
+      const [real, imag] = num;
       const strImag = imag === 0 ? "" : (Math.abs(imag) === 1 ? "i" : Math.round(Math.abs(imag) * 1000) / 1000 + "i" );
       const strReal = real === 0 ? "" : Math.round(real * 1000) / 1000;
       let sign = real === 0 && imag === 0 ? "0" : (real * imag !== 0 ? " + " : "");
