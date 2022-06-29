@@ -69,6 +69,7 @@ export default {
           && "box" in op && "gate" in op.box) {
         name = "name" in op.box.gate ? op.box.gate.name : "Parametrised Circuit";
       }
+      // Display classical op params more directly
       if (["ExplicitPredicate", "ExplicitModifier"].includes(this.opType)
           && "classical" in op) {
         name = "name" in op.classical ? op.classical.name : "Classical";
@@ -150,7 +151,7 @@ export default {
       <div class="gate_container" :class="[gateColor, {'generic': !arg.flags.single}]">
         <div class="gate" :class="specialGateClasses">
           <span v-if="arg.pos !== -1 && !arg.flags.single" class="wire-label">
-              [[# arg.pos #]]
+            [[# arg.pos #]]
           </span>
           <span :class="specialGateContentClasses" :style="[opType === 'Reset'? {margin: 0} : {}]">
             [[# arg.flags.last ? name : '' #]]

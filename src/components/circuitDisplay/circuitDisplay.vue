@@ -38,6 +38,11 @@ export default {
         },
         visible: false,
         closeCallback: null,
+      },
+      condensedRegisters: {
+        names: {},
+        toggles: {},
+        order: {},
       }
     }
   },
@@ -45,20 +50,49 @@ export default {
     circuitDetails () {
       if (this.circuit) {
         return {
-          condensedBits: this.circuit.bits.length > 0 ? ["C", [".." + this.circuit.bits.length]] : false,
+          condensedBits: {
+            global: this.circuit.bits.length > 0 ? [["C", [".." + this.circuit.bits.length]]] : [],
+            names: this.condensedRegisters.names,
+          },
           bits: this.circuit.bits,
           qubits: this.circuit.qubits,
         }
       }
       return {
-        condensedBits: [],
+        condensedBits: {global: [], names: {}},
         bits: [],
         qubits: [],
       };
     },
     activeArgs () {
-      // Wires that we are currently displaying
-      return [...this.circuitDetails.qubits, ...(this.renderOptions.condenseCBits && this.circuitDetails.condensedBits ? [this.circuitDetails.condensedBits] : this.circuitDetails.bits)];
+      if (this.circuit) {
+        // Wires that we are currently displaying
+        // Filter classical bits:
+        const classicalBits = this.circuitDetails.bits.reduce(({filtered, included}, bit) => {
+          if (this.condensedRegisters.toggles[bit[0]]) {
+            if (!(bit[0] in included)) {  // Add the condensed register if this is the first bit to be condensed.
+              filtered.push([bit[0], ['..' + this.circuitDetails.condensedBits.names[bit[0]]]]);
+              included[bit[0]] = true;
+            }
+          } else {  // not condensing this register
+            filtered.push(bit);
+          }
+          return {filtered, included};
+        }, {filtered: [], included: {}}).filtered;
+
+        return [...this.circuitDetails.qubits, ...(
+            this.renderOptions.condenseCBits && this.circuitDetails.condensedBits
+                ? this.circuitDetails.condensedBits.global
+                : classicalBits
+        )];
+      }
+      return [];
+    },
+    hasCondensedRegisters () {
+      return Object.values(this.condensedRegisters.toggles).reduce(
+        (isCondensed, toggle) => isCondensed || toggle,
+        false,
+      );
     },
     layers () {
       if (this.circuit) {
@@ -98,6 +132,12 @@ export default {
               });
           let firstArg = sortedArgs[0].order;
           let lastArg = sortedArgs[sortedArgs.length - 1].order;
+          let overlappingCondensedRegisters = Object.keys(this.condensedRegisters.order).filter(regName => {
+            const {first, last} = this.condensedRegisters.order[regName];
+            return this.condensedRegisters.toggles[regName] && (
+                    (firstArg <= first && first <= lastArg) || (firstArg <= last && last <= lastArg)
+                )
+          });
 
           // If we can't fit this command onto the current layer:
           if (firstArg < currentPos) {
@@ -113,9 +153,16 @@ export default {
           }
           // now fill with id up to start of current command.
           if (currentPos < firstArg) {
+            // If the first register is collapsed, don't include it in the ID op.
+            let adjustedFirstArg = firstArg;
+            if (!this.renderOptions.condenseCBits && this.hasCondensedRegisters) {
+              for (let regName of overlappingCondensedRegisters) {
+                adjustedFirstArg = Math.min(adjustedFirstArg, this.condensedRegisters.order[regName].first);
+              }
+            }
             let args = registerOrder.slice(
                 currentPos,
-                this.renderOptions.condenseCBits ? Math.min(firstArg, classicalThreshold) : firstArg
+                this.renderOptions.condenseCBits ? Math.min(firstArg, classicalThreshold) : adjustedFirstArg
             )
             layer.push({
               command: {args: args, op: {type: "ID"}},
@@ -131,7 +178,14 @@ export default {
 
           // Adjust current pos to next wire to be filled. Wrap around if necessary:
           currentPos = lastArg + 1 % registerOrder.length;
-          // If condensing classical args, and this op was classical, must circle around:
+          // If condensing specific registers, adjust the end position to the end of the included condensed registers
+          if (!this.renderOptions.condenseCBits && this.hasCondensedRegisters) {
+            for (let regName of overlappingCondensedRegisters) {
+              currentPos = Math.max(currentPos, this.condensedRegisters.order[regName].last + 1);
+            }
+            currentPos %= registerOrder.length;
+          }
+          // If condensing all classical args, and this op was classical, must circle around:
           if (this.renderOptions.condenseCBits && currentPos > classicalThreshold) {
             currentPos = 0;
           }
@@ -163,6 +217,21 @@ export default {
       return [];
     },
   },
+  watch: {
+    circuit (newCircuit) {
+      if (newCircuit) {
+        this.initCondensedRegisters();
+      }
+    },
+    "renderOptions.recursive" (recursive) {
+      if (recursive) {
+        // Make sure no registers are collapsed
+        for (let name of Object.keys(this.condensedRegisters.toggles)) {
+          this.condensedRegisters.toggles[name] = false;
+        }
+      }
+    }
+  },
   mounted () {
     // Initialise the teleport components
     this.infoModal.teleport.names[this.infoModal.teleport.id] = this.$refs.infoModals;
@@ -170,6 +239,32 @@ export default {
   methods: {
     renderControlGate (opType) {
       return CONTROLLED_OPS.includes(opType) && !["CNOT", "CX", "CZ"].includes(opType);
+    },
+    initCondensedRegisters () {
+      // Add a condensedRegister for each classical register name present in the circuit.
+      let condensedRegisterNames = {};
+      let condensedRegisterToggles = {};
+      let condensedRegisterOrder = {};
+
+      this.circuit.bits.forEach((bit, order) => {
+        if (bit[0] in condensedRegisterNames) {
+          condensedRegisterNames[bit[0]]++;
+          condensedRegisterOrder[bit[0]].last = this.circuit.qubits.length + order;
+        } else {
+          condensedRegisterNames[bit[0]] = 1;
+          condensedRegisterToggles[bit[0]] = false;
+          condensedRegisterOrder[bit[0]] = {
+            first: this.circuit.qubits.length + order,
+            last: this.circuit.qubits.length + order,
+          };
+        }
+      });
+      this.condensedRegisters.names = condensedRegisterNames;
+      this.condensedRegisters.toggles = condensedRegisterToggles;
+      this.condensedRegisters.order = condensedRegisterOrder;
+    },
+    updateCondensedRegisterToggles (name) {
+      this.condensedRegisters.toggles[name] = !this.condensedRegisters.toggles[name];
     },
     registerTeleport (...args) {
       this.$refs.teleportParent.registerTeleport(...args);
@@ -185,7 +280,14 @@ export default {
     <div v-if="circuit" tabindex="0" :class="{'nested-circuit-container': renderOptions.condensed}">
       <div :class="{'circuit-inner-scroll': renderOptions.condensed}">
         <div class="circuit-container" :class="{nested: renderOptions.nested || renderOptions.condensed, zx: renderOptions.zxStyle}">
-          <circuit-layer :nested="renderOptions.nested" :qubits="true" :argList="activeArgs"></circuit-layer>
+          <circuit-layer
+              :nested="renderOptions.nested"
+              :qubits="true"
+              :style="{'text-align': 'right'}"
+              :argList="activeArgs"
+              :condensed-registers="renderOptions.recursive ? {} : condensedRegisters.toggles"
+              @toggle="updateCondensedRegisterToggles">
+          </circuit-layer>
 
           <circuit-layer v-for="(layer, i) in layers" :key="i" :nested="renderOptions.nested">
             <div v-for="(command, j) in layer" :key="j" :data-command="command.command.op.type">
@@ -193,13 +295,15 @@ export default {
                   :command="command.command"
                   :args="command.args"
                   :circuitDetails="circuitDetails"
-                  :render-options="renderOptions">
+                  :render-options="renderOptions"
+                  :condensed-registers="condensedRegisters.toggles">
               </controlled-gate>
               <generic-gate v-else
                   :command="command.command"
                   :args="command.args"
                   :circuitDetails="circuitDetails"
-                  :render-options="renderOptions">
+                  :render-options="renderOptions"
+                  :condensed-registers="condensedRegisters.toggles">
               </generic-gate>
               <gate-info
                   :op="command.command.op"
@@ -211,7 +315,14 @@ export default {
             </div>
           </circuit-layer>
 
-          <circuit-layer :nested="renderOptions.nested" :qubits="true" :argList="activeArgs"></circuit-layer>
+          <circuit-layer
+              :nested="renderOptions.nested"
+              :qubits="true"
+              :style="{'text-align': 'left'}"
+              :argList="activeArgs"
+              :condensed-registers="renderOptions.recursive ? {} : condensedRegisters.toggles"
+              @toggle="updateCondensedRegisterToggles">
+          </circuit-layer>
         </div>
       </div>
     </div>
