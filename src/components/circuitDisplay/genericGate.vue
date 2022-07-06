@@ -67,7 +67,7 @@ export default {
     <div v-if="opType === 'ID'">
       <div v-for="(arg, i) in renderIndexedArgs" :key="i" class="gate_container">
         <wire :classical="isClassicalWire(arg.name)" :condensed="renderOptions.condenseCBits"></wire>
-        <div v-if="linkVertical" class="link-top"></div>
+        <div v-if="linkVertical" class="link link-top"></div>
       </div>
     </div>
 
@@ -76,8 +76,8 @@ export default {
       <div v-for="(arg, i) in renderIndexedArgs" :key="i"
           class="gate_container nested" style="height:var(--block-height)"
       >
-        <div v-if="!arg.flags.last" class="link-bottom" :class="{classical: opType === 'Measure'}"></div>
-        <div v-if="arg.flags.first && linkVertical" class="link-top"></div>
+        <div v-if="!arg.flags.last" class="link link-bottom" :class="{classical: opType === 'Measure'}"></div>
+        <div v-if="arg.flags.first && linkVertical" class="link link-top"></div>
 
         <wire class="wire_in flex_wire" :classical="arg.flags.classical" :condensed="renderOptions.condenseCBits"></wire>
 

@@ -19,6 +19,7 @@ export default {
     specialGateClasses () {
       return {
         "gate_top": !this.arg.flags.single && this.arg.flags.first,
+        "gate_mid": !this.arg.flags.single && !this.arg.flags.first && !this.arg.flags.last,
         "gate_bottom": !this.arg.flags.single && this.arg.flags.last,
         "gate_box": this.command.args.length === 1 || this.arg.flags.single,
         "classical": this.arg.flags.classical,
@@ -27,6 +28,7 @@ export default {
         "gate_reset": this.opType === "Reset",
         "zx-hadamard": this.opType === "H" && this.renderOptions.zxStyle,
         "zx-spider": this.renderOptions.zxStyle && this.asSpider(this.opType),
+        "gate_barrier": this.opType === "Barrier",
       };
     },
     specialGateContentClasses () {
@@ -134,10 +136,10 @@ export default {
 <template>
   <div :data-gate-component="opType">
     <!-- Barrier requires special rendering -->
-    <div v-if="opType === 'Barrier'" :class="{'gate_container nested': arg.flags.single }" style="height:var(--block-height)">
+    <div v-if="opType === 'Barrier'" style="height:var(--block-height)">
       <wire :classical="arg.flags.classical" :condensed="arg.flags.condensed"></wire>
       <div class="gate_container" :class="[gateColor]">
-        <div v-if="arg.pos > -1" class="barrier" :class="[arg.flags.first ? 'link-bottom edge-link' : 'link-top', {'edge-link': arg.flags.last}]"></div>
+        <div v-if="arg.pos !== -1" class="link" :class="specialGateClasses"></div>
       </div>
     </div>
 
@@ -154,7 +156,7 @@ export default {
             [[# arg.flags.last ? name : '' #]]
           </span>
         </div>
-        <div v-if="linkVertical" class="link-top"></div>
+        <div v-if="linkVertical" class="link link-top"></div>
       </div>
 
       <wire v-if="arg.pos !== -1" class="wire_in" :class="{flex_wire: arg.flags.single}" :classical="arg.flags.classical" :condensed="arg.flags.condensed"></wire>
