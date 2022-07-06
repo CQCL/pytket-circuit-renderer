@@ -50,7 +50,7 @@ export default {
       <div v-if="arg.pos === -1" class="gate_container">
           <wire :classical="arg.flags.classical"></wire>
           <div class="gate gate_connection" :class="{classical: arg.flags.classical}"></div>
-          <div v-if="arg.order > 0" class="link-top"></div>
+          <div v-if="arg.order > 0" class="link link-top"></div>
       </div>
 
       <div v-else>
@@ -59,7 +59,7 @@ export default {
             <wire :classical="arg.flags.classical" :condensed="arg.flags.condensed"></wire>
             <div v-if="opType === 'Condition' & !arg.flags.condensed" class="control_index">[[# arg.pos #]]</div>
             <div class="gate gate_control" :class="[arg.flags.classical ? 'classical' : 'z']"></div>
-            <div v-if="arg.order > 0" class="link-top"></div>
+            <div v-if="arg.order > 0" class="link link-top"></div>
           </div>
         </div>
 

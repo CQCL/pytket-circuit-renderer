@@ -362,16 +362,14 @@ export default {
   }
 
   .wire,
-  .link-top,
-  .link-bottom {
+  .link {
     --wire-height: var(--base-wire-height);
     background: var(--wire-col);
     position: relative;
   }
 
   .wire.classical,
-  .link-top.classical,
-  .link-bottom.classical {
+  .link.classical {
     --wire-height: calc(var(--base-wire-height) / 2);
     background: var(--c-wire-col) !important;
   }
@@ -425,11 +423,9 @@ export default {
   .gate {
     --border: var(--box-border) solid var(--wire-col);
     position: relative;
-    height: var(--block-height);
-    margin: 0 var(--box-margin);
-    padding: var(--box-margin) 0.4em;
-    border-left: var(--border);
-    border-right: var(--border);
+    margin: var(--box-margin);
+    border: var(--border);
+    padding: 0.4em;
     text-align: left;
     background: var(--box-col);
     display: flex;
@@ -456,16 +452,28 @@ export default {
   /* Multi-qubit gates */
   .gate_bottom {
     height: calc(var(--box-height) + var(--box-margin));
-    margin-bottom: var(--box-margin);
+    margin-top: 0;
+    padding-top: var(--box-margin);
     padding-bottom: 0;
-    border-bottom: var(--border);
+    border-top: none;
+  }
+
+  .gate_mid {
+    height: var(--block-height);
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-top: var(--box-margin);
+    padding-bottom: var(--box-margin);
+    border-top: none;
+    border-bottom: none;
   }
 
   .gate_top {
-    height: calc(var(--box-height) + var(--box-margin));
-    margin-top: var(--box-margin);
+    height: calc(var(--box-height) + var(--box-margin) + 1px);
+    margin-bottom: 0;
     padding-top: 0;
-    border-top: var(--border);
+    padding-bottom: var(--box-margin);
+    border-bottom: none;
   }
 
   .gate_name {
@@ -476,9 +484,10 @@ export default {
   /* Single qubit gate*/
   .gate_box {
     height: calc(var(--box-height) + var(--box-border));
-    margin: var(--box-margin) 0;
-    padding: 0 0.4em;
-    border: var(--border);
+    margin-left: 0;
+    margin-right: 0;
+    padding-top: 0;
+    padding-bottom: 0;
     text-align: center;
   }
 
@@ -555,6 +564,33 @@ export default {
     font-size: 0.75em;
   }
 
+  .gate_barrier.link {
+    border: var(--wire-height) dashed var(--c-wire-col);
+    border-width: 0 var(--wire-height) 0 0;
+    background: transparent !important;
+    top: 0;
+    width: 0;
+    padding:0;
+    margin: 0 auto;
+  }
+
+  .gate-barrier.gate_mid {
+    height: 100%;
+  }
+
+  .gate_barrier.gate_bottom {
+    margin-bottom: var(--box-margin);
+  }
+
+  .gate_barrier.gate_top {
+    margin-top: var(--box-margin);
+  }
+
+  .gate_barrier.gate_box {
+    margin-bottom: var(--box-margin);
+    margin-top: var(--box-margin);
+  }
+
   /* Special ZX style gates */
   .zx-spider {
     border: var(--base-wire-height) solid var(--wire-col);
@@ -598,31 +634,8 @@ export default {
     top: calc(var(--block-height) / 2)
   }
 
-  .edge-link {
-    height: calc(var(--block-height) - var(--box-margin));
-  }
-
-  .link-top.edge-link {
-    margin-bottom: var(--box-margin);
-  }
-
-  .link-bottom.edge-link {
-    margin-top: var(--box-margin);
-  }
-
   .link-bottom.classical {
     z-index: 1;
-  }
-
-  .link-top.barrier,
-  .link-bottom.barrier {
-    border-left: var(--wire-height) dashed var(--c-wire-col);
-    border-right: none;
-    border-top: none;
-    border-bottom: none;
-    background: transparent;
-    width: 0;
-    top: 0;
   }
 
   .nested > .tool-tip-container {
