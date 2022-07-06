@@ -8,7 +8,7 @@ const registerEquality = function (reg1, reg2) {
 const getIndexedArgs = function () {
   let nClassicalBits = 0;
   let classicalBitsPos = { global: [], names: {} };
-  let classicalBitsOrder = {};
+  let classicalBitsOrder = {global: undefined, names: {}};
   let classicalBits = { global: [], names: {} };
 
   let indexedArgs = this.args.map((arg, i) => {
@@ -19,15 +19,14 @@ const getIndexedArgs = function () {
       if (!classicalBits.names[argName]) {
         classicalBits.names[argName] = [];
         classicalBitsPos.names[argName] = [];
-        classicalBitsOrder[argName] = i;
+        classicalBitsOrder.names[argName] = i;
       }
+      if (typeof classicalBitsOrder.global === "undefined") classicalBitsOrder.global = i;
+      if (pos > -1) nClassicalBits ++;  // Count number of classical bits that actually feature in the command.
       classicalBits.global.push(arg);
+      classicalBitsPos.global.push(pos);
       classicalBits.names[argName].push(arg);
-      if (pos > -1) {
-        nClassicalBits ++;
-        classicalBitsPos.global.push(pos);
-        classicalBitsPos.names[argName].push(pos);
-      }
+      classicalBitsPos.names[argName].push(pos);
     }
     return {
       name: arg,
@@ -44,18 +43,18 @@ const getIndexedArgs = function () {
     };
   });
 
-  // Add condensed classical register if relevant
+  // Add condensed classical register if relevant.
   if (nClassicalBits > 0) {
     for (let registerName of Object.keys(classicalBits.names)) {
       const nBits = classicalBits.names[registerName].length
       indexedArgs.push({
-        name: [registerName, [nBits]],
-        pos: classicalBitsPos.names[registerName].length > 0 ? classicalBitsPos.names[registerName] : -1,
-        order: classicalBitsOrder[registerName],
+        name: [registerName, [nBits], "condensed"],
+        pos: classicalBitsPos.names[registerName].filter(pos => pos > -1).length > 0 ? classicalBitsPos.names[registerName] : -1,
+        order: classicalBitsOrder.names[registerName],
         bits: classicalBits.names[registerName],
         flags: {
-          first: classicalBitsOrder[registerName] === 0,
-          last: classicalBitsOrder[registerName] >= this.args.length - nBits,
+          first: classicalBitsOrder.names[registerName] === 0,
+          last: classicalBitsOrder.names[registerName] >= this.args.length - nBits,
           single: this.args.length === nBits,
           classical: true,
           condensed: true,
@@ -65,12 +64,12 @@ const getIndexedArgs = function () {
     }
     // Global register
     indexedArgs.push({
-      name: ["C", [nClassicalBits]],
+      name: ["Global Classical", ['n'], "condensed"],
       pos: classicalBitsPos.global,
-      order: this.args.length, // classical bits are always last in display order
+      order: classicalBitsOrder.global,
       bits: classicalBits.global,
       flags: {
-        first: this.command.args.length - nClassicalBits === 0,
+        first: classicalBitsOrder.global === 0,
         last: true, // bits displayed after qubits.
         single: this.command.args.length === nClassicalBits,
         classical: true,
@@ -108,57 +107,80 @@ const extractSubCircuit = function (operation) {
 }
 
 // Controlled commands
-const extractControlledCommand = function (controlledCommand) {
-  function convert (command) {
+const extractControlledCommand = function (controlCommand, controlArgs) {
+  function convert (command, args) {
     // Generate a command for the nested op.
     // Overload for when we only care about the op, and set args to false.
     if (["CX", "CY", "CZ", "CH", "CSWAP",
       "CRx", "CRy", "CRz", "CU1", "CU3",
       "CV", "CVdg", "CSx", "CSXdg"].includes(command.op.type)) {
+      args.push(command.args[0]);
       return {
-        op: {
-          type: command.op.type.slice(1),
-          params: command.op.params,
+        cc: {
+          op: {
+            type: command.op.type.slice(1),
+            params: command.op.params,
+          },
+          args: command.args ? command.args.slice(1) : false,
         },
-        args: command.args ? command.args.slice(1) : false,
+        ca: args,
       };
     }
     if (command.op.type === "CCX") {
+      args.push(...command.args.slice(0, 2));
       return {
-        op: {type: "X"},
-        args: command.args ? command.args.slice(2) : false,
+        cc: {
+          op: {type: "X"},
+          args: command.args ? command.args.slice(2) : false,
+        },
+        ca: args,
       };
     }
     if (["CnRy", "CnX"].includes(command.op.type)) {
+      args.push(...command.args.slice(0, command.args.length - 1));
       return {
-        op: {
-          type: command.op.type.slice(2),
-          params: command.op.params
+        cc: {
+          op: {
+            type: command.op.type.slice(2),
+            params: command.op.params
+          },
+          args: command.args ? [command.args[command.args.length - 1]] : false,
         },
-        args: command.args ? [command.args[command.args.length - 1]] : false,
+        ca: args,
       };
     }
     if (["Control", "QControlBox"].includes(command.op.type)) {
+      args.push(...command.args.slice(0, command.op.box.n_controls));
       return {
-        op: command.op.box.op,
-        args: command.args ? command.args.slice(command.op.box.n_controls) : false,
+        cc: {
+          op: command.op.box.op,
+          args: command.args ? command.args.slice(command.op.box.n_controls) : false,
+        },
+        ca: args,
       }
     }
     if (["Condition", "Conditional"].includes(command.op.type)) {
+      args.push(...command.args.slice(0, command.op.conditional.width));
       return {
-        op: command.op.conditional.op,
-        args: command.args ? command.args.slice(command.op.conditional.width) : false
+        cc: {
+          op: command.op.conditional.op,
+          args: command.args ? command.args.slice(command.op.conditional.width) : false
+        },
+        ca: args,
       }
     }
-    return {op: {type: "Unknown"}, args: command.args ? [] : false};
+    return {cc: {op: {type: "Unknown"}, args: command.args ? [] : false}, ca: args};
   }
 
-  let cc = { ...controlledCommand};
-  while (CONTROLLED_OPS.includes(cc.op.type)) {
-    cc = convert(cc);
+  let converting = {
+    cc: { ...controlCommand},
+    ca: [...controlArgs],
+  };
+  while (CONTROLLED_OPS.includes(converting.cc.op.type)) {
+    converting = convert(converting.cc, converting.ca);
   }
 
-  return cc;
+  return {command: converting.cc, controlArgs: converting.ca};
 }
 
 

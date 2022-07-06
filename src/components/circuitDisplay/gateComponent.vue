@@ -8,6 +8,7 @@ export default {
   },
   props: {
     arg: {type: Object, required: true},
+    split: {type: Boolean, default: false},
     command: {type: Object, required: true},
     linkVertical: {type: Boolean, default: false},
     renderOptions: {type: Object, required: true},
@@ -18,10 +19,10 @@ export default {
     },
     specialGateClasses () {
       return {
-        "gate_top": !this.arg.flags.single && this.arg.flags.first,
-        "gate_mid": !this.arg.flags.single && !this.arg.flags.first && !this.arg.flags.last,
-        "gate_bottom": !this.arg.flags.single && this.arg.flags.last,
-        "gate_box": this.command.args.length === 1 || this.arg.flags.single,
+        "gate_top": !this.arg.flags.single && !this.split && this.arg.flags.first,
+        "gate_mid": !this.arg.flags.single && !this.split && !this.arg.flags.first && !this.arg.flags.last,
+        "gate_bottom": !this.arg.flags.single && !this.split && this.arg.flags.last,
+        "gate_box": this.command.args.length === 1 || this.arg.flags.single || this.split,
         "classical": this.arg.flags.classical,
         "condensed": this.arg.flags.condensed,
         "connected": this.arg.pos !== -1,
@@ -160,13 +161,13 @@ export default {
       <div class="gate_container" :class="[gateColor, {'generic': !arg.flags.single}]">
         <div class="gate" :class="specialGateClasses">
           <span v-if="arg.pos !== -1 && !arg.flags.single" class="wire-label">
-            [[# arg.pos #]]
+            [[# Array.isArray(arg.pos) ? arg.pos.map(pos => pos == -1 ? '-' : pos.toString()).join(' ') : arg.pos #]]
           </span>
           <span :class="specialGateContentClasses" :style="[opType === 'Reset'? {margin: 0} : {}]">
             [[# arg.flags.last ? name : '' #]]
           </span>
         </div>
-        <div v-if="linkVertical" class="link link-top"></div>
+        <div v-if="linkVertical" class="link link-top" :class="{'classical': arg.flags.classical}"></div>
       </div>
 
       <wire v-if="arg.pos !== -1" class="wire_in" :class="{flex_wire: arg.flags.single}" :classical="arg.flags.classical" :condensed="arg.flags.condensed"></wire>

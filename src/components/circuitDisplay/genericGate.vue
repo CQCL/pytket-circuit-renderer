@@ -25,6 +25,7 @@ export default {
     split: {type: Boolean, default: false},
     circuitDetails: {type: Object, required: true},
     renderOptions: {type: Object, required: true},
+    condensedRegisters: {type: Object, required: true},
   },
   computed: {
     opType () {
@@ -66,8 +67,8 @@ export default {
     <!-- ID -->
     <div v-if="opType === 'ID'">
       <div v-for="(arg, i) in renderIndexedArgs" :key="i" class="gate_container">
-        <wire :classical="isClassicalWire(arg.name)" :condensed="renderOptions.condenseCBits"></wire>
-        <div v-if="linkVertical" class="link link-top"></div>
+        <wire :classical="arg.flags.classical" :condensed="arg.flags.condensed"></wire>
+        <div v-if="linkVertical" class="link link-top" :class="{'classical': arg.flags.classical}"></div>
       </div>
     </div>
 
@@ -77,9 +78,9 @@ export default {
           class="gate_container nested" style="height:var(--block-height)"
       >
         <div v-if="!arg.flags.last" class="link link-bottom" :class="{classical: opType === 'Measure'}"></div>
-        <div v-if="arg.flags.first && linkVertical" class="link link-top"></div>
+        <div v-if="arg.flags.first && linkVertical" class="link link-top" :class="{'classical': arg.flags.classical}"></div>
 
-        <wire class="wire_in flex_wire" :classical="arg.flags.classical" :condensed="renderOptions.condenseCBits"></wire>
+        <wire class="wire_in flex_wire" :classical="arg.flags.classical" :condensed="arg.flags.condensed"></wire>
 
         <div v-if="opType === 'SWAP'">
           <gate-swap v-if="arg.pos !== -1" class="gate gate_connection"></gate-swap>
@@ -107,7 +108,7 @@ export default {
           <div v-else class="gate gate_connection"></div>
         </div>
 
-        <wire class="wire_in flex_wire" :classical="arg.flags.classical" :condensed="renderOptions.condenseCBits"></wire>
+        <wire class="wire_in flex_wire" :classical="arg.flags.classical" :condensed="arg.flags.condensed"></wire>
       </div>
     </div>
 
@@ -136,6 +137,7 @@ export default {
     <div v-if="opType !== 'ID' && !special2qGate && !nestedCircuitGate">
       <gate-component v-for="(arg, i) in renderIndexedArgs" :key="i"
               :arg="arg"
+              :split="split"
               :command="command"
               :link-vertical="linkVertical"
               :render-options="renderOptions">

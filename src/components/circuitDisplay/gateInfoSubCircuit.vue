@@ -33,7 +33,7 @@ export default  {
         extractControlledCommand({
           op: this.op,
           args: []
-        })
+        }, []).command
       );
       if (circuit) {
         return {
