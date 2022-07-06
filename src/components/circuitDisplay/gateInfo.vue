@@ -274,7 +274,7 @@ export default  {
     right: 0;
     height: 0;
     width: 100%;
-    z-index: 4;
+    z-index: 1;
     overflow: hidden;
 }
 .tool-tip-container:hover {
