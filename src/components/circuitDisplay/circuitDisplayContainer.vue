@@ -46,21 +46,29 @@ export default  {
       } else {
         return this.circuitRaw;
       }
+    },
+  },
+  watch: {
+    circuitElementStr () {
+      this.getCircuitFromDOM();
     }
   },
   mounted () {
     // Collect the circuit from a designated element
-    if (this.circuitElementStr) {
-      console.log("query", this.circuitElementStr);
-
-      const circuitJson = document.querySelector(this.circuitElementStr).innerText;
-      let circuit;
-      try {
-        circuit = circuitJson ? JSON.parse(circuitJson) : undefined;
-      } catch (e) {
-        circuit = undefined;
+    this.getCircuitFromDOM();
+  },
+  methods: {
+    getCircuitFromDOM () {
+      if (this.circuitElementStr) {
+        const circuitJson = document.querySelector(this.circuitElementStr).innerText;
+        let circuit;
+        try {
+          circuit = circuitJson ? JSON.parse(circuitJson) : undefined;
+        } catch (e) {
+          circuit = undefined;
+        }
+        this.embeddedCircuit = circuit;
       }
-      this.embeddedCircuit = circuit;
     }
   }
 }
@@ -86,6 +94,7 @@ export default  {
 
 <style scoped>
 .circuit-display-container {
+  min-height: 9em;
   margin: 1em;
   display: flex;
   position: relative;
