@@ -1,7 +1,7 @@
 import {CONTROLLED_OPS} from "./consts";
 
 const registerEquality = function (reg1, reg2) {
-  return reg1[0] === reg2[0] && reg1[1][0] === reg2[1][0];
+    return JSON.stringify(reg1) === JSON.stringify(reg2);
 }
 
 // Deal with potentially condensed classical wires

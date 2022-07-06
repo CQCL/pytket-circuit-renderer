@@ -13,8 +13,11 @@ export default  {
   <div class="circuit-layer" :class="{'qubits': qubits}">
     <slot>
       <!--  Default is the wire name list  -->
-      <div v-for="(wire, i) in argList" :key="i" class="wire-label" :class="{'qubit': qubits}">
-        [[# wire[0][0] #]][[[# wire[1][0] #]]]
+      <div
+          v-for="(wire, i) in argList"
+          :key="i"
+          :class="{'qubit': qubits}">
+        [[# wire[0] #]][[[# wire[1].join(',') #]]]
       </div>
     </slot>
   </div>
