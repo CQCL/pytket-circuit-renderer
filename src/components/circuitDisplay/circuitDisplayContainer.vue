@@ -13,11 +13,16 @@ export default  {
   data () {
     return {
       embeddedCircuit: undefined,
+      zoom: 1,
       renderOptions: {
         zxStyle: true,
         condenseCBits: true,
         recursive: false,
         condensed: true,
+      },
+      zoomOptions: {
+        zoomOut: -0.1,
+        zoomIn: 0.1,
       },
       options: {
         zxStyle: {
@@ -36,6 +41,14 @@ export default  {
           title: "Render on one line only",
           icon: `<svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-arrows-angle-contract"><path fill-rule="evenodd" d="M.172 15.828a.5.5 0 0 0 .707 0l4.096-4.096V14.5a.5.5 0 1 0 1 0v-3.975a.5.5 0 0 0-.5-.5H1.5a.5.5 0 0 0 0 1h2.768L.172 15.121a.5.5 0 0 0 0 .707zM15.828.172a.5.5 0 0 0-.707 0l-4.096 4.096V1.5a.5.5 0 1 0-1 0v3.975a.5.5 0 0 0 .5.5H14.5a.5.5 0 0 0 0-1h-2.768L15.828.879a.5.5 0 0 0 0-.707z"/></svg>`,
         },
+        zoomIn: {
+          title: "Zoom in",
+          icon: `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-zoom-in" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M6.5 12a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11zM13 6.5a6.5 6.5 0 1 1-13 0 6.5 6.5 0 0 1 13 0z"/><path d="M10.344 11.742c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1 6.538 6.538 0 0 1-1.398 1.4z"/><path fill-rule="evenodd" d="M6.5 3a.5.5 0 0 1 .5.5V6h2.5a.5.5 0 0 1 0 1H7v2.5a.5.5 0 0 1-1 0V7H3.5a.5.5 0 0 1 0-1H6V3.5a.5.5 0 0 1 .5-.5z"/></svg>`
+        },
+        zoomOut: {
+          title: "Zoom out",
+          icon: `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-zoom-out" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M6.5 12a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11zM13 6.5a6.5 6.5 0 1 1-13 0 6.5 6.5 0 0 1 13 0z"/><path d="M10.344 11.742c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1 6.538 6.538 0 0 1-1.398 1.4z"/><path fill-rule="evenodd" d="M3 6.5a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5z"/></svg>`
+        },
       },
     };
   },
@@ -53,8 +66,17 @@ export default  {
         condenseCBits: false,
         recursive: !this.renderOptions.condensed,
         condensed: this.renderOptions.recursive,
+        zoomOut: this.zoom <= 0.2,
+        zoomIn: this.zoom >= 1,
       }
-    }
+    },
+    zoomStyling () {
+      return {
+        transform: `scale(${this.zoom})`,
+        transformOrigin: "0% 0% 0px",
+        width: `calc(100% / ${this.zoom})`,
+      }
+    },
   },
   watch: {
     circuitElementStr () {
@@ -95,14 +117,24 @@ export default  {
              v-html="options[option].icon">
         </div>
       </div>
+      <div v-for="(val, option) in zoomOptions" :key="option">
+        <div v-if="option in options"
+             :title="options[option].title"
+             class="icon" :class="{'disabled': disabledOptions[option]}"
+             role="button"
+             @click="zoom += disabledOptions[option] ? 0 : val"
+             @keyup.space="zoom += disabledOptions[option] ? 0 : val"
+             v-html="options[option].icon">
+        </div>
+      </div>
     </div>
-    <circuit-display style="flex-grow: 1" :circuit="circuit" :render-options="renderOptions"></circuit-display>
+    <circuit-display style="flex-grow: 1" :style="zoomStyling" :circuit="circuit" :render-options="renderOptions"></circuit-display>
   </div>
 </template>
 
 <style scoped>
 .circuit-display-container {
-  min-height: 9em;
+  min-height: 13em;
   margin: 1em;
   display: flex;
   position: relative;
