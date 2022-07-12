@@ -12,6 +12,11 @@ This is to allow user-facing information to be more easily extracted from this c
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
+### Added 
+- QIR support: classical controls, self controls, classical expressions, WASM.
+- Collapse individual classical registers independently.
+### Test
+- Add sample circuits to test page.
 
 ## [0.1.7] 2022-07-12
 ### Fixed
