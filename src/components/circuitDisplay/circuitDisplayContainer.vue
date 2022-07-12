@@ -47,6 +47,14 @@ export default  {
         return this.circuitRaw;
       }
     },
+    disabledOptions () {
+      return {
+        zxStyle: false,
+        condenseCBits: false,
+        recursive: !this.renderOptions.condensed,
+        condensed: this.renderOptions.recursive,
+      }
+    }
   },
   watch: {
     circuitElementStr () {
@@ -80,10 +88,10 @@ export default  {
       <div v-for="(val, option) in renderOptions" :key="option">
         <div v-if="option in options"
              :title="options[option].title"
-             class="icon" :class="{'active': renderOptions[option]}"
+             class="icon" :class="{'active': renderOptions[option], 'disabled': disabledOptions[option]}"
              role="checkbox"
-             @click="renderOptions[option] = !renderOptions[option]"
-             @keyup.space="renderOptions[option] = !renderOptions[option]"
+             @click="renderOptions[option] = disabledOptions[option] ? renderOptions[option] : !renderOptions[option]"
+             @keyup.space="renderOptions[option] = disabledOptions[option] ? renderOptions[option] : !renderOptions[option]"
              v-html="options[option].icon">
         </div>
       </div>
@@ -138,11 +146,23 @@ export default  {
     border-radius: 10%;
     border: 1px solid var(--mid-col);
     color: var(--main-col);
+    cursor: pointer;
   }
 
   .icon.active {
     border-color: var(--accent-col-emph);
     box-shadow: 0 0 0 3px var(--accent-col-overlay) inset;
+  }
+
+  .icon.disabled {
+    color: var(--mid-col);
+    border-color: var(--mid-col);
+    box-shadow: none;
+    cursor: default;
+  }
+
+  .icon.active.disabled {
+    box-shadow: 0 0 0 3px var(--faint-col-overlay) inset;
   }
 
   .icon > svg {
