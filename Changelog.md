@@ -12,6 +12,14 @@ This is to allow user-facing information to be more easily extracted from this c
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
+
+## [0.1.7] 2022-07-12
+### Fixed
+- Barrier displays
+- Higher dimensional registers now display correctly
+- Fix nested circuit extra info
+
+## [0.1.6] 2022-06-22
 ### Fixed
 - Scoped styles now use sass.
 
