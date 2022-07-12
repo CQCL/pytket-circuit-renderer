@@ -183,6 +183,27 @@ const extractControlledCommand = function (controlCommand, controlArgs) {
   return {command: converting.cc, controlArgs: converting.ca};
 }
 
+// Classical Expression
+const formatClassicalExp = function (expression) {
+      let formattedArgs = [];
+      for (let arg of expression.args) {
+        if (typeof arg == "number") formattedArgs.push(arg);  // constant
+        else if (Array.isArray(arg)) formattedArgs.push(`${arg[0]}[${arg[1][0]}]`);  // bit
+        else if ("name" in arg) formattedArgs.push(arg.name);  // bit register
+        else formattedArgs.push(this.formatClassicalExp(arg));  // recursive expression
+      }
+      // Now get the operation display name
+      const op = expression.op.split(".");
+      const operation = (op.length > 1) ? op[1] : op[0];
+      const n = formattedArgs.length;
+
+      // Display the operation differently based on the number of arguments involved
+      // This is so we can write binary operations infix, and omit the brackets for unary or constant operations
+      if (n === 0) return operation;  // -> op
+      else if (n === 1) return `${operation} ${formattedArgs[0]}`;  // -> op exp
+      else if (n === 2) return `(${formattedArgs[0]} ${operation} ${formattedArgs[1]})`;  // -> (exp op exp)
+      else return `${operation}(${formattedArgs})`;  // -> op(exp, ... exp)
+    }
 
 export {
   registerEquality,
@@ -190,4 +211,5 @@ export {
   renderIndexedArgs,
   extractSubCircuit,
   extractControlledCommand,
+  formatClassicalExp,
 };

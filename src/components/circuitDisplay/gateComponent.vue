@@ -1,5 +1,6 @@
 <script>
 import wire from './wire';
+import { formatClassicalExp } from './utils'
 
 export default {
   name: "gate-component",
@@ -85,7 +86,10 @@ export default {
         name = `Range[${op.classical.lower}, ${op.classical.upper}]`;
       }
       if (this.opType === "WASM") {
-        name = op.wasm.func_name;
+        name = `WASM: ${op.wasm.func_name}`;
+      }
+      if (this.opType === "ClassicalExpBox") {
+        name = this.formatClassicalExp(op.box.exp);
       }
 
       // If this should be a spider, return the phase to display.
@@ -139,6 +143,7 @@ export default {
         return false;
       }
     },
+    formatClassicalExp: formatClassicalExp,
   }
 }
 
