@@ -10,8 +10,8 @@ npm install pytket-circuit-renderer
 
 Or include directly in a script tag. Make sure to also load the css.
 ```
-<script type="application/javascript" src="https://unpkg.com/pytket-circuit-renderer@0.1.0/dist/pytket-circuit-renderer.umd.js"></script>
-<link rel="stylesheet" href="https://unpkg.com/pytket-circuit-renderer@0.1.0/dist/pytket-circuit-renderer.css">
+<script type="application/javascript" src="https://unpkg.com/pytket-circuit-renderer@latest/dist/pytket-circuit-renderer.umd.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/pytket-circuit-renderer@latest/dist/pytket-circuit-renderer.css">
 ```
 
 ## Usage
