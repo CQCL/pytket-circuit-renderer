@@ -12,17 +12,19 @@ This is to allow user-facing information to be more easily extracted from this c
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
-### Added 
+### Added
 - QIR support: classical controls, self controls, classical expressions, WASM.
 - Collapse individual classical registers independently.
+- Option to zoom circuits.
+
 ### Test
 - Add sample circuits to test page.
 
 ## [0.1.7] 2022-07-12
 ### Fixed
-- Barrier displays
-- Higher dimensional registers now display correctly
-- Fix nested circuit extra info
+- Barrier displays.
+- Higher dimensional registers now display correctly.
+- Fix nested circuit extra info.
 
 ## [0.1.6] 2022-06-22
 ### Fixed
