@@ -99,13 +99,20 @@ export default  {
         }
         this.embeddedCircuit = circuit;
       }
+    },
+    onWheelZoom (e) {
+      if (e.deltaY < 0 ) {
+        this.zoom = Math.min(1, this.zoom - e.deltaY * 0.01)
+      } else if (e.deltaY > 0) {
+        this.zoom = Math.max(0.2, this.zoom - e.deltaY * 0.01)
+      }
     }
   }
 }
 </script>
 
 <template>
-  <div class="circuit-display-container">
+  <div class="circuit-display-container" @wheel.ctrl.prevent.stop="onWheelZoom">
     <div class="display-options-container" v-if="circuit">
       <div v-for="(val, option) in renderOptions" :key="option">
         <div v-if="option in options"
