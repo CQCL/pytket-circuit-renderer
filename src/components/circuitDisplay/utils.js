@@ -205,6 +205,15 @@ const formatClassicalExp = function (expression) {
       else return `${operation}(${formattedArgs})`;  // -> op(exp, ... exp)
     }
 
+// Display register index in command
+const formatPosStr = function (argPos, posAdjust) {
+  if (typeof posAdjust === "undefined") posAdjust = 0;
+  if (Array.isArray(argPos)) {
+    return argPos.map(pos => pos == -1 ? '-' : (pos + posAdjust)).join(' ');
+  }
+  return argPos + posAdjust;
+}
+
 export {
   registerEquality,
   getIndexedArgs,
@@ -212,4 +221,5 @@ export {
   extractSubCircuit,
   extractControlledCommand,
   formatClassicalExp,
+  formatPosStr,
 };

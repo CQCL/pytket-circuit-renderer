@@ -1,10 +1,20 @@
 <script>
+import { formatPosStr } from './utils'
+
 export default {
   name: "nested-label-layer",
   components: {
   },
   props: {
     args: {type: Array, default: () => []},
+  },
+  computed: {
+    posStrs () {
+      return this.args.map(arg => arg.pos !== -1 ? this.formatPosStr(arg.pos) : '');
+    }
+  },
+  methods: {
+    formatPosStr: formatPosStr,
   }
 }
 </script>
@@ -12,8 +22,8 @@ export default {
 <template>
     <div class="nested-label-layer">
         <slot>
-            <div v-for="(arg, i) in args" :key="i" class="wire-label">
-                [[#arg.pos !== -1 ? arg.pos : '' #]]
+            <div v-for="(posStr, i) in posStrs" :key="i" class="wire-label">
+                [[# posStr #]]
             </div>
         </slot>
     </div>
@@ -27,6 +37,7 @@ export default {
 .nested-label-layer:deep() .wire-label{
     padding: var(--box-margin) 0;
     height: var(--block-height);
+    margin: auto;
 }
 .nested-label-layer.as-height{
     padding: 0;
