@@ -135,7 +135,9 @@ export default  {
         </div>
       </div>
     </div>
-    <circuit-display style="flex-grow: 1" :style="zoomStyling" :circuit="circuit" :render-options="renderOptions"></circuit-display>
+    <div :style="zoomStyling">
+      <circuit-display style="flex-grow: 1" :circuit="circuit" :render-options="renderOptions"></circuit-display>
+    </div>
   </div>
 </template>
 
