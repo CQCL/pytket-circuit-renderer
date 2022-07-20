@@ -1,12 +1,9 @@
 <script>
 import { teleportContainer, teleportTo } from '@/components/teleport/init';
 
-import { registerEquality } from './utils';
-import { CONTROLLED_OPS } from './consts';
-
 import circuitLayer from './circuitLayer';
-import controlledGate from './controlledGate';
-import genericGate from './genericGate';
+import renderCircuitLayers from './renderCircuitLayers';
+import circuitCommand from './command';
 import gateInfo from './gateInfo'
 
 
@@ -19,8 +16,8 @@ export default {
     teleportContainer,
     teleportTo,
     circuitLayer,
-    controlledGate,
-    genericGate,
+    renderCircuitLayers,
+    circuitCommand,
     gateInfo,
   },
   props: {
@@ -39,6 +36,8 @@ export default {
         visible: false,
         closeCallback: null,
       },
+      nRenderedCommands: 0,
+      idCommandRef: undefined,
       condensedRegisters: {
         names: {},
         toggles: {},
@@ -56,12 +55,15 @@ export default {
           },
           bits: this.circuit.bits,
           qubits: this.circuit.qubits,
+          registerOrder: this.circuit.qubits.concat(this.circuit.bits),
+
         }
       }
       return {
         condensedBits: {global: [], names: {}},
         bits: [],
         qubits: [],
+        registerOrder: [],
       };
     },
     activeArgs () {
@@ -88,134 +90,10 @@ export default {
       }
       return [];
     },
-    hasCondensedRegisters () {
-      return Object.values(this.condensedRegisters.toggles).reduce(
-        (isCondensed, toggle) => isCondensed || toggle,
-        false,
-      );
-    },
-    layers () {
-      if (this.circuit) {
-        // Iterate over commands and add id blocks as necessary
-        // Here we only delimit which (qu)bit segments are involved in each command,
-        // then render in a dedicated component.
-        const registerOrder = this.circuitDetails.qubits.concat(this.circuitDetails.bits);
-        const classicalThreshold = this.circuitDetails.qubits.length;
-        let currentPos = 0;
-        let layer = [];
-        let layers = [];
-
-        // Pad with a layer of ID at start
-        layers.push([{
-          command: {args: registerOrder, op: {type: "ID"}},
-          args: registerOrder,
-        }]);
-
-        this.circuit.commands.forEach(command => {
-          // Get the start and end indices for this command.
-          let sortedArgs = command.args
-              .map((arg, pos) => {
-                return {
-                  name: arg,
-                  pos: pos, // index of arg in the command
-                  order: registerOrder.findIndex(reg => registerEquality(reg, arg)), // index of arg in the display order
-                }
-              })
-              .sort((a, b) => {
-                if (a.order > b.order) {
-                  return 1;
-                }
-                if (a.order < b.order) {
-                  return -1;
-                }
-                return 0;
-              });
-          let firstArg = sortedArgs[0].order;
-          let lastArg = sortedArgs[sortedArgs.length - 1].order;
-          let overlappingCondensedRegisters = Object.keys(this.condensedRegisters.order).filter(regName => {
-            const {first, last} = this.condensedRegisters.order[regName];
-            return this.condensedRegisters.toggles[regName] && (
-                    (firstArg <= first && first <= lastArg) || (firstArg <= last && last <= lastArg)
-                )
-          });
-
-          // If we can't fit this command onto the current layer:
-          if (firstArg < currentPos) {
-            // Fill the previous layer with ID so we can start a new one.
-            let args = registerOrder.slice(currentPos)
-            layer.push({
-              command: {args: args, op: {type: "ID"}},
-              args: args,
-            });
-            layers.push(layer);
-            currentPos = 0;
-            layer = [];
-          }
-          // now fill with id up to start of current command.
-          if (currentPos < firstArg) {
-            // If the first register is collapsed, don't include it in the ID op.
-            let adjustedFirstArg = firstArg;
-            if (!this.renderOptions.condenseCBits && this.hasCondensedRegisters) {
-              for (let regName of overlappingCondensedRegisters) {
-                adjustedFirstArg = Math.min(adjustedFirstArg, this.condensedRegisters.order[regName].first);
-              }
-            }
-            let args = registerOrder.slice(
-                currentPos,
-                this.renderOptions.condenseCBits ? Math.min(firstArg, classicalThreshold) : adjustedFirstArg
-            )
-            layer.push({
-              command: {args: args, op: {type: "ID"}},
-              args: args,
-            });
-          }
-
-          // Add in this command
-          layer.push({
-            command: command,
-            args: registerOrder.slice(firstArg, lastArg + 1),
-          });
-
-          // Adjust current pos to next wire to be filled. Wrap around if necessary:
-          currentPos = lastArg + 1 % registerOrder.length;
-          // If condensing specific registers, adjust the end position to the end of the included condensed registers
-          if (!this.renderOptions.condenseCBits && this.hasCondensedRegisters) {
-            for (let regName of overlappingCondensedRegisters) {
-              currentPos = Math.max(currentPos, this.condensedRegisters.order[regName].last + 1);
-            }
-            currentPos %= registerOrder.length;
-          }
-          // If condensing all classical args, and this op was classical, must circle around:
-          if (this.renderOptions.condenseCBits && currentPos > classicalThreshold) {
-            currentPos = 0;
-          }
-          // If we wrapped around, push the layer we just completed
-          if (currentPos === 0) {
-            layers.push(layer);
-            layer = [];
-          }
-        });
-
-        // Complete the last layer.
-        if (currentPos > 0) {
-          let args = registerOrder.slice(currentPos, registerOrder.length);
-          layer.push({
-            command: {args: args, op: {type: "ID"}},
-            args: args,
-          });
-          layers.push(layer);
-        }
-
-        // Pad with a layer of ID at end
-        layers.push([{
-          command: {args: registerOrder, op: {type: "ID"}},
-          args: registerOrder,
-        }]);
-
-        return layers
-      }
-      return [];
-    },
+    commandRefs () {
+      // Force update each time a new command gets rendered.
+      return this.nRenderedCommands > 0 ? this.$refs.commands : [];
+    }
   },
   watch: {
     circuit (newCircuit) {
@@ -237,9 +115,6 @@ export default {
     this.infoModal.teleport.names[this.infoModal.teleport.id] = this.$refs.infoModals;
   },
   methods: {
-    renderControlGate (opType) {
-      return CONTROLLED_OPS.includes(opType) && !["CNOT", "CX", "CZ"].includes(opType);
-    },
     initCondensedRegisters () {
       // Add a condensedRegister for each classical register name present in the circuit.
       let condensedRegisterNames = {};
@@ -278,6 +153,38 @@ export default {
     :class="{condensed: renderOptions.condensed, 'circuit-preview circuit_variables': !renderOptions.nested}"
   >
     <div v-if="circuit" tabindex="0" :class="{'nested-circuit-container': renderOptions.condensed}">
+      <!--  Pre-processing for the commands we want to display  -->
+      <div style="display:none">
+        <circuit-command
+            :ref="'command-id'"
+            :command="{op: {type: 'ID'}, args: circuitDetails.registerOrder}"
+            :register-order="circuitDetails.registerOrder"
+            :classicalThreshold="circuitDetails.qubits.length"
+            :render-options="renderOptions"
+            :condensed-registers="condensedRegisters"
+            @mounted="idCommandRef = $refs['command-id']"
+        ></circuit-command>
+        <circuit-command v-for="(command, j) in circuit.commands" :key="j"
+            :ref="'commands'"
+            :command="command"
+            :register-order="circuitDetails.registerOrder"
+            :classicalThreshold="circuitDetails.qubits.length"
+            :render-options="renderOptions"
+            :condensed-registers="condensedRegisters"
+            @mounted="nRenderedCommands++"
+        >
+          <template #gate-info>
+            <gate-info
+                :op="command.op"
+                :teleport-id="infoModal.teleport.id"
+                :teleport-parent="$refs.teleportParent"
+                :render-options="renderOptions"
+                @register-teleport="registerTeleport">
+            </gate-info>
+          </template>
+        </circuit-command>
+      </div>
+
       <div :class="{'circuit-inner-scroll': renderOptions.condensed}">
         <div class="circuit-container" :class="{nested: renderOptions.nested || renderOptions.condensed, zx: renderOptions.zxStyle}">
           <circuit-layer
@@ -289,31 +196,15 @@ export default {
               @toggle="updateCondensedRegisterToggles">
           </circuit-layer>
 
-          <circuit-layer v-for="(layer, i) in layers" :key="i" :nested="renderOptions.nested">
-            <div v-for="(command, j) in layer" :key="j" :data-command="command.command.op.type">
-              <controlled-gate v-if="renderControlGate(command.command.op.type)"
-                  :command="command.command"
-                  :args="command.args"
-                  :circuitDetails="circuitDetails"
-                  :render-options="renderOptions"
-                  :condensed-registers="condensedRegisters.toggles">
-              </controlled-gate>
-              <generic-gate v-else
-                  :command="command.command"
-                  :args="command.args"
-                  :circuitDetails="circuitDetails"
-                  :render-options="renderOptions"
-                  :condensed-registers="condensedRegisters.toggles">
-              </generic-gate>
-              <gate-info
-                  :op="command.command.op"
-                  :teleport-id="infoModal.teleport.id"
-                  :teleport-parent="$refs.teleportParent"
-                  :render-options="renderOptions"
-                  @register-teleport="registerTeleport">
-              </gate-info>
-            </div>
-          </circuit-layer>
+          <!--  Circuit commands will actually render in here:  -->
+          <div v-if="commandRefs.length === 0">Loading...</div>
+          <render-circuit-layers v-else
+              :register-order="circuitDetails.registerOrder"
+              :command-refs="commandRefs"
+              :id-command-ref="idCommandRef"
+              :render-options="renderOptions"
+              :condensed-registers="condensedRegisters.toggles">
+          </render-circuit-layers>
 
           <circuit-layer
               :nested="renderOptions.nested"
