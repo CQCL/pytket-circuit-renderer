@@ -1,5 +1,5 @@
 <script>
-import { registerEquality, getIndexedArgs, renderIndexedArgs, extractSubCircuit } from './utils';
+import { renderIndexedArgs, extractSubCircuit } from './utils';
 
 import wire from './wire';
 import nestedLabelLayer from './nestedLabelLayer';
@@ -19,19 +19,18 @@ export default {
     gateComponent,
   },
   props: {
-    args: {type: Array, required: true},
+    indexedArgs: {type: Array, required: true},
     command: {type: Object, required: true},
     linkVertical: {type: Boolean, default: false},
     split: {type: Boolean, default: false},
-    circuitDetails: {type: Object, required: true},
     renderOptions: {type: Object, required: true},
     condensedRegisters: {type: Object, required: true},
+    posAdjust: {type: Number, default: 0},
   },
   computed: {
     opType () {
       return this.command.op.type;
     },
-    indexedArgs: getIndexedArgs,
     renderIndexedArgs: renderIndexedArgs,
     special2qGate () {
       // Note: we will only have a controlled operation here if we need to render it specially.
@@ -53,11 +52,6 @@ export default {
   beforeCreate () {
     this.$options.components["circuit-display"] = require('./circuitDisplay.vue').default;
   },
-  methods: {
-    isClassicalWire (arg) {
-      return this.circuitDetails.qubits.findIndex(reg => registerEquality(reg, arg)) === -1;
-    },
-  },
 }
 
 </script>
@@ -77,7 +71,7 @@ export default {
       <div v-for="(arg, i) in renderIndexedArgs" :key="i"
           class="gate_container nested" style="height:var(--block-height)"
       >
-        <div v-if="!arg.flags.last" class="link link-bottom" :class="{classical: opType === 'Measure'}"></div>
+        <div v-if="!arg.flags.first" class="link link-top" :class="{classical: opType === 'Measure'}"></div>
         <div v-if="arg.flags.first && linkVertical" class="link link-top" :class="{'classical': arg.flags.classical}"></div>
 
         <wire class="wire_in flex_wire" :classical="arg.flags.classical" :condensed="arg.flags.condensed"></wire>
@@ -104,7 +98,7 @@ export default {
         </div>
 
         <div v-if="opType === 'Measure'">
-          <gate-measure v-if="arg.pos === 0" class="gate gate_connection"></gate-measure>
+          <gate-measure v-if="arg.pos + posAdjust === 0" class="gate gate_connection"></gate-measure>
           <div v-else class="gate gate_connection"></div>
         </div>
 
@@ -137,6 +131,7 @@ export default {
     <div v-if="opType !== 'ID' && !special2qGate && !nestedCircuitGate">
       <gate-component v-for="(arg, i) in renderIndexedArgs" :key="i"
               :arg="arg"
+              :pos-adjust="posAdjust"
               :split="split"
               :command="command"
               :link-vertical="linkVertical"

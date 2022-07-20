@@ -1,6 +1,6 @@
 <script>
 import wire from './wire';
-import { formatClassicalExp } from './utils'
+import { formatClassicalExp, formatPosStr } from './utils'
 
 export default {
   name: "gate-component",
@@ -9,6 +9,7 @@ export default {
   },
   props: {
     arg: {type: Object, required: true},
+    posAdjust: {type: Number, required: true},
     split: {type: Boolean, default: false},
     command: {type: Object, required: true},
     linkVertical: {type: Boolean, default: false},
@@ -114,6 +115,9 @@ export default {
       return params.length > 0
           ? (params.length > 3 ? `(${params.slice(0,4)}...)` : `(${params})`)
           : "";
+    },
+    posStr () {
+      return this.formatPosStr(this.arg.pos, this.posAdjust);
     }
   },
   methods: {
@@ -144,6 +148,7 @@ export default {
       }
     },
     formatClassicalExp: formatClassicalExp,
+    formatPosStr: formatPosStr,
   }
 }
 
@@ -166,10 +171,10 @@ export default {
       <div class="gate_container" :class="[gateColor, {'generic': !arg.flags.single}]">
         <div class="gate" :class="specialGateClasses">
           <span v-if="arg.pos !== -1 && !arg.flags.single" class="wire-label">
-            [[# Array.isArray(arg.pos) ? arg.pos.map(pos => pos == -1 ? '-' : pos.toString()).join(' ') : arg.pos #]]
+            [[# posStr #]]
           </span>
           <span :class="specialGateContentClasses" :style="[opType === 'Reset'? {margin: 0} : {}]">
-            [[# arg.flags.last ? name : '' #]]
+            [[# arg.flags.last || split ? name : '' #]]
           </span>
         </div>
         <div v-if="linkVertical" class="link link-top" :class="{'classical': arg.flags.classical}"></div>
