@@ -107,80 +107,83 @@ const extractSubCircuit = function (operation) {
 }
 
 // Controlled commands
-const extractControlledCommand = function (controlCommand, controlArgs) {
-  function convert (command, args) {
+const extractControlledCommand = function (controlCommand, argDetails) {
+  function convert (command, details) {
+    const args = [];
+    let cc;
     // Generate a command for the nested op.
     // Overload for when we only care about the op, and set args to false.
     if (["CX", "CY", "CZ", "CH", "CSWAP",
       "CRx", "CRy", "CRz", "CU1", "CU3",
       "CV", "CVdg", "CSx", "CSXdg"].includes(command.op.type)) {
       args.push(command.args[0]);
-      return {
-        cc: {
-          op: {
-            type: command.op.type.slice(1),
-            params: command.op.params,
-          },
-          args: command.args ? command.args.slice(1) : false,
+      cc = {
+        op: {
+          type: command.op.type.slice(1),
+          params: command.op.params,
         },
-        ca: args,
+        args: command.args ? command.args.slice(1) : false,
       };
     }
     if (command.op.type === "CCX") {
       args.push(...command.args.slice(0, 2));
-      return {
-        cc: {
-          op: {type: "X"},
-          args: command.args ? command.args.slice(2) : false,
-        },
-        ca: args,
+      cc = {
+        op: {type: "X"},
+        args: command.args ? command.args.slice(2) : false,
       };
     }
     if (["CnRy", "CnX"].includes(command.op.type)) {
       args.push(...command.args.slice(0, command.args.length - 1));
-      return {
-        cc: {
-          op: {
-            type: command.op.type.slice(2),
-            params: command.op.params
-          },
-          args: command.args ? [command.args[command.args.length - 1]] : false,
+      cc = {
+        op: {
+          type: command.op.type.slice(2),
+          params: command.op.params
         },
-        ca: args,
+        args: command.args ? [command.args[command.args.length - 1]] : false,
       };
     }
     if (["Control", "QControlBox"].includes(command.op.type)) {
       args.push(...command.args.slice(0, command.op.box.n_controls));
-      return {
-        cc: {
-          op: command.op.box.op,
-          args: command.args ? command.args.slice(command.op.box.n_controls) : false,
-        },
-        ca: args,
-      }
+      cc = {
+        op: command.op.box.op,
+        args: command.args ? command.args.slice(command.op.box.n_controls) : false,
+      };
     }
     if (["Condition", "Conditional"].includes(command.op.type)) {
       args.push(...command.args.slice(0, command.op.conditional.width));
-      return {
-        cc: {
-          op: command.op.conditional.op,
-          args: command.args ? command.args.slice(command.op.conditional.width) : false
-        },
-        ca: args,
-      }
+      cc = {
+        op: command.op.conditional.op,
+        args: command.args ? command.args.slice(command.op.conditional.width) : false
+      };
     }
-    return {cc: {op: {type: "Unknown"}, args: command.args ? [] : false}, ca: args};
+    // Mark control args
+    if (details) {
+      args.forEach(arg => {
+        if (arg in details) details[arg].control = true
+        else details[arg] = {control: true}
+      });
+    }
+
+    return {cc: cc ? cc : {op: {type: "Unknown"}, args: command.args ? [] : false}, details: details};
   }
 
   let converting = {
     cc: { ...controlCommand},
-    ca: [...controlArgs],
+    details: argDetails ? {...argDetails} : false,
   };
   while (CONTROLLED_OPS.includes(converting.cc.op.type)) {
-    converting = convert(converting.cc, converting.ca);
+    converting = convert(converting.cc, converting.details);
   }
 
-  return {command: converting.cc, controlArgs: converting.ca};
+  // mark which args are in the controlled command
+  if (argDetails) {
+    converting.cc.args.forEach(arg => {
+      if (arg in converting.details) converting.details[arg].controlled = true
+      else converting.details[arg] = {controlled: true}
+    });
+  }
+
+  return {command: converting.cc, argDetails: converting.details};
 }
 
 // Classical Expression
