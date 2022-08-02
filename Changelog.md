@@ -15,6 +15,9 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ### Internal
 - Refactor code to optimise rendering computations.
 
+### Added
+- Option to export rendered circuits as images.
+
 ## [0.2.0] 2022-07-13
 ### Added
 - QIR support: classical controls, self controls, classical expressions, WASM.
