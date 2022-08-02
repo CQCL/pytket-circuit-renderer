@@ -42,7 +42,7 @@ export default {
         names: {},
         toggles: {},
         order: {},
-      }
+      },
     }
   },
   computed: {
@@ -93,7 +93,7 @@ export default {
     commandRefs () {
       // Force update each time a new command gets rendered.
       return this.nRenderedCommands > 0 ? this.$refs.commands : [];
-    }
+    },
   },
   watch: {
     circuit (newCircuit) {
@@ -144,6 +144,13 @@ export default {
     registerTeleport (...args) {
       this.$refs.teleportParent.registerTeleport(...args);
     },
+    getRenderedCircuitEl () {
+      return {
+        circuit: this.$refs.renderedCircuit,
+        width: this.$refs.renderedCircuitDimensions.clientWidth,
+        height: this.$refs.renderedCircuitDimensions.clientHeight,
+      }
+    }
   }
 }
 </script>
@@ -186,7 +193,9 @@ export default {
       </div>
 
       <div :class="{'circuit-inner-scroll': renderOptions.condensed}">
-        <div class="circuit-container" :class="{nested: renderOptions.nested || renderOptions.condensed, zx: renderOptions.zxStyle}">
+        <div ref="renderedCircuit">
+          <div  ref="renderedCircuitDimensions" class="circuit-container"
+             :class="{nested: renderOptions.nested || renderOptions.condensed, zx: renderOptions.zxStyle}">
           <circuit-layer
               :nested="renderOptions.nested"
               :qubits="true"
@@ -214,6 +223,7 @@ export default {
               :condensed-registers="renderOptions.recursive ? {} : condensedRegisters.toggles"
               @toggle="updateCondensedRegisterToggles">
           </circuit-layer>
+        </div>
         </div>
       </div>
     </div>

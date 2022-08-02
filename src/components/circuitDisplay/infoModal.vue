@@ -58,6 +58,9 @@ export default {
       this.modalHeight = this.$refs.modal.clientHeight;
     })
   },
+  updated () {
+    this.onResize();
+  },
   beforeUnmount() {
     window.removeEventListener('resize', this.onResize);
   },
