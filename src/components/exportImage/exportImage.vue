@@ -66,7 +66,7 @@ export default {
       return {
         cacheBust: true,
         quality: this.options.quality.value,
-        bgcolor: this.options.fileType.value === "png" ? "transparent" : "#ffffff",
+        bgcolor: this.options.fileType.value === "jpeg" ? "#ffffff" : "transparent",
         ...this.resolution,
         style: {
           transform: `scale(${this.options.scale.value})`,
