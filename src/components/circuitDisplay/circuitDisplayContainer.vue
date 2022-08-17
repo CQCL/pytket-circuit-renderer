@@ -137,7 +137,7 @@ export default  {
 </script>
 
 <template>
-  <div class="circuit-display-container" @wheel.ctrl.prevent.stop="onWheelZoom">
+  <div class="circuit-display-container theme_variables" @wheel.ctrl.prevent.stop="onWheelZoom">
     <div class="display-options-container" v-if="circuit">
       <div v-for="(val, option) in renderOptions" :key="option">
         <div v-if="option in options"
@@ -193,19 +193,6 @@ export default  {
   display: flex;
   position: relative;
   padding-top: 3.5em;
-  font-family: "roboto", system-ui, sans-serif;
-  background: var(--main-bg);
-  --accent-col: green;
-  --accent-col-fill: darkseagreen;
-  --accent-col-alt: #aca;
-  --accent-col-emph: limegreen;
-  --accent-col-overlay: rgba(130,255,140,0.2);
-  --accent-col-outline: rgba(30, 250, 30,0.2);
-  --main-col: black;
-  --mid-col: #bbb;
-  --faint-col: #eee;
-  --faint-col-overlay: rgba(0, 0, 0, 0.05);
-  --main-bg: white;
 }
 
 .display-options-container {
@@ -224,172 +211,5 @@ export default  {
 </style>
 
 <style lang="scss">
-.circuit-display-container {
-  .icon {
-    margin-right: 0.3em;
-    padding: 0.4em;
-    height: 1em;
-    width: 1em;
-    border-radius: 10%;
-    border: 1px solid var(--mid-col);
-    color: var(--main-col);
-    cursor: pointer;
-  }
-
-  .icon.active {
-    border-color: var(--accent-col-emph);
-    box-shadow: 0 0 0 3px var(--accent-col-overlay) inset;
-  }
-
-  .icon.disabled {
-    color: var(--mid-col);
-    border-color: var(--mid-col);
-    box-shadow: none;
-    cursor: default;
-  }
-
-  .icon.active.disabled {
-    box-shadow: 0 0 0 3px var(--faint-col-overlay) inset;
-  }
-
-  .icon > svg {
-    height: 100%;
-    width: 100%;
-  }
-
-  .row {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    padding: 10px;
-    border-bottom: 1px solid var(--faint-col);
-    position: relative;
-  }
-
-  .row.paras {
-    flex-direction: column;
-    text-align: left;
-    align-content: stretch;
-  }
-
-  .row-item {
-    flex-grow: 1
-  }
-
-  .row-item-l {
-    text-align: left;
-    padding-right: 5px;
-  }
-
-  .row-item-c {
-    text-align: center;
-    padding: 0 5px;
-  }
-
-  .row-item-r {
-    text-align: right;
-    padding-left: 5px;
-  }
-
-  .row-heading {
-    font-weight: bold;
-    margin-top: 20px;
-    border-bottom: 2px solid var(--accent-col);
-  }
-
-  .row-sub-heading {
-    border-color: var(--accent-col-emph);
-    width: calc(100% - 20px);
-  }
-
-  :focus-visible {
-    outline: none;
-    box-shadow: inset 0 0 0 6px rgba(30, 250, 30, .2);
-  }
-
-  :focus {
-    outline: none;
-    box-shadow: inset 0 0 0 6px rgba(30, 250, 30, .2);
-  }
-
-  button:focus-visible,
-  .button:focus-visible {
-    box-shadow: 0 0 0 6px rgba(30, 250, 30, .2);
-  }
-
-  button:focus,
-  .button:focus {
-    box-shadow: 0 0 0 6px rgba(30, 250, 30, .2);
-  }
-
-  button,
-  .button,
-  [type=button],
-  [type=reset],
-  [type=submit] {
-    padding: 10px;
-    cursor: pointer;
-    border-radius: 4px;
-    border: none;
-    transition: background-color 0.5s ease;
-    font: 400 13.3333px Arial;
-  }
-
-  button:hover, button:focus,
-  .button:hover, .button:focus,
-  [type=button]:hover, [type=button]:focus,
-  [type=reset]:hover, [type=reset]:focus,
-  [type=submit]:hover, [type=submit]:focus {
-    background: var(--accent-col-fill);
-  }
-
-  .hover-highlight tr:nth-child(2n+1) {
-    background: var(--fainter-col-overlay);
-  }
-
-  .no-hover-highlight tr:nth-child(2n+1) {
-    background: revert;
-  }
-
-  td, th {
-    padding: 10px;
-    position: relative;
-  }
-
-  .complex-number {
-    padding: 10px;
-  }
-
-  .complex-number:nth-child(2n+1) {
-    background: rgba(0, 0, 0, 0.1);
-  }
-
-  .matrix_container {
-    border: 2px solid var(--mid-col);
-    border-top: 0;
-    border-bottom: 0;
-    margin: auto;
-    border-collapse: collapse;
-    text-align: center;
-  }
-
-  .list {
-    flex-wrap: wrap;
-    justify-content: space-evenly;
-    align-items: stretch;
-    padding: 0;
-  }
-
-  .list > * {
-    margin: 10px;
-  }
-
-  .list > .row-sub-heading {
-    margin: 10px 0;
-  }
-
-  .chart-list-item {
-    display: inline-block;
-  }
-}
+@import "@/theme.scss";
 </style>
