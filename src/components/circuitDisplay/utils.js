@@ -190,25 +190,41 @@ const extractControlledCommand = function (controlCommand, argDetails) {
 
 // Classical Expression
 const formatClassicalExp = function (expression) {
-      let formattedArgs = [];
-      for (let arg of expression.args) {
-        if (typeof arg == "number") formattedArgs.push(arg);  // constant
-        else if (Array.isArray(arg)) formattedArgs.push(`${arg[0]}[${arg[1][0]}]`);  // bit
-        else if ("name" in arg) formattedArgs.push(arg.name);  // bit register
-        else formattedArgs.push(this.formatClassicalExp(arg));  // recursive expression
-      }
-      // Now get the operation display name
-      const op = expression.op.split(".");
-      const operation = (op.length > 1) ? op[1] : op[0];
-      const n = formattedArgs.length;
+  const formatting = [{ exp: expression, start: 0 }]
+  const formattedArgs = []
+  let pos = 0
 
-      // Display the operation differently based on the number of arguments involved
-      // This is so we can write binary operations infix, and omit the brackets for unary or constant operations
-      if (n === 0) return operation;  // -> op
-      else if (n === 1) return `${operation} ${formattedArgs[0]}`;  // -> op exp
-      else if (n === 2) return `(${formattedArgs[0]} ${operation} ${formattedArgs[1]})`;  // -> (exp op exp)
-      else return `${operation}(${formattedArgs})`;  // -> op(exp, ... exp)
+  while (pos < formatting.length) {
+    let { exp, start } = formatting[pos]
+    // Get the arg display names
+    for (const arg of exp.args) {
+      if (typeof arg === 'number') formattedArgs.splice(start, 0, arg) // constant
+      else if (Array.isArray(arg)) formattedArgs.splice(start, 0, `${arg[0]}[${arg[1][0]}]`) // bit
+      else if ('name' in arg) formattedArgs.splice(start, 0, arg.name) // bit register
+      else formatting.push({ exp: arg, start }) // recursive expression
+      start++
     }
+    pos++
+  }
+  while (formatting.length > 0) {
+    const { exp, start } = formatting.pop()
+    // Get the operation display name
+    const op = exp.op.split('.')
+    const operation = (op.length > 1) ? op[1] : op[0]
+    const n = exp.args.length
+
+    // Replace the arg displays with the combined operation display name.
+    // Display the operation differently based on the number of arguments involved
+    // This is so we can write binary operations infix, and omit the brackets for unary or constant operations
+    const args = formattedArgs.splice(start, n)
+    if (n === 0) formattedArgs.splice(start, 0, operation) // -> op
+    else if (n === 1) formattedArgs.splice(start, 0, `${operation} ${args[0]}`) // -> op exp
+    else if (n === 2) formattedArgs.splice(start, 0, `(${args[0]} ${operation} ${args[1]})`) // -> (exp op exp)
+    else formattedArgs.splice(start, 0, `${operation}(${args})`) // -> op(exp, ... exp)
+  }
+
+  return formattedArgs[0]
+}
 
 // Display register index in command
 const formatPosStr = function (argPos, posAdjust) {
