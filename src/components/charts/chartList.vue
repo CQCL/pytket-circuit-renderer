@@ -1,11 +1,11 @@
 <script>
 export default {
-  name: "chart-list",
+  name: 'chart-list',
   delimiters: ['[[#', '#]]'],
   props: {
-    chart: {type: Array, required: true},
-    title: {type: String, default: ""},
-    displayTitle: {type: Boolean, default: true},
+    chart: { type: Array, required: true },
+    title: { type: String, default: '' },
+    displayTitle: { type: Boolean, default: true }
   }
 }
 </script>

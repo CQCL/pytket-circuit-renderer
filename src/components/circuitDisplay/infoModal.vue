@@ -1,12 +1,12 @@
 <script>
 
 export default {
-  name: "info-modal",
+  name: 'info-modal',
   props: {
-    modelValue: {type: Boolean, required: true},
+    modelValue: { type: Boolean, required: true }
   },
-  emits: ["update:modelValue"],
-  data() {
+  emits: ['update:modelValue'],
+  data () {
     return {
       width: window.innerWidth,
       height: window.innerHeight,
@@ -14,65 +14,65 @@ export default {
       modalHeight: 200,
       styles: {
         infoModal: {
-          position: "fixed",
+          position: 'fixed',
           top: 0,
           bottom: 0,
           left: 0,
-          right: 0,
+          right: 0
         },
         infoModalContainer: {
-          position: "absolute",
-          overflow: "auto",
-          padding: "0 20px 20px",
-          borderRadius: "5px",
-          boxShadow: "0px 5px 20px -10px black",
-          background: "var(--main-bg, #fff)",
+          position: 'absolute',
+          overflow: 'auto',
+          padding: '0 20px 20px',
+          borderRadius: '5px',
+          boxShadow: '0px 5px 20px -10px black',
+          background: 'var(--main-bg, #fff)'
         },
         infoModalBackdrop: {
-          position: "absolute",
+          position: 'absolute',
           top: 0,
           bottom: 0,
           left: 0,
           right: 0,
-          background: "black",
-          opacity: 0.1,
+          background: 'black',
+          opacity: 0.1
         }
       }
-    };
-  },
-  computed: {
-    modalStyle() {
-      return {
-        "max-height": `calc(${this.height}px - 5%)`,
-        "max-width": `calc(${this.width}px - 5%)`,
-        left: `calc(50% - ${this.modalWidth / 2}px)`,
-        top: `calc(50% - ${this.modalHeight / 2}px)`,
-      };
     }
   },
-  mounted() {
+  computed: {
+    modalStyle () {
+      return {
+        'max-height': `calc(${this.height}px - 5%)`,
+        'max-width': `calc(${this.width}px - 5%)`,
+        left: `calc(50% - ${this.modalWidth / 2}px)`,
+        top: `calc(50% - ${this.modalHeight / 2}px)`
+      }
+    }
+  },
+  mounted () {
     this.$nextTick(() => {
-      window.addEventListener('resize', this.onResize);
+      window.addEventListener('resize', this.onResize)
       // Init tracking the current size of the modal
-      this.modalWidth = this.$refs.modal.clientWidth;
-      this.modalHeight = this.$refs.modal.clientHeight;
+      this.modalWidth = this.$refs.modal.clientWidth
+      this.modalHeight = this.$refs.modal.clientHeight
     })
   },
   updated () {
-    this.onResize();
+    this.onResize()
   },
-  beforeUnmount() {
-    window.removeEventListener('resize', this.onResize);
+  beforeUnmount () {
+    window.removeEventListener('resize', this.onResize)
   },
   methods: {
-    closeModal() {
-      this.$emit("update:modelValue", false);
+    closeModal () {
+      this.$emit('update:modelValue', false)
     },
-    onResize() {
-      this.height = window.innerHeight;
-      this.width = window.innerWidth;
-      this.modalWidth = this.$refs.modal.clientWidth;
-      this.modalHeight = this.$refs.modal.clientHeight;
+    onResize () {
+      this.height = window.innerHeight
+      this.width = window.innerWidth
+      this.modalWidth = this.$refs.modal.clientWidth
+      this.modalHeight = this.$refs.modal.clientHeight
     }
   }
 }

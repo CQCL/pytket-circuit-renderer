@@ -1,17 +1,17 @@
 <script>
-export default  {
-  name: "circuit-layer",
-  emits: ["toggle"],
+export default {
+  name: 'circuit-layer',
+  emits: ['toggle'],
   props: {
-    qubits: {type: Boolean, default: false},
-    nested: {type: Boolean, default: false},
-    argList: {type: Array, default () {return []}},
-    condensedRegisters: {type: Object, default () {return {}}},
+    qubits: { type: Boolean, default: false },
+    nested: { type: Boolean, default: false },
+    argList: { type: Array, default () { return [] } },
+    condensedRegisters: { type: Object, default () { return {} } }
   },
   methods: {
     toggleRegister (name) {
       if (name in this.condensedRegisters) {
-        this.$emit("toggle", name);
+        this.$emit('toggle', name)
       }
     }
   }

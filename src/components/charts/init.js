@@ -1,4 +1,4 @@
-import chartMatrix from './chartMatrix';
-import chartList from './chartList';
+import chartMatrix from './chartMatrix'
+import chartList from './chartList'
 
-export { chartList, chartMatrix };
+export { chartList, chartMatrix }

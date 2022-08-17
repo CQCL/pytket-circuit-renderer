@@ -2,112 +2,112 @@
 import domToImage from 'dom-to-image'
 
 export default {
-  name: "export-image",
-  emits: ["updated"],
+  name: 'export-image',
+  emits: ['updated'],
   props: {
-    defaultFileName: {type: String, required: false},
-    elementToRender: {type: Object, required: true},
-    baseDimensions: {type: Object, default: () =>  {return {width: false, height: false}}}
+    defaultFileName: { type: String, required: false },
+    elementToRender: { type: Object, required: true },
+    baseDimensions: { type: Object, default: () => { return { width: false, height: false } } }
 
   },
   data () {
     return {
       options: {
         fileType: {
-          title: "File type",
-          value: "png",
+          title: 'File type',
+          value: 'png',
           options: {
-            PNG: "png",
-            JPEG: "jpeg",
-            SVG: "svg",
-          },
+            PNG: 'png',
+            JPEG: 'jpeg',
+            SVG: 'svg'
+          }
         },
         quality: {
-          title: "Quality",
+          title: 'Quality',
           value: 1.0,
           options: {
-            "25%": 0.25,
-            "50%": 0.5,
-            "75%": 0.75,
-            "100%": 1.0,
-          },
+            '25%': 0.25,
+            '50%': 0.5,
+            '75%': 0.75,
+            '100%': 1.0
+          }
         },
         scale: {
-          title: "Resolution",
+          title: 'Resolution',
           value: 1.0,
           options: {
-            "1x": 1.0,
-            "2x": 2.0,
-            "4x": 4.0,
-            "8x": 8.0,
-          },
-        },
+            '1x': 1.0,
+            '2x': 2.0,
+            '4x': 4.0,
+            '8x': 8.0
+          }
+        }
       },
       methods: {
-        png: "toPng",
-        jpeg: "toJpeg",
-        svg: "toSvg",
+        png: 'toPng',
+        jpeg: 'toJpeg',
+        svg: 'toSvg'
       },
       imageUrl: undefined,
-      fileName: this.defaultFileName ? this.defaultFileName : "image",
-      rendering: false,
+      fileName: this.defaultFileName ? this.defaultFileName : 'image',
+      rendering: false
     }
   },
   computed: {
     resolution () {
-      const width = this.baseDimensions.width ? this.baseDimensions.width : this.elementToRender?.clientWidth;
-      const height = this.baseDimensions.height ? this.baseDimensions.height : this.elementToRender?.clientHeight;
+      const width = this.baseDimensions.width ? this.baseDimensions.width : this.elementToRender?.clientWidth
+      const height = this.baseDimensions.height ? this.baseDimensions.height : this.elementToRender?.clientHeight
       return {
         width: Math.ceil(width * this.options.scale.value),
-        height: Math.ceil(height * this.options.scale.value),
-      };
+        height: Math.ceil(height * this.options.scale.value)
+      }
     },
     renderOptions () {
       return {
         cacheBust: true,
         quality: this.options.quality.value,
-        bgcolor: this.options.fileType.value === "jpeg" ? "#ffffff" : "transparent",
+        bgcolor: this.options.fileType.value === 'jpeg' ? '#ffffff' : 'transparent',
         ...this.resolution,
         style: {
           transform: `scale(${this.options.scale.value})`,
-          transformOrigin: "top left",
+          transformOrigin: 'top left'
         }
-      };
+      }
     }
   },
   updated () {
     // If this is in a modal we need to update it explicitly when the image changes.
-    this.$nextTick(() => this.$emit("updated", this.imageUrl));
+    this.$nextTick(() => this.$emit('updated', this.imageUrl))
   },
   methods: {
     download () {
       if (this.imageUrl && this.fileName) {
-        const link = document.createElement('a');
-        link.download = `${this.fileName}.${this.options.fileType.value}`;
-        link.href = this.imageUrl;
-        link.click();
-        link.remove();
+        const link = document.createElement('a')
+        link.download = `${this.fileName}.${this.options.fileType.value}`
+        link.href = this.imageUrl
+        link.click()
+        link.remove()
       }
     },
     async renderImage () {
       try {
-        this.rendering = true;
+        this.rendering = true
         const dataUrl = await domToImage[this.methods[this.options.fileType.value]](
-            this.elementToRender,
-            this.renderOptions
-        );
-        this.imageUrl = dataUrl;
-        this.rendering = false;
+          this.elementToRender,
+          this.renderOptions
+        )
+        this.imageUrl = dataUrl
+        this.rendering = false
       } catch (error) {
-        console.error('render error!', error);
-        this.rendering = false;
+        console.error('render error!', error)
+        this.rendering = false
       }
     },
     resetState () {
-      this.imageUrl = undefined;
-      this.options.fileType.value = "png";
-      this.options.scale.value = 1.0;
-      this.options.quality.value = 1.0;
+      this.imageUrl = undefined
+      this.options.fileType.value = 'png'
+      this.options.scale.value = 1.0
+      this.options.quality.value = 1.0
     }
   }
 }
