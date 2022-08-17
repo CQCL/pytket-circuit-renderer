@@ -5,7 +5,6 @@ module.exports = defineConfig({
     devServer: {
       framework: 'vue-cli',
       bundler: 'webpack',
-      webpackConfig: require('@vue/cli-service/webpack.config.js')
     }
   }
 })
