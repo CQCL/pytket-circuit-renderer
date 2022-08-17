@@ -13,7 +13,10 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## Unreleased
 ### Fixed
-- White background added in for dark theme compatibility
+- White background added in for dark theme compatibility.
+
+### Test
+- Add cypress and storybook, basic tests.
 
 ### Internal
 - Refactor code to optimise rendering computations.
