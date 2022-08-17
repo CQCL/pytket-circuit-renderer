@@ -1,6 +1,6 @@
 <script>
 export default {
-  name: "gate-swap"
+  name: 'gate-swap'
 }
 </script>
 

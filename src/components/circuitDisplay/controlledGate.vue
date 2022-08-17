@@ -1,94 +1,94 @@
 <script>
-import { registerEquality, renderIndexedArgs, extractControlledCommand } from './utils';
+import { registerEquality, renderIndexedArgs, extractControlledCommand } from './utils'
 
-import wire from './wire';
-import genericGate from './genericGate';
+import wire from './wire'
+import genericGate from './genericGate'
 
 export default {
-  name: "controlled-gate",
+  name: 'controlled-gate',
   components: {
     wire,
-    genericGate,
+    genericGate
   },
   props: {
-    indexedArgs: {type: Array, required: true},
-    command: {type: Object, required: true},
-    renderOptions: {type: Object, required: true},
-    condensedRegisters: {type: Object, required: true},
+    indexedArgs: { type: Array, required: true },
+    command: { type: Object, required: true },
+    renderOptions: { type: Object, required: true },
+    condensedRegisters: { type: Object, required: true }
   },
   computed: {
     opType () {
-      return this.command.op.type;
+      return this.command.op.type
     },
     nestedRenderOptions () {
-      let newOptions = {...this.renderOptions};
-      newOptions.recursive = false;
-      return newOptions;
+      const newOptions = { ...this.renderOptions }
+      newOptions.recursive = false
+      return newOptions
     },
     controlFlags () {
       // update the previously computed arg details.
-      let flags = {...this.controlledCommand.argDetails};
-      let inQuantumOp = false; // Display the connecting control wire as classical if there are no quantum controls.
-      let lastControl = false;  // Track which control wire is displayed last.
+      const flags = { ...this.controlledCommand.argDetails }
+      let inQuantumOp = false // Display the connecting control wire as classical if there are no quantum controls.
+      let lastControl = false // Track which control wire is displayed last.
       let nControlled = 0 // re compute the bounds for the controlled op.
       for (const argRef of this.renderIndexedArgs.slice().reverse()) {
-        const arg = JSON.parse(JSON.stringify(argRef));  // deep copy so that we can have an updated copy of the flags fo the controled op.
+        const arg = JSON.parse(JSON.stringify(argRef)) // deep copy so that we can have an updated copy of the flags fo the controled op.
         // Iterate over backwards so we can easily identify the first quantum bit involved.
-        inQuantumOp = inQuantumOp || (!arg.flags.classical && arg.pos > -1);
+        inQuantumOp = inQuantumOp || (!arg.flags.classical && arg.pos > -1)
         if (arg.name in flags) { // => pos !== -1
-          flags[arg.name] = {...flags[arg.name], ...arg};
+          flags[arg.name] = { ...flags[arg.name], ...arg }
         } else {
           flags[arg.name] = {
             control: false,
             controlled: false,
-            ...arg,
-          };
+            ...arg
+          }
         }
         if (arg.flags.condensed) {
           flags[arg.name] = {
             control: arg.bits.reduce(
-                (acc, bit, i) => arg.pos[i] > -1 ? acc || flags[bit].control : acc,
-                false
+              (acc, bit, i) => arg.pos[i] > -1 ? acc || flags[bit].control : acc,
+              false
             ),
             controlled: arg.bits.reduce(
-                (acc, bit, i) => arg.pos[i] > -1 ? acc || flags[bit].controlled : acc,
-                false
+              (acc, bit, i) => arg.pos[i] > -1 ? acc || flags[bit].controlled : acc,
+              false
             ),
-            ...arg,
+            ...arg
           }
         }
         if (!lastControl && flags[arg.name].control) { // This is the last control bit
-          flags[arg.name].lastControl = true;
-          lastControl = true;
+          flags[arg.name].lastControl = true
+          lastControl = true
         } else {
-          flags[arg.name].lastControl = false;
+          flags[arg.name].lastControl = false
         }
 
         if (flags[arg.name].controlled) { // reassign controlled op bound flags
           const nArgs = arg.flags.condensed ? arg.indexedBits.filter(bit => bit.name in flags && flags[bit.name].controlled).length : 1
-          flags[arg.name].flags.last = nControlled === 0;
-          flags[arg.name].flags.first = nControlled === this.controlledCommand.command.args.length - 1;
-          flags[arg.name].flags.single = this.controlledCommand.command.args.length === nArgs;
-          nControlled += nArgs;
+          flags[arg.name].flags.last = nControlled === 0
+          flags[arg.name].flags.first = nControlled === this.controlledCommand.command.args.length - 1
+          flags[arg.name].flags.single = this.controlledCommand.command.args.length === nArgs
+          nControlled += nArgs
         }
 
-        flags[arg.name].classicalLink = !inQuantumOp;
-        flags[arg.name].selfControl = flags[arg.name].control && flags[arg.name].controlled;
+        flags[arg.name].classicalLink = !inQuantumOp
+        flags[arg.name].selfControl = flags[arg.name].control && flags[arg.name].controlled
       }
-      return flags;
+      return flags
     },
     controlledCommand () {
-      return extractControlledCommand(this.command, {});
+      return extractControlledCommand(this.command, {})
     },
     posAdjust () {
-      return this.controlledCommand.command.args.length - this.command.args.length;
+      return this.controlledCommand.command.args.length - this.command.args.length
     },
-    renderIndexedArgs: renderIndexedArgs,
+    renderIndexedArgs
   },
   methods: {
-    registerEquality: registerEquality,
-  },
-};
+    registerEquality
+  }
+}
 
 </script>
 

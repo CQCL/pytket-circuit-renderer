@@ -1,57 +1,57 @@
 <script>
-import { renderIndexedArgs, extractSubCircuit } from './utils';
+import { renderIndexedArgs, extractSubCircuit } from './utils'
 
-import wire from './wire';
-import nestedLabelLayer from './nestedLabelLayer';
-import circuitLayer from './circuitLayer';
-import gateSwap from './gateSwap';
-import gateMeasure from './gateMeasure';
-import gateComponent from './gateComponent';
+import wire from './wire'
+import nestedLabelLayer from './nestedLabelLayer'
+import circuitLayer from './circuitLayer'
+import gateSwap from './gateSwap'
+import gateMeasure from './gateMeasure'
+import gateComponent from './gateComponent'
 
 export default {
-  name: "generic-gate",
+  name: 'generic-gate',
   components: {
     wire,
     nestedLabelLayer,
     circuitLayer,
     gateSwap,
     gateMeasure,
-    gateComponent,
+    gateComponent
   },
   props: {
-    indexedArgs: {type: Array, required: true},
-    command: {type: Object, required: true},
-    linkVertical: {type: Boolean, default: false},
-    split: {type: Boolean, default: false},
-    renderOptions: {type: Object, required: true},
-    condensedRegisters: {type: Object, required: true},
-    posAdjust: {type: Number, default: 0},
+    indexedArgs: { type: Array, required: true },
+    command: { type: Object, required: true },
+    linkVertical: { type: Boolean, default: false },
+    split: { type: Boolean, default: false },
+    renderOptions: { type: Object, required: true },
+    condensedRegisters: { type: Object, required: true },
+    posAdjust: { type: Number, default: 0 }
   },
   computed: {
     opType () {
-      return this.command.op.type;
+      return this.command.op.type
     },
-    renderIndexedArgs: renderIndexedArgs,
+    renderIndexedArgs,
     special2qGate () {
       // Note: we will only have a controlled operation here if we need to render it specially.
-      return ['SWAP', 'Measure', 'CX', 'CZ'].includes(this.opType);
+      return ['SWAP', 'Measure', 'CX', 'CZ'].includes(this.opType)
     },
     nestedCircuitGate () {
-      return this.renderOptions.recursive && this.nestedCircuit;
+      return this.renderOptions.recursive && this.nestedCircuit
     },
     nestedRenderOptions () {
-      let newOptions = {...this.renderOptions};
-      newOptions.condensed = true;
-      newOptions.nested = true;
-      return newOptions;
+      const newOptions = { ...this.renderOptions }
+      newOptions.condensed = true
+      newOptions.nested = true
+      return newOptions
     },
     nestedCircuit () {
-      return extractSubCircuit(this.command.op);
-    },
+      return extractSubCircuit(this.command.op)
+    }
   },
   beforeCreate () {
-    this.$options.components["circuit-display"] = require('./circuitDisplay.vue').default;
-  },
+    this.$options.components['circuit-display'] = require('./circuitDisplay.vue').default
+  }
 }
 
 </script>

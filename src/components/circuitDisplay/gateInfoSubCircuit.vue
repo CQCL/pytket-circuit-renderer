@@ -1,31 +1,31 @@
 <script>
-import { extractSubCircuit, extractControlledCommand } from "./utils";
+import { extractSubCircuit, extractControlledCommand } from './utils'
 
-export default  {
-  name: "gate-info-sub-circuit",
+export default {
+  name: 'gate-info-sub-circuit',
   components: {},
   props: {
-    op: {type: Object, required: true},
-    renderOptions: {type: Object, required: true},
+    op: { type: Object, required: true },
+    renderOptions: { type: Object, required: true }
   },
   computed: {
     opType () {
-      return this.op.type;
+      return this.op.type
     },
     subCircuit () {
-      let newRenderOptions = {...this.renderOptions};
-      newRenderOptions.condensed = true;
-      newRenderOptions.nested = true;
-      newRenderOptions.recursive = false;
+      const newRenderOptions = { ...this.renderOptions }
+      newRenderOptions.condensed = true
+      newRenderOptions.nested = true
+      newRenderOptions.recursive = false
 
       // Default is that this box contains a circuit directly
-      let circuit = extractSubCircuit(this.op);
+      let circuit = extractSubCircuit(this.op)
       if (circuit) {
         return {
-          circuit: circuit,
-          type: "Nested",
-          renderOptions: newRenderOptions,
-        };
+          circuit,
+          type: 'Nested',
+          renderOptions: newRenderOptions
+        }
       }
 
       // Otherwise, this could be a circuit controlled by another box
@@ -34,20 +34,20 @@ export default  {
           op: this.op,
           args: []
         }, false).command
-      );
+      )
       if (circuit) {
         return {
-          circuit: circuit,
-          type: "Controlled",
-          renderOptions: newRenderOptions,
+          circuit,
+          type: 'Controlled',
+          renderOptions: newRenderOptions
         }
       }
-      return false;
-    },
+      return false
+    }
   },
   beforeCreate () {
-    this.$options.components["circuit-display"] = require('./circuitDisplay.vue').default;
-  },
+    this.$options.components['circuit-display'] = require('./circuitDisplay.vue').default
+  }
 }
 </script>
 

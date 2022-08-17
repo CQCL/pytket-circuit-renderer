@@ -1,9 +1,9 @@
-import circuitDisplay from "./circuitDisplay"
-import circuitDisplayContainer from "./circuitDisplayContainer";
-import infoModal from "./infoModal";
+import circuitDisplay from './circuitDisplay'
+import circuitDisplayContainer from './circuitDisplayContainer'
+import infoModal from './infoModal'
 
 export {
-    circuitDisplay,
-    circuitDisplayContainer,
-    infoModal,
+  circuitDisplay,
+  circuitDisplayContainer,
+  infoModal
 }

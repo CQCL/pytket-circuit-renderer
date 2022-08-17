@@ -2,19 +2,17 @@
 import { formatPosStr } from './utils'
 
 export default {
-  name: "nested-label-layer",
-  components: {
-  },
+  name: 'nested-label-layer',
   props: {
-    args: {type: Array, default: () => []},
+    args: { type: Array, default: () => [] }
   },
   computed: {
     posStrs () {
-      return this.args.map(arg => arg.pos !== -1 ? this.formatPosStr(arg.pos) : '');
+      return this.args.map(arg => arg.pos !== -1 ? this.formatPosStr(arg.pos) : '')
     }
   },
   methods: {
-    formatPosStr: formatPosStr,
+    formatPosStr
   }
 }
 </script>

@@ -1,48 +1,46 @@
 <script>
-import { teleportContainer, teleportTo } from '@/components/teleport/init';
+import { teleportContainer, teleportTo } from '@/components/teleport/init'
 
-import circuitLayer from './circuitLayer';
-import renderCircuitLayers from './renderCircuitLayers';
-import circuitCommand from './command';
+import circuitLayer from './circuitLayer'
+import renderCircuitLayers from './renderCircuitLayers'
+import circuitCommand from './command'
 import gateInfo from './gateInfo'
 
-
-let nCircuits = 0;  // circuits needs unique ids.
-
+let nCircuits = 0 // circuits needs unique ids.
 
 export default {
-  name: "circuit-display",
+  name: 'circuit-display',
   components: {
     teleportContainer,
     teleportTo,
     circuitLayer,
     renderCircuitLayers,
     circuitCommand,
-    gateInfo,
+    gateInfo
   },
   props: {
-    circuit: {type: Object},
-    renderOptions: {type: Object, required: true},
+    circuit: { type: Object },
+    renderOptions: { type: Object, required: true }
   },
   data () {
-    nCircuits++;
-    const id = 'gate-info-modal-' + nCircuits;
+    nCircuits++
+    const id = 'gate-info-modal-' + nCircuits
     return {
       infoModal: {
         teleport: {
           names: {},
-          id: id,
+          id
         },
         visible: false,
-        closeCallback: null,
+        closeCallback: null
       },
       nRenderedCommands: 0,
       idCommandRef: undefined,
       condensedRegisters: {
         names: {},
         toggles: {},
-        order: {},
-      },
+        order: {}
+      }
     }
   },
   computed: {
@@ -50,105 +48,105 @@ export default {
       if (this.circuit) {
         return {
           condensedBits: {
-            global: this.circuit.bits.length > 0 ? [["C", [".." + this.circuit.bits.length]]] : [],
-            names: this.condensedRegisters.names,
+            global: this.circuit.bits.length > 0 ? [['C', ['..' + this.circuit.bits.length]]] : [],
+            names: this.condensedRegisters.names
           },
           bits: this.circuit.bits,
           qubits: this.circuit.qubits,
-          registerOrder: this.circuit.qubits.concat(this.circuit.bits),
+          registerOrder: this.circuit.qubits.concat(this.circuit.bits)
 
         }
       }
       return {
-        condensedBits: {global: [], names: {}},
+        condensedBits: { global: [], names: {} },
         bits: [],
         qubits: [],
-        registerOrder: [],
-      };
+        registerOrder: []
+      }
     },
     activeArgs () {
       if (this.circuit) {
         // Wires that we are currently displaying
         // Filter classical bits:
-        const classicalBits = this.circuitDetails.bits.reduce(({filtered, included}, bit) => {
+        const classicalBits = this.circuitDetails.bits.reduce(({ filtered, included }, bit) => {
           if (this.condensedRegisters.toggles[bit[0]]) {
-            if (!(bit[0] in included)) {  // Add the condensed register if this is the first bit to be condensed.
-              filtered.push([bit[0], ['..' + this.circuitDetails.condensedBits.names[bit[0]]]]);
-              included[bit[0]] = true;
+            if (!(bit[0] in included)) { // Add the condensed register if this is the first bit to be condensed.
+              filtered.push([bit[0], ['..' + this.circuitDetails.condensedBits.names[bit[0]]]])
+              included[bit[0]] = true
             }
-          } else {  // not condensing this register
-            filtered.push(bit);
+          } else { // not condensing this register
+            filtered.push(bit)
           }
-          return {filtered, included};
-        }, {filtered: [], included: {}}).filtered;
+          return { filtered, included }
+        }, { filtered: [], included: {} }).filtered
 
         return [...this.circuitDetails.qubits, ...(
-            this.renderOptions.condenseCBits && this.circuitDetails.condensedBits
-                ? this.circuitDetails.condensedBits.global
-                : classicalBits
-        )];
+          this.renderOptions.condenseCBits && this.circuitDetails.condensedBits
+            ? this.circuitDetails.condensedBits.global
+            : classicalBits
+        )]
       }
-      return [];
+      return []
     },
     commandRefs () {
       // Force update each time a new command gets rendered.
-      return this.nRenderedCommands > 0 ? this.$refs.commands : [];
-    },
+      return this.nRenderedCommands > 0 ? this.$refs.commands : []
+    }
   },
   watch: {
     circuit (newCircuit) {
       if (newCircuit) {
-        this.initCondensedRegisters();
+        this.initCondensedRegisters()
       }
     },
-    "renderOptions.recursive" (recursive) {
+    'renderOptions.recursive' (recursive) {
       if (recursive) {
         // Make sure no registers are collapsed
-        for (let name of Object.keys(this.condensedRegisters.toggles)) {
-          this.condensedRegisters.toggles[name] = false;
+        for (const name of Object.keys(this.condensedRegisters.toggles)) {
+          this.condensedRegisters.toggles[name] = false
         }
       }
     }
   },
   mounted () {
     // Initialise the teleport components
-    this.infoModal.teleport.names[this.infoModal.teleport.id] = this.$refs.infoModals;
+    this.infoModal.teleport.names[this.infoModal.teleport.id] = this.$refs.infoModals
   },
   methods: {
     initCondensedRegisters () {
       // Add a condensedRegister for each classical register name present in the circuit.
-      let condensedRegisterNames = {};
-      let condensedRegisterToggles = {};
-      let condensedRegisterOrder = {};
+      const condensedRegisterNames = {}
+      const condensedRegisterToggles = {}
+      const condensedRegisterOrder = {}
 
       this.circuit.bits.forEach((bit, order) => {
         if (bit[0] in condensedRegisterNames) {
-          condensedRegisterNames[bit[0]]++;
-          condensedRegisterOrder[bit[0]].last = this.circuit.qubits.length + order;
+          condensedRegisterNames[bit[0]]++
+          condensedRegisterOrder[bit[0]].last = this.circuit.qubits.length + order
         } else {
-          condensedRegisterNames[bit[0]] = 1;
-          condensedRegisterToggles[bit[0]] = false;
+          condensedRegisterNames[bit[0]] = 1
+          condensedRegisterToggles[bit[0]] = false
           condensedRegisterOrder[bit[0]] = {
             first: this.circuit.qubits.length + order,
-            last: this.circuit.qubits.length + order,
-          };
+            last: this.circuit.qubits.length + order
+          }
         }
-      });
-      this.condensedRegisters.names = condensedRegisterNames;
-      this.condensedRegisters.toggles = condensedRegisterToggles;
-      this.condensedRegisters.order = condensedRegisterOrder;
+      })
+      this.condensedRegisters.names = condensedRegisterNames
+      this.condensedRegisters.toggles = condensedRegisterToggles
+      this.condensedRegisters.order = condensedRegisterOrder
     },
     updateCondensedRegisterToggles (name) {
-      this.condensedRegisters.toggles[name] = !this.condensedRegisters.toggles[name];
+      this.condensedRegisters.toggles[name] = !this.condensedRegisters.toggles[name]
     },
     registerTeleport (...args) {
-      this.$refs.teleportParent.registerTeleport(...args);
+      this.$refs.teleportParent.registerTeleport(...args)
     },
     getRenderedCircuitEl () {
       return {
         circuit: this.$refs.renderedCircuit,
         width: this.$refs.renderedCircuitDimensions.clientWidth,
-        height: this.$refs.renderedCircuitDimensions.clientHeight,
+        height: this.$refs.renderedCircuitDimensions.clientHeight
       }
     }
   }
@@ -194,8 +192,8 @@ export default {
 
       <div :class="{'circuit-inner-scroll': renderOptions.condensed}">
         <div ref="renderedCircuit">
-          <div  ref="renderedCircuitDimensions" class="circuit-container"
-             :class="{nested: renderOptions.nested || renderOptions.condensed, zx: renderOptions.zxStyle}">
+          <div ref="renderedCircuitDimensions" class="circuit-container"
+              :class="{nested: renderOptions.nested || renderOptions.condensed, zx: renderOptions.zxStyle}">
           <circuit-layer
               :nested="renderOptions.nested"
               :qubits="true"

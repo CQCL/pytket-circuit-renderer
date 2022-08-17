@@ -1,17 +1,16 @@
 <script>
-import { teleportFrom } from "@/components/teleport/init";
-import { chartList, chartMatrix } from "@/components/charts/init";
-import mathjaxContent from "@/components/mathjaxContent/mathjaxContent";
+import { teleportFrom } from '@/components/teleport/init'
+import { chartList, chartMatrix } from '@/components/charts/init'
+import mathjaxContent from '@/components/mathjaxContent/mathjaxContent'
 
-import { CONTROLLED_OPS } from "./consts";
+import { CONTROLLED_OPS } from './consts'
 
-import infoModal from "./infoModal";
-import gateInfoSubCircuit from './gateInfoSubCircuit';
-import gateInfoClassical from './gateInfoClassical';
+import infoModal from './infoModal'
+import gateInfoSubCircuit from './gateInfoSubCircuit'
+import gateInfoClassical from './gateInfoClassical'
 
-
-export default  {
-  name: "gate-info",
+export default {
+  name: 'gate-info',
   components: {
     chartList,
     chartMatrix,
@@ -19,109 +18,115 @@ export default  {
     teleportFrom,
     mathjaxContent,
     gateInfoSubCircuit,
-    gateInfoClassical,
+    gateInfoClassical
   },
   props: {
-    op: {type: Object, required: true},
-    teleportId: {type: String, required: true},
-    teleportParent: {required: true}, // ref to the parent. Undefined until parent is mounted.
-    renderOptions: {type: Object, required: true},
+    op: { type: Object, required: true },
+    teleportId: { type: String, required: true },
+    teleportParent: { required: true }, // ref to the parent. Undefined until parent is mounted.
+    renderOptions: { type: Object, required: true }
   },
-  emits: ["register-teleport"],
+  emits: ['register-teleport'],
   data () {
     return {
       controlledOps: CONTROLLED_OPS,
       contentOps: [
-        "Unitary1qBox", "Unitary2qBox", "Unitary3qBox",
-        "ExpBox", "PauliExpBox", "ClassicalExpBox",
-        "PhasePolyBox", "CircBox", "Conditional",
-        "Custom", "CustomGate", "Composite", "CompositeGate",
-        "ProjectorAssertionBox", "StabiliserAssertionBox",
-        "ExplicitPredicate", "ExplicitModifier",
-        "ClassicalTransform", "SetBits", "CopyBits",
-        "MultiBit", "RangePredicate",
-        "UnitaryTableauBox", "WASM",
+        'Unitary1qBox', 'Unitary2qBox', 'Unitary3qBox',
+        'ExpBox', 'PauliExpBox', 'ClassicalExpBox',
+        'PhasePolyBox', 'CircBox', 'Conditional',
+        'Custom', 'CustomGate', 'Composite', 'CompositeGate',
+        'ProjectorAssertionBox', 'StabiliserAssertionBox',
+        'ExplicitPredicate', 'ExplicitModifier',
+        'ClassicalTransform', 'SetBits', 'CopyBits',
+        'MultiBit', 'RangePredicate',
+        'UnitaryTableauBox', 'WASM'
       ],
-      visible: false,
-    };
+      visible: false
+    }
   },
   computed: {
     opType () {
-      return this.op.type;
+      return this.op.type
     },
     matrix () {
-      if ("matrix" in this.displayOp) {
-        return this.displayOp.matrix;
+      if ('matrix' in this.displayOp) {
+        return this.displayOp.matrix
       }
-      if ("box" in this.displayOp && "matrix" in this.displayOp.box) {
-        return this.displayOp.box.matrix;
+      if ('box' in this.displayOp && 'matrix' in this.displayOp.box) {
+        return this.displayOp.box.matrix
       }
-      return false;
+      return false
     },
     displayOp () {
-       return this.hasNestedContent ? (
-           this.isCondition ? this.op.conditional.op : this.op.box.op
-       ): this.op;
+      return this.hasNestedContent
+        ? (
+            this.isCondition ? this.op.conditional.op : this.op.box.op
+          )
+        : this.op
     },
     isCondition () {
-      return ["Condition", "Conditional"].includes(this.opType)
+      return ['Condition', 'Conditional'].includes(this.opType)
     },
     hasNestedContent () {
       return (
-          ["Condition", "Conditional", "Control", "QControlBox"].includes(this.opType)
-          && "box" in this.op && "op" in this.op.box
-          && this.contentOps.includes(this.op.box.op.type)
-        ) || this.isCondition && this.contentOps.includes(this.op.conditional.op.type);
+        ['Condition', 'Conditional', 'Control', 'QControlBox'].includes(this.opType) &&
+          'box' in this.op && 'op' in this.op.box &&
+          this.contentOps.includes(this.op.box.op.type)
+      ) || (this.isCondition && this.contentOps.includes(this.op.conditional.op.type))
     },
     hasContent () {
-      return (this.contentOps.includes(this.opType)
-          && (!this.renderOptions.recursive || !["CircBox"].includes(this.opType)))
-          || this.hasLongParams;
+      return (this.contentOps.includes(this.opType) &&
+          (!this.renderOptions.recursive || !['CircBox'].includes(this.opType))) ||
+          this.hasLongParams
     },
     hasLongParams () {
       return (this.params.length > 3) || (this.params.reduce((acc, param) => {
-        return acc || param.length > 5;
-      }, false));
+        return acc || param.length > 5
+      }, false))
     },
     params () {
-      let params = "params" in this.op && this.op.params ? this.op.params : [];
+      const params = 'params' in this.op && this.op.params ? this.op.params : []
       return params.concat(
-          "box" in this.op && this.op.box.params ? this.op.box.params : [],
-          this.isCondition && this.op.conditional.op.params ? this.op.conditional.op.params : [],
-      );
+        'box' in this.op && this.op.box.params ? this.op.box.params : [],
+        this.isCondition && this.op.conditional.op.params ? this.op.conditional.op.params : []
+      )
     }
   },
   methods: {
     formatMapping (mapping, coerceFrom, coerceTo) {
       const coerce = {
         register: (reg) => reg, // `${reg[0]}[${reg[1][0]}]`,
-        bool: (x) => x ? "1" : "0",
+        bool: (x) => x ? '1' : '0'
       }
-      let formattedMapping = [];
-      for (let elFrom in mapping) {
+      const formattedMapping = []
+      for (const elFrom in mapping) {
         formattedMapping.push(
-            coerceFrom ? coerce[coerceFrom](elFrom) : elFrom
-            + " → " +
-            coerceFrom ? coerce[coerceTo](mapping[elFrom]) : mapping[elFrom]
-        );
+          coerceFrom
+            ? coerce[coerceFrom](elFrom)
+            : elFrom +
+            ' → ' +
+            coerceFrom
+              ? coerce[coerceTo](mapping[elFrom])
+              : mapping[elFrom]
+        )
       }
-      return formattedMapping;
+      return formattedMapping
     },
     formatBoolMatrix (matrix) {
-      const nQubits = Math.round(Math.log(matrix.length));
-      let basis = [];
+      const nQubits = Math.round(Math.log(matrix.length))
+      const basis = []
       for (const x of Array(2 ** nQubits).keys()) {
         basis.push(
-          (new Array(1 + nQubits).join("0") + x.toString(2))
+          (new Array(1 + nQubits).join('0') + x.toString(2))
             .slice(-nQubits)
-        );
+        )
       }
-      let formattedMatrix = [];
-      for (let row of matrix) {
-        formattedMatrix.push((basis, row.map((x) => x ? "1" : "0")));
+      const formattedMatrix = []
+      for (const row of matrix) {
+        formattedMatrix.push((basis, row.map((x) => x ? '1' : '0')))
       }
-      return formattedMatrix;
-    },
+      return formattedMatrix
+    }
   }
 }
 </script>

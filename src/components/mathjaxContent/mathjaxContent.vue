@@ -1,22 +1,22 @@
 <script>
 // Vue wrapper for Mathjax.
 // Must use this if the formula can change dynamically.
-import "./mathjaxLoader"
+import './mathjaxLoader'
 
-let nMJC = 0;
+let nMJC = 0
 
 export default {
-  name: "mathjax-content",
+  name: 'mathjax-content',
   delimiters: ['[[#', '#]]'],
   props: {
-    formula: {type: String, default: ''},
-    safe: {type: Boolean, default: true}
+    formula: { type: String, default: '' },
+    safe: { type: Boolean, default: true }
   },
   data () {
-    nMJC++;
+    nMJC++
     return {
       uid: 'mathjax-content-' + nMJC
-    };
+    }
   },
   watch: {
     formula () {
@@ -35,9 +35,9 @@ export default {
       }
     },
     renderMathJax () {
-      this.renderContent();
+      this.renderContent()
       if (!!window.MathJax && !!window.MathJax.typeset) {
-        window.MathJax.typeset(['[data-uid=' + this.uid + ']']);
+        window.MathJax.typeset(['[data-uid=' + this.uid + ']'])
       }
     }
   }
