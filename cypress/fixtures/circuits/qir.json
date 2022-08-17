@@ -1,0 +1,42 @@
+{
+  "bits": [["s", [0]], ["s", [1]]],
+  "qubits": [["a", [0]], ["t", [0]]],
+  "commands": [
+    {"args": [["t", [0]], ["a", [0]], ["s", [0]]], "op": {"box": {"circuit": {
+      "bits": [["c", [0]]],
+      "commands": [
+        {"args": [["q", [0]], ["q", [1]]], "op": {"type": "CX"}},
+        {"args": [["q", [0]]], "op": {"type": "X"}},
+        {"args": [["q", [0]], ["q", [1]]], "op": {"type": "CX"}},
+        {"args": [["q", [1]], ["c", [0]]], "op": {"type": "Measure"}}
+      ],
+      "implicit_permutation": [[["q", [0]], ["q", [0]]], [["q", [1]], ["q", [1]]]],
+      "phase": "0.0",
+      "qubits": [["q", [0]], ["q", [1]]]
+    }, "id": "adae22f2-d6ba-4f23-97aa-1ba927b3634e", "type": "CircBox"}, "type": "CircBox"}},
+    {"args": [["s", [0]], ["t", [0]], ["a", [0]], ["s", [0]]], "op": {"conditional": {"op": {"box": {"circuit": {
+      "bits": [["c", [0]]],
+      "commands": [
+        {"args": [["q", [0]], ["q", [1]]], "op": {"type": "CX"}},
+        {"args": [["q", [0]]], "op": {"type": "X"}},
+        {"args": [["q", [0]], ["q", [1]]], "op": {"type": "CX"}},
+        {"args": [["q", [1]], ["c", [0]]], "op": {"type": "Measure"}}
+      ],
+      "implicit_permutation": [[["q", [0]], ["q", [0]]], [["q", [1]], ["q", [1]]]],
+      "phase": "0.0",
+      "qubits": [["q", [0]], ["q", [1]]]
+    }, "id": "adae22f2-d6ba-4f23-97aa-1ba927b3634e", "type": "CircBox"}, "type": "CircBox"}, "value": 0, "width": 1}, "type": "Conditional"}},
+    {"args": [["t", [0]], ["a", [0]]], "op": {"type": "CX"}},
+    {"args": [["t", [0]]], "op": {"params": ["0", "1", "0"], "type": "TK1"}},
+    {"args": [["t", [0]], ["a", [0]]], "op": {"type": "CX"}},
+    {"args": [["a", [0]], ["s", [0]]], "op": {"type": "Measure"}},
+    {"args": [["s", [0]], ["t", [0]], ["a", [0]]], "op": {"conditional": {"op": {"type": "CX"}, "value": 0, "width": 1}, "type": "Conditional"}},
+    {"args": [["s", [0]], ["t", [0]]], "op": {"conditional": {"op": {"params": ["0", "1", "0"], "type": "TK1"}, "value": 0, "width": 1}, "type": "Conditional"}},
+    {"args": [["s", [0]], ["t", [0]], ["a", [0]]], "op": {"conditional": {"op": {"type": "CX"}, "value": 0, "width": 1}, "type": "Conditional"}},
+    {"args": [["s", [0]], ["a", [0]], ["s", [0]]], "op": {"conditional": {"op": {"type": "Measure"}, "value": 0, "width": 1}, "type": "Conditional"}},
+    {"args": [["a", [0]]], "op": {"type": "XXPhase"}}, {"args": [["s", [0]], ["t", [0]], ["s", [0]]], "op": {"conditional": {"op": {"type": "Measure"}, "value": 0, "width": 1}, "type": "Conditional"}},
+    {"args": [["s", [1]]], "op": {"type": "XOR"}}
+  ],
+  "implicit_permutation": [[["a", [0]], ["a", [0]]], [["t", [0]], ["t", [0]]]],
+  "phase": "1.0"
+}
