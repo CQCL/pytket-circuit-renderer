@@ -1,0 +1,20 @@
+{
+  "bits": [["a", [0]], ["a", [1]], ["a", [2]], ["a", [3]], ["b", [0]], ["b", [1]], ["b", [2]], ["c", [0]], ["c", [1]], ["c", [2]], ["tk_SCRATCH_BIT", [0]]],
+  "commands": [
+    {"args": [["a", [0]], ["a", [1]], ["a", [2]], ["a", [3]]], "op": {"classical": {"values": [true, true, false, false]}, "type": "SetBits"}},
+    {"args": [["a", [0]]], "op": {"classical": {"values": [true]}, "type": "SetBits"}},
+    {"args": [["a", [0]], ["a", [1]], ["a", [2]], ["b", [0]], ["b", [1]], ["b", [2]]], "op": {"classical": {"n_i": 3}, "type": "CopyBits"}},
+    {"args": [["a", [0]], ["a", [1]], ["a", [2]], ["a", [3]], ["tk_SCRATCH_BIT", [0]]], "op": {"classical": {"lower": 2, "n_i": 4, "upper": 4294967295}, "type": "RangePredicate"}},
+    {"args": [["a", [2]], ["b", [1]]], "op": {"classical": {"n_i": 1}, "type": "CopyBits"}},
+    {"args": [["tk_SCRATCH_BIT", [0]], ["b", [0]], ["b", [1]], ["b", [2]]], "op": {"conditional": {"op": {"classical": {"values": [true, true, false]}, "type": "SetBits"}, "value": 1, "width": 1}, "type": "Conditional"}},
+    {"args": [["a", [0]], ["a", [1]], ["a", [2]], ["a", [3]], ["b", [0]], ["b", [1]], ["b", [2]], ["c", [0]], ["c", [1]], ["c", [2]]], "op": {"box": {"exp": {"args": [{"name": "a", "size": 4}, {"name": "b", "size": 3}], "op": "RegWiseOp.XOR"}, "id": "264724cc-a0ef-4da1-b80f-6a2b1596ae89", "n_i": 7, "n_io": 0, "n_o": 3, "type": "ClassicalExpBox"}, "type": "ClassicalExpBox"}},
+    {"args": [["a", [1]], ["b", [2]], ["c", [0]]], "op": {"box": {"exp": {"args": [["a", [1]], ["b", [2]]], "op": "BitWiseOp.AND"}, "id": "7838d83e-f2e5-42ad-976b-93e02a31a846", "n_i": 2, "n_io": 0, "n_o": 1, "type": "ClassicalExpBox"}, "type": "ClassicalExpBox"}},
+    {"args": [["a", [0]], ["a", [1]], ["a", [2]], ["a", [3]], ["b", [0]], ["b", [1]], ["b", [2]], ["c", [0]], ["c", [1]], ["c", [2]]], "op": {"box": {"exp": {"args": [{"name": "a", "size": 4}, {"args": [{"name": "b", "size": 3}, {"name": "c", "size": 3}], "op": "RegWiseOp.DIV"}], "op": "RegWiseOp.ADD"}, "id": "f4b78f91-836f-4190-9f6f-b8aa98764f98", "n_i": 7, "n_io": 3, "n_o": 0, "type": "ClassicalExpBox"}, "type": "ClassicalExpBox"}},
+    {"args": [["b", [0]], ["b", [1]], ["b", [2]], ["c", [0]], ["c", [1]], ["c", [2]], ["a", [0]], ["a", [1]], ["a", [2]], ["a", [3]]], "op": {"box": {"exp": {"args": [{"name": "a", "size": 4}, {"args": [{"name": "b", "size": 3}, {"name": "c", "size": 3}], "op": "RegWiseOp.MUL"}], "op": "RegWiseOp.SUB"}, "id": "4938287d-727c-4edc-8bd3-5d45887550a3", "n_i": 6, "n_io": 4, "n_o": 0, "type": "ClassicalExpBox"}, "type": "ClassicalExpBox"}},
+    {"args": [["a", [0]], ["a", [1]], ["a", [2]], ["a", [3]]], "op": {"box": {"exp": {"args": [{"name": "a", "size": 4}, 2], "op": "RegWiseOp.LSH"}, "id": "c366995e-af73-45a7-a3d1-e4bc18938e2a", "n_i": 0, "n_io": 4, "n_o": 0, "type": "ClassicalExpBox"}, "type": "ClassicalExpBox"}},
+    {"args": [["b", [0]], ["b", [1]], ["b", [2]], ["c", [0]], ["c", [1]], ["c", [2]]], "op": {"box": {"exp": {"args": [{"name": "b", "size": 3}, 1], "op": "RegWiseOp.RSH"}, "id": "9f489ae2-47e6-4189-97e9-063487aa1648", "n_i": 3, "n_io": 0, "n_o": 3, "type": "ClassicalExpBox"}, "type": "ClassicalExpBox"}}
+  ],
+  "implicit_permutation": [],
+  "phase": "0.0",
+  "qubits": []
+}
