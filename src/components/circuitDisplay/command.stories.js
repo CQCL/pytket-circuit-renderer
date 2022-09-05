@@ -4,6 +4,7 @@ import CircuitCommand from './command.vue'
 export default {
   title: 'Circuits/Command',
   component: CircuitCommand,
+  excludeStories: ['SubstituteCommand'],
   args: {
     renderOptions: {
       zxStyle: true,
