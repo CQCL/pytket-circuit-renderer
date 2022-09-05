@@ -27,10 +27,10 @@ const Template = (args) => ({
     return { args, h, commandRef: undefined, isReady: false }
   },
   methods: {
-    onMounted() {
+    onMounted () {
       this.commandRef = this.$refs.commandRef
       this.isReady = true
-    },
+    }
   },
   template: `<div class="circuit-display-container circuit-container circuit-preview theme_variables circuit_variables">
     <circuit-command :ref="'commandRef'" v-bind="args" @mounted="onMounted">
@@ -42,24 +42,23 @@ const Template = (args) => ({
   </div>`
 })
 
-
 export const Basic = Template.bind({})
 Basic.args = {
   command: {
-    args: [["q", [0]]],
+    args: [['q', [0]]],
     op: { type: 'X' }
   },
   registerOrder: [
-    ["q", [0]],
-    ["q", [1]],
-    ["q", [2]],
-    ["q", [3]],
-    ["c", [0]],
-    ["c", [1]],
-    ["c", [2]],
-    ["c", [3]],
-    ["d", [0]],
-    ["d", [1]],
+    ['q', [0]],
+    ['q', [1]],
+    ['q', [2]],
+    ['q', [3]],
+    ['c', [0]],
+    ['c', [1]],
+    ['c', [2]],
+    ['c', [3]],
+    ['d', [0]],
+    ['d', [1]]
   ],
   classicalThreshold: 4,
   condensedRegisters: {

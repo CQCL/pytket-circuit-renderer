@@ -1,6 +1,6 @@
 /* global cy, it, describe */
 import { composeStories } from '@storybook/testing-vue3'
-import { SubstituteCommand, default as BaseStory } from './command.stories.js'
+import BaseStory, { SubstituteCommand } from './command.stories.js'
 import commands from '@/../cypress/fixtures/commands.json'
 
 // Generate a story for each command
