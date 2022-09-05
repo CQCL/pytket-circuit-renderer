@@ -180,6 +180,7 @@ export default {
     renderSelf (h) {
       // Render the gate for this command
       const gateProps = {
+        'data-command': true, // mark this as containing a command from the circuit definition for testing.
         command: this.command,
         indexedArgs: this.indexedArgs,
         renderOptions: this.renderOptions,

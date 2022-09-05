@@ -1,0 +1,187 @@
+{
+  "registerOrder": [
+    ["q", [0]],
+    ["q", [1]],
+    ["q", [2]],
+    ["q", [3]],
+    ["c", [0]],
+    ["c", [1]],
+    ["c", [2]],
+    ["c", [3]],
+    ["d", [0]],
+    ["d", [1]]
+  ],
+  "commands": [
+    {"args": [["q", [0]]], "op": {"type": "X"}},
+    {"args": [["q", [1]]], "op": {"type": "Y"}},
+    {"args": [["q", [2]]], "op": {"type": "Z"}},
+    {"args": [["q", [3]]], "op": {"type": "H"}},
+    {"args": [["q", [0]]], "op": {"type": "S"}},
+    {"args": [["q", [1]]], "op": {"type": "T"}},
+    {"args": [["q", [2]]], "op": {"type": "V"}},
+    {"args": [["q", [0]]], "op": {"params": ["0.33"], "type": "Rx"}},
+    {"args": [["q", [3]]], "op": {"type": "Sdg"}},
+    {"args": [["q", [3]]], "op": {"type": "Reset"}},
+
+    {"args": [["q", [0]], ["q", [3]]], "op": {"type": "SWAP"}},
+    {"args": [["q", [3]], ["q", [0]]], "op": {"type": "SWAP"}},
+    {"args": [["q", [2]], ["q", [3]]], "op": {"type": "SWAP"}},
+    {"args": [["q", [1]], ["q", [2]]], "op": {"type": "CX"}},
+    {"args": [["q", [3]], ["q", [1]]], "op": {"type": "CX"}},
+    {"args": [["q", [1]], ["q", [3]]], "op": {"type": "CY"}},
+    {"args": [["q", [0]], ["q", [3]]], "op": {"type": "CZ"}},
+    {"args": [["q", [3]], ["q", [1]]], "op": {"type": "CZ"}},
+
+    {"args": [["q", [3]], ["c", [0]]], "op": {"type": "Measure"}},
+    {"args": [["q", [0]], ["c", [0]]], "op": {"type": "Measure"}},
+
+    {"args": [["q", [0]], ["q", [3]], ["c", [1]]], "op": {"signature": ["Q", "Q", "C"], "type": "Barrier"}},
+    {"args": [["q", [0]], ["q", [1]], ["q", [2]]], "op": {"signature": ["Q", "Q", "Q"], "type": "Barrier"}},
+    {"args": [["c", [0]], ["c", [1]], ["c", [2]]], "op": {"signature": ["C", "C", "C"], "type": "Barrier"}},
+    {"args": [["q", [3]], ["c", [0]], ["c", [2]]], "op": {"signature": ["Q", "C", "C"], "type": "Barrier"}},
+    {"args": [["q", [2]]], "op": {"signature": ["Q"], "type": "Barrier"}},
+
+    {"args": [["q", [2]], ["q", [3]]], "op": {"params": ["0.2555555555"], "type": "ZZPhase"}},
+    {"args": [["c", [0]], ["c", [1]], ["c", [2]], ["c", [3]]], "op": {"classical": {"values": [true, true, false, false]}, "type": "SetBits"}},
+    {"args": [["c", [2]], ["c", [1]]], "op": {"classical": {"n_i": 1}, "type": "CopyBits"}},
+    {"args": [["c", [1]], ["c", [2]], ["c", [0]]], "op": {"box": {"exp": {"args": [["c", [1]], ["c", [2]]], "op": "BitWiseOp.AND"}, "id": "7838d83e-f2e5-42ad-976b-93e02a31a846", "n_i": 2, "n_io": 0, "n_o": 1, "type": "ClassicalExpBox"}, "type": "ClassicalExpBox"}},
+    {"args": [["c", [0]], ["c", [1]], ["c", [2]], ["c", [3]]], "op": {"classical": {"lower": 2, "n_i": 3, "upper": 4294967295}, "type": "RangePredicate"}},
+
+    {"args": [["c", [0]], ["c", [0]], ["c", [1]], ["c", [2]]], "op": {"conditional": {"op": {"classical": {"values": [true, true, false]}, "type": "SetBits"}, "value": 1, "width": 1}, "type": "Conditional"}},
+    {"args": [["c", [3]], ["c", [0]], ["c", [1]], ["c", [2]]], "op": {"conditional": {"op": {"classical": {"values": [true, true, false]}, "type": "SetBits"}, "value": 1, "width": 1}, "type": "Conditional"}},
+    {"args": [["q", [0]], ["q", [1]]], "op": {"box": {"id": "b142ac60-66e3-4c92-bb18-eb4e61143b3b", "n_controls": 1, "op": {"type": "S"}, "type": "QControlBox"}, "type": "QControlBox"}},
+    {"args": [["c", [0]], ["q", [1]], ["q", [2]]], "op": {"conditional": {"op": {"type": "CX"}, "value": 1, "width": 1}, "type": "Conditional"}},
+
+    {"args": [["q", [1]], ["q", [0]]], "op": {"params": ["0.5"], "type": "CRz"}},
+    {"args": [["q", [2]], ["q", [3]], ["q", [0]]], "op": {"type": "CSWAP"}},
+    {"args": [["q", [0]], ["q", [3]], ["q", [2]]], "op": {"type": "CSWAP"}},
+
+    {"args": [["q", [0]]], "op": {"box": {"id": "2e6380c5-a346-4485-a835-8d610d198bc9", "matrix": [
+      [[0.0, 0.0], [-0.0, -1.0]],
+      [[1.0, 0.0], [0.0, 0.0]]
+    ], "type": "Unitary1qBox"}, "type": "Unitary1qBox"}},
+    {"args": [["q", [0]], ["q", [1]]], "op": {"box": {"id": "0c348ac1-6610-4774-95fa-e660e6cc7baf", "matrix": [
+      [[0.0, 0.0], [1.0, 0.0], [0.0, 0.0], [0.0, 0.0]],
+      [[0.0, 1.0], [0.0, 0.0], [0.0, 0.0], [0.0, 0.0]],
+      [[0.0, 0.0], [0.0, 0.0], [-0.0, -1.0], [0.0, 0.0]],
+      [[0.0, 0.0], [0.0, 0.0], [0.0, 0.0], [1.0, 0.0]]
+    ], "type": "Unitary2qBox"}, "type": "Unitary2qBox"}},
+    {"args": [["q", [0]], ["q", [1]], ["q", [2]]], "op": {"box": {"id": "0d6e4d4c-98fc-4d51-adb6-befdd2a7b726", "matrix": [
+      [[0.0, 0.0], [0.0, 1.0], [0.0, 0.0], [0.0, 0.0], [0.0, 0.0], [0.0, 0.0], [0.0, 0.0], [0.0, 0.0]],
+      [[1.0, 0.0], [0.0, 0.0], [0.0, 0.0], [0.0, 0.0], [0.0, 0.0], [0.0, 0.0], [0.0, 0.0], [0.0, 0.0]],
+      [[0.0, 0.0], [0.0, 0.0], [1.0, 0.0], [0.0, 0.0], [0.0, 0.0], [0.0, 0.0], [0.0, 0.0], [0.0, 0.0]],
+      [[0.0, 0.0], [0.0, 0.0], [0.0, 0.0], [0.0, 1.0], [0.0, 0.0], [0.0, 0.0], [0.0, 0.0], [0.0, 0.0]],
+      [[0.0, 0.0], [0.0, 0.0], [0.0, 0.0], [0.0, 0.0], [0.0, 0.0], [0.0, 0.0], [0.0, 0.0], [-0.0, -1.0]],
+      [[0.0, 0.0], [0.0, 0.0], [0.0, 0.0], [0.0, 0.0], [0.0, 0.0], [0.0, 0.0], [-1.0, 0.0], [0.0, 0.0]],
+      [[0.0, 0.0], [0.0, 0.0], [0.0, 0.0], [0.0, 0.0], [0.0, 0.0], [1.0, 0.0], [0.0, 0.0], [0.0, 0.0]],
+      [[0.0, 0.0], [0.0, 0.0], [0.0, 0.0], [0.0, 0.0], [-0.0, -1.0], [0.0, 0.0], [0.0, 0.0], [0.0, 0.0]]
+    ], "type": "Unitary3qBox"}, "type": "Unitary3qBox"}},
+    {"args": [["q", [0]], ["q", [1]]], "op": {"box": {"id": "d5803067-615e-4275-8795-bd298c6c85c5", "paulis": ["X", "Y"], "phase": "0.1", "type": "PauliExpBox"}, "type": "PauliExpBox"}},
+    {"args": [["q", [0]], ["q", [1]]], "op": {"box": {"id": "f7937806-29f0-4a09-90bc-6087943d5f11", "paulis": ["Y", "X"], "phase": "-0.1", "type": "PauliExpBox"}, "type": "PauliExpBox"}},
+    {"args": [["q", [0]], ["q", [1]], ["q", [2]], ["q", [3]]], "op": {"box": {"id": "1595a725-9c9c-46bb-80d7-77b83a1f0696", "paulis": ["X", "Y", "Y", "Y"], "phase": "0.2", "type": "PauliExpBox"}, "type": "PauliExpBox"}},
+    {"args": [["q", [0]], ["q", [1]], ["q", [2]], ["q", [3]]], "op": {"box": {"id": "4dabba8f-3b09-4be6-8a2b-d86af503c579", "paulis": ["Y", "X", "Y", "Y"], "phase": "-0.2", "type": "PauliExpBox"}, "type": "PauliExpBox"}},
+    {"args": [["q", [0]], ["q", [1]], ["q", [2]]], "op": {"box": {"id": "05ae75f6-894e-4d37-92cf-37a1f5807819",
+      "tab": {"qubits": [["q", [0]], ["q", [1]], ["q", [2]]], "tab": {"nqubits": 3, "nrows": 6,
+        "phase": [[false], [false], [true], [true], [false], [true]],
+        "xmat": [
+          [true, true, false],
+          [false, true, false],
+          [false, false, true],
+          [false, false, false],
+          [false, true, false],
+          [false, false, false]
+        ],
+        "zmat": [
+          [false, false, false],
+          [false, false, false],
+          [false, false, true],
+          [true, false, false],
+          [true, true, false],
+          [false, false, true]
+        ]}
+      }, "type": "UnitaryTableauBox"}, "type": "UnitaryTableauBox"}
+    },
+
+    {"op":{"type":"CircBox","box":{"id":"e418b9ab-258c-4e88-9797-4fed60600839","type":"CircBox","circuit":{
+      "phase":"0.0",
+      "qubits":[],
+      "bits":[["c",[0]],["c",[1]],["c",[2]]],
+      "commands":[
+        {"op":{"type":"ExplicitModifier","classical":{"n_i":1,"name":"XOR","values":[0,1,1,0]}},"args":[["c",[0]],["c",[1]]]},
+        {"op":{"type":"ExplicitModifier","classical":{"n_i":1,"name":"XOR","values":[0,1,1,0]}},"args":[["c",[1]],["c",[0]]]},
+        {"op":{"type":"ExplicitPredicate","classical":{"n_i":2,"name":"AND","values":[0,0,0,1]}},"args":[["c",[0]],["c",[1]],["c",[2]]]},
+        {"op":{"type":"SetBits","classical":{"values":[0,1]}},"args":[["c",[0]],["c",[1]]]},
+        {"op":{"type":"ExplicitPredicate","classical":{"n_i":1,"name":"NOT","values":[1,0]}},"args":[["c",[2]]]},
+        {"op":{"type":"ExplicitPredicate","classical":{"n_i":1,"name":"NOT","values":[1,0]}},"args":[["c",[0]],["c",[1]]]}
+      ], "implicit_permutation":[[["q",[0]],["q",[0]]],[["q",[1]],["q",[1]]],[["q",[2]],["q",[2]]]]}}},
+      "args":[["c",[0]],["c",[2]],["c",[1]]]
+    },
+    {"op":{"type":"CircBox","box":{"id":"e418b9ab-258c-4e88-9797-4fed60600839","type":"CircBox","circuit":{
+      "phase":"0.0",
+      "qubits":[["q",[0]],["q",[1]]],
+      "bits":[["c",[0]],["c",[1]],["c",[2]]],
+      "commands":[
+        {"op":{"type":"CX"},"args":[["q",[0]],["q",[1]]]},
+        {"op":{"type":"Rz","params":["0.2"]},"args":[["q",[1]]]},
+        {"op":{"type":"ExplicitPredicate","classical":{"n_i":1,"name":"NOT","values":[1,0]}},"args":[["c",[0]]]},
+        {"op":{"type":"CopyBits","classical":{"n_i":2}},"args":[["c",[0]],["c",[1]],["c",[2]]]},
+        {"op":{"type":"RangePredicate","classical":{"n_i":2,"upper":6,"lower":2}},"args":[["c",[1]],["c",[2]],["c",[0]]]}
+      ],"implicit_permutation":[[["q",[0]],["q",[0]]],[["q",[1]],["q",[1]]]]}}},
+      "args":[["q",[0]],["q",[2]],["c",[2]]]
+    },
+    {"op":{"type":"CircBox","box":{"id":"621ee04f-bc1f-4ae3-bbf5-0db8385e9e01","type":"CircBox","circuit":{
+      "phase":"0.0",
+      "qubits":[["q",[0]],["q",[1]],["q",[2]],["q",[3]]],
+      "bits":[],"commands":[
+        {"op":{"type":"SWAP"},"args":[["q",[1]],["q",[3]]]},
+        {"op":{"type":"CircBox","box":{"id":"621ee04f-bc1f-4ae3-bbf5-0db8385e9e01","type":"CircBox","circuit":{
+          "phase":"0.0",
+          "qubits":[["q",[0]],["q",[1]],["q",[2]],["q",[3]]],
+          "bits":[],"commands":[
+            {"op":{"type":"CnX","n_qb":4}, "args":[["q",[0]],["q",[1]],["q",[2]],["q",[3]]]},
+            {"op":{"type":"CnRy","n_qb":4,"params":["0.2"]},"args":[["q",[3]],["q",[2]],["q",[1]],["q",[0]]]}
+          ],"implicit_permutation":[[["q",[0]],["q",[0]]],[["q",[1]],["q",[1]]],[["q",[2]],["q",[2]]],[["q",[3]],["q",[3]]]]}}},
+          "args":[["q",[0]],["q",[1]],["q",[2]],["q",[3]]]
+        },
+        {"op":{"type":"SWAP"},"args":[["q",[3]],["q",[1]]]},
+        {"op":{"type":"CX"},"args":[["q",[2]],["q",[0]]]},
+        {"op":{"type":"CircBox","box":{"id":"e418b9ab-258c-4e88-9797-4fed60600839","type":"CircBox","circuit":{
+          "phase":"0.0",
+          "qubits":[["q",[0]],["q",[1]]],
+          "bits":[],
+          "commands":[
+            {"op":{"type":"CX"},"args":[["q",[0]],["q",[1]]]},
+            {"op":{"type":"Rz","params":["0.2"]},"args":[["q",[1]]]}
+          ],"implicit_permutation":[[["q",[0]],["q",[0]]],[["q",[1]],["q",[1]]]]}}},
+          "args":[["q",[1]],["q",[2]]]
+        }],"implicit_permutation":[[["q",[0]],["q",[0]]],[["q",[1]],["q",[1]]],[["q",[2]],["q",[2]]],[["q",[3]],["q",[3]]]]}}},
+      "args":[["q",[0]],["q",[1]],["q",[3]],["q",[2]]]
+    },
+    {"op":{"type":"Custom","box":{"id":"13aa2b86-e4c9-4def-8715-3c8e2c116522","type":"Composite","gate":{"args":["alpha","beta","gamma"],"definition":{
+      "phase":"0.0",
+      "qubits":[["q",[0]],["q",[1]],["q",[2]]],
+      "bits":[],
+      "commands":[
+        {"op":{"type":"PauliExpBox","box":{"id":"1d57e158-521f-46d2-9a51-02b380f0f8a4","type":"PauliExpBox","paulis":["X","X","Y"],"phase":"-0.3*alpha"}},"args":[["q",[0]],["q",[1]],["q",[2]]]},
+        {"op":{"type":"PauliExpBox","box":{"id":"2a3869e8-8894-438e-b5d3-ae60d10f8d66","type":"PauliExpBox","paulis":["Y","X","X"],"phase":"-0.3*beta"}},"args":[["q",[0]],["q",[1]],["q",[2]]]},
+        {"op":{"type":"Rx","params":["gamma"]},"args":[["q",[1]]]}
+      ],"implicit_permutation":[[["q",[0]],["q",[0]]],[["q",[1]],["q",[1]]],[["q",[2]],["q",[2]]]]},
+      "name":"Frank"},"params":["0.707","1.5","0.2"]}},
+      "args":[["q",[0]],["q",[1]],["q",[2]]]
+    }
+  ],
+  "classicalThreshold": 4,
+  "condensedRegisters": {
+    "names": {
+      "c": 4,
+      "d": 2
+    },
+    "toggles": {
+      "c": false,
+      "d": true },
+    "order": {
+      "c": { "first": 4, "last": 7 },
+      "d": { "first": 8, "last": 9 }
+    }
+  }
+}
