@@ -189,11 +189,12 @@ export default  {
 <style scoped>
 .circuit-display-container {
   min-height: 3em;
-  margin: 1em;
+  padding: 1em;
   display: flex;
   position: relative;
-  padding-top: 2.5em;
+  padding-top: 3.5em;
   font-family: "roboto", system-ui, sans-serif;
+  background: var(--main-bg);
   --accent-col: green;
   --accent-col-fill: darkseagreen;
   --accent-col-alt: #aca;
@@ -216,9 +217,9 @@ export default  {
   border-bottom: 1px solid var(--mid-col);
   padding-bottom: 0.5em;
   position: absolute;
-  top: 0;
-  right: 0;
-  left: 0;
+  top: 1em;
+  right: 1em;
+  left: 1em;
 }
 </style>
 

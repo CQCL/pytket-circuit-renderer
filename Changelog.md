@@ -12,6 +12,9 @@ This is to allow user-facing information to be more easily extracted from this c
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
+### Fixed
+- White background added in for dark theme compatibility
+
 ### Internal
 - Refactor code to optimise rendering computations.
 
