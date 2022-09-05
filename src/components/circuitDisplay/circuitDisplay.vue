@@ -94,16 +94,22 @@ export default {
     }
   },
   watch: {
-    circuit (newCircuit) {
-      if (newCircuit) {
-        this.initCondensedRegisters()
+    circuit: {
+      immediate: true,
+      handler: function (newCircuit) {
+        if (newCircuit) {
+          this.initCondensedRegisters()
+        }
       }
     },
-    'renderOptions.recursive' (recursive) {
-      if (recursive) {
-        // Make sure no registers are collapsed
-        for (const name of Object.keys(this.condensedRegisters.toggles)) {
-          this.condensedRegisters.toggles[name] = false
+    'renderOptions.recursive': {
+      immediate: true,
+      handler: function (recursive) {
+        if (recursive) {
+          // Make sure no registers are collapsed
+          for (const name of Object.keys(this.condensedRegisters.toggles)) {
+            this.condensedRegisters.toggles[name] = false
+          }
         }
       }
     }

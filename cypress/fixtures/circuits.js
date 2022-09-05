@@ -1,13 +1,17 @@
-const basic = require('./circuits/basic.json')
-const classical = require('./circuits/classical.json')
-const qir = require('./circuits/qir.json')
-const zx = require('./circuits/zx.json')
-const boxes = require('./circuits/boxes.json')
+const Basic = require('./circuits/basic.json')
+const Classical = require('./circuits/classical.json')
+const Control = require('./circuits/control.json')
+const QIR = require('./circuits/qir.json')
+const ZX = require('./circuits/zx.json')
+const Boxes = require('./circuits/boxes.json')
+const Nested = require('./circuits/nested.json')
 
 export {
-  basic,
-  classical,
-  qir,
-  zx,
-  boxes
+  Basic,
+  Classical,
+  Control,
+  QIR,
+  ZX,
+  Boxes,
+  Nested
 }
