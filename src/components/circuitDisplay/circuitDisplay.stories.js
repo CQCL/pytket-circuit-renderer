@@ -59,3 +59,18 @@ export const QIR = Template.bind({})
 QIR.args = {
   circuit: circuitFixtures.QIR
 }
+
+export const Control = Template.bind({})
+Control.args = {
+  circuit: circuitFixtures.Control
+}
+
+export const Deep = Template.bind({})
+Deep.args = {
+  circuit: circuitFixtures.Deep
+}
+
+export const Nested = Template.bind({})
+Nested.args = {
+  circuit: circuitFixtures.Nested
+}
