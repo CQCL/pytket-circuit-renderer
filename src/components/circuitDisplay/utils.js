@@ -87,7 +87,7 @@ const renderIndexedArgs = function () {
   return this.indexedArgs.filter((arg) => {
     return arg.flags.classical
       ? (
-          this.renderOptions.condenseCBits
+          this.condenseCBits
             ? arg.flags.globalClassical // Condensing to a single global classical wire
             : this.condensedRegisters[arg.name[0]] // Check if this particular register is to be condensed.
               ? arg.flags.condensed

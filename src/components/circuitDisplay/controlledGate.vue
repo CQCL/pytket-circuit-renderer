@@ -3,6 +3,7 @@ import { registerEquality, renderIndexedArgs, extractControlledCommand } from '.
 
 import wire from './wire'
 import genericGate from './genericGate'
+import { renderOptions } from './provideKeys'
 
 export default {
   name: 'controlled-gate',
@@ -13,17 +14,19 @@ export default {
   props: {
     indexedArgs: { type: Array, required: true },
     command: { type: Object, required: true },
-    renderOptions: { type: Object, required: true },
     condensedRegisters: { type: Object, required: true }
+  },
+  inject: {
+    condenseCBits: { from: renderOptions.condenseCBits }
+  },
+  provide () {
+    return {
+      [renderOptions.recursive]: false
+    }
   },
   computed: {
     opType () {
       return this.command.op.type
-    },
-    nestedRenderOptions () {
-      const newOptions = { ...this.renderOptions }
-      newOptions.recursive = false
-      return newOptions
     },
     controlFlags () {
       // update the previously computed arg details.
@@ -129,7 +132,6 @@ export default {
               :pos-adjust="posAdjust"
               :split="true"
               :link-vertical="order > 0 && !arg.flags.single"
-              :render-options="nestedRenderOptions"
               :condensed-registers="condensedRegisters">
         </generic-gate>
       </div>
