@@ -1,17 +1,16 @@
 import GenericGate from './genericGate.vue'
+import { setupProvideRenderOptions } from './circuitDisplay.stories'
 
 export default {
   title: 'Circuits/GenericGate',
   component: GenericGate,
   args: {
+    zxStyle: true,
+    condenseCBits: true,
+    recursive: false,
+    condensed: true,
     linkVertical: false,
     split: false,
-    renderOptions: {
-      zxStyle: true,
-      condenseCBits: true,
-      recursive: false,
-      condensed: true
-    },
     posAdjust: 0
   }
 }
@@ -19,6 +18,7 @@ export default {
 const Template = (args) => ({
   components: { GenericGate },
   setup () {
+    setupProvideRenderOptions(args)
     return { args }
   },
   template: '<div class="circuit-display-container circuit-container circuit-preview theme_variables circuit_variables"><generic-gate v-bind="args" /></div>'
@@ -368,6 +368,7 @@ const Template2Q = (args) => ({
       }
     }
     args = { ...args, ...commands[args.opType] }
+    setupProvideRenderOptions(args)
     return { args }
   },
   template: '<div class="circuit-display-container circuit-container circuit-preview theme_variables circuit_variables"><generic-gate v-bind="args" /></div>'
@@ -404,6 +405,7 @@ const Template1Q = (args) => ({
       },
       condensedRegisters: {}
     }
+    setupProvideRenderOptions(args)
     return { args }
   },
   template: '<div class="circuit-display-container circuit-container circuit-preview theme_variables circuit_variables"><generic-gate v-bind="args" /></div>'

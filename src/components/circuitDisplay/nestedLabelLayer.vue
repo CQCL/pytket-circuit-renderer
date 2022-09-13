@@ -31,6 +31,7 @@ export default {
 .nested-label-layer{
     background: var(--box-col);
     padding: 0 0.4em;
+    flex-shrink: 0;
 }
 .nested-label-layer:deep() .wire-label{
     padding: var(--box-margin) 0;
