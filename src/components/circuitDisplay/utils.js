@@ -134,7 +134,7 @@ const extractControlledCommand = function (controlCommand, argDetails) {
         args: command.args ? command.args.slice(2) : false
       }
     }
-    if (['CnRy', 'CnX'].includes(command.op.type)) {
+    if (['CnRy', 'CnX', 'CnY', 'CnZ'].includes(command.op.type)) {
       args.push(...command.args.slice(0, command.args.length - 1))
       cc = {
         op: {

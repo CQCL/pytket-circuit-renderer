@@ -15,7 +15,12 @@
        {"args": [["q", [1]], ["q", [0]]], "op": {"type": "CX"}},
        {"args": [["q", [1]], ["q", [2]], ["q", [0]]], "op": {"type": "CCX"}},
        {"args": [["q", [2]]], "op": {"params": ["0.25"], "type": "Rz"}},
-       {"args": [["q", [2]]], "op": {"type": "Z"}}], "implicit_permutation": [[["q", [0]], ["q", [0]]], [["q", [1]], ["q", [1]]], [["q", [2]], ["q", [2]]]], "phase": "0.0", "qubits": [["q", [0]], ["q", [1]], ["q", [2]]]}, "id": "dcc6b230-c144-4257-9eff-1ff7a7ced912", "type": "CircBox"}, "type": "CircBox"}, "value": 1, "width": 1}, "type": "Conditional"}}
+       {"args": [["q", [2]]], "op": {"type": "Z"}}], "implicit_permutation": [[["q", [0]], ["q", [0]]], [["q", [1]], ["q", [1]]], [["q", [2]], ["q", [2]]]], "phase": "0.0", "qubits": [["q", [0]], ["q", [1]], ["q", [2]]]}, "id": "dcc6b230-c144-4257-9eff-1ff7a7ced912", "type": "CircBox"}, "type": "CircBox"}, "value": 1, "width": 1}, "type": "Conditional"}
+     },
+     {"args": [["q", [1]], ["q", [0]], ["q", [2]]], "op": {"params": ["0.5"], "type": "CnRy"}},
+     {"args": [["q", [1]], ["q", [0]], ["q", [3]], ["q", [2]]], "op": {"type": "CnX"}},
+     {"args": [["q", [2]], ["q", [0]], ["q", [3]], ["q", [1]]], "op": {"type": "CnY"}},
+     {"args": [["q", [1]], ["q", [2]], ["q", [3]], ["q", [0]]], "op": {"type": "CnZ"}}
    ],
    "implicit_permutation": [[["q", [0]], ["q", [0]]], [["q", [1]], ["q", [1]]], [["q", [2]], ["q", [2]]], [["q", [3]], ["q", [3]]]],
    "phase": "0.0",
