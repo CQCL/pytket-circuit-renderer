@@ -1,8 +1,13 @@
 /* global cy, it, describe */
-import { composeStories } from '@storybook/testing-vue3'
-import * as stories from './circuitDisplay.stories.js'
+import { composeStories, composeStory } from '@storybook/testing-vue3'
+import * as storiesRaw from './circuitDisplay.stories.js'
 import * as circuits from '@/../cypress/fixtures/circuits.js'
 
+// remove non-story exports from the main collection
+const Template = storiesRaw.Template
+const stories = { ...storiesRaw, setupProvideRenderOptions: undefined, Template: undefined }
+delete stories.setupProvideRenderOptions
+delete stories.Template
 const components = composeStories(stories)
 const bools = [true, false]
 
@@ -11,10 +16,13 @@ describe('Circuit display component', () => {
     describe(name + ' circuit', () => {
       it('mounts', () => {
         cy.mount({ name, ...components[name]() })
+        waitForRender()
       })
 
       it('renders the right number of commands', () => {
         cy.mount({ name, ...components[name]() })
+        waitForRender()
+
         cy.get('.circuit-container')
           .first()
           .children()
@@ -25,15 +33,26 @@ describe('Circuit display component', () => {
       bools.forEach(condenseCBits => {
         const nBits = condenseCBits ? Math.min(1, circuits[name].bits.length) : circuits[name].bits.length
         const nWires = nBits + circuits[name].qubits.length
+        const story = Template.bind({})
+        story.args = {
+          condenseCBits,
+          ...stories[name].args
+        }
+        const component = composeStory(story, stories.default)
 
         it(`displays the right number of registers when${condenseCBits ? ' ' : ' not '}condensing bits`, () => {
-          cy.mount({ name, ...components[name]({ condenseCBits }) })
+          cy.log(story)
+          cy.mount({ name, ...component() })
+          waitForRender()
+
           cy.log('Expecting ' + nWires + ' bits.')
           countRegisters(nWires)
         })
 
         it(`renders (at most) the right number of wires for each circuit layer when${condenseCBits ? ' ' : ' not '}condensing bits`, () => {
-          cy.mount({ name, ...components[name]({ condenseCBits }) })
+          cy.mount({ name, ...component() })
+          waitForRender()
+
           cy.log('Expecting ' + nWires + ' wires.')
           cy.get('[data-command=true]').invoke('css', 'font-size').as('1em')
           cy.get('@1em').then(em => {
@@ -50,7 +69,15 @@ describe('Circuit display component', () => {
   })
 
   it('can toggle collapsing a classical register', () => {
-    cy.mount({ name, ...components.Classical({ condenseCBits: false }) })
+    const story = Template.bind({})
+    story.args = {
+      condenseCBits: false,
+      ...stories.Classical.args
+    }
+    const component = composeStory(story, stories.default)
+    cy.mount({ name, ...component() })
+    waitForRender()
+
     cy.contains('a[1]').click()
     countRegisters(circuits.Classical.qubits.length + circuits.Classical.bits.length - 3)
     cy.contains('a[..4]').click()
@@ -64,4 +91,14 @@ const countRegisters = function (nRegisters) {
     .first()
     .find('.qubit')
     .should('have.length', nRegisters)
+}
+
+const waitForRender = function () {
+  return cy
+    .get('[data-command=true]')
+    .should('exist')
+    .then(() => {
+      cy.get('.loading')
+        .should('not.exist')
+    })
 }

@@ -16,6 +16,7 @@ describe('Circuit command component', () => {
     describe(name, () => {
       it('mounts', () => {
         cy.mount({ name, ...component() })
+        cy.get('loading').should('not.exist')
       })
 
       it('has the right number of wires', () => {
@@ -38,7 +39,7 @@ describe('Circuit command component', () => {
         cy.get('@1em').then(em => {
           em = parseInt(em, 10) // chop 'px' off the end
           cy.log('1em:', em)
-          cy.get('.circuit-display-container > [data-command=true]') // No circuit layer at top level when testing.
+          cy.get('[data-cy=command-container] > [data-command=true]') // No circuit layer at top level when testing.
             .should('have.length', 1) // Only one command should render.
             .invoke('height').should('be.eq', 3 * em * nWires)
         })
