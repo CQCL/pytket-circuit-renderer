@@ -1,6 +1,10 @@
 
 /* Circuit renderer specific styling options */
 .circuit_variables {
+    color: var(--wire-col);
+    font-size: 1em;
+    line-height: 1em;
+
     /* Define some variables */
     --block-height: 3em;
     --box-height: 1.3em;
@@ -19,6 +23,10 @@
 
 .circuit-preview * {
     box-sizing: border-box !important;
+}
+
+.display-options-container * {
+    box-sizing: content-box;
 }
 
 .circuit-container {
@@ -140,6 +148,10 @@
     z-index: 1;
   }
 
+  .gate:not(.zx-spider) {
+    line-height: 1.2em;
+  }
+
   .gate.connected {
     margin-left: 0;
     margin-right: 0;
@@ -248,6 +260,7 @@
     top: calc(50% - 1.4em);
     color: var(--c-wire-col);
     font-size: 0.8em;
+    line-height: 0.8em;
   }
 
   .control_index.measure {
@@ -270,6 +283,7 @@
     background: var(--box-col);
     border-radius: 50%;
     font-size: 0.75em;
+    line-height: 0.75em;
   }
 
   .gate_barrier.link {

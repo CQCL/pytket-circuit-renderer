@@ -1,7 +1,12 @@
 <script>
+import { applyPureReactInVue } from 'veaury'
+import { Button } from '@cqcl-dev/quantinuum-ui'
 
 export default {
   name: 'info-modal',
+  components: {
+    ReactButton: applyPureReactInVue(Button)
+  },
   props: {
     modelValue: { type: Boolean, required: true }
   },
@@ -37,6 +42,11 @@ export default {
           background: 'black',
           opacity: 0.1
         }
+      },
+      reactProps: {
+        variant: 'primary',
+        color: 'green',
+        width: 'full'
       }
     }
   },
@@ -87,7 +97,9 @@ export default {
         <div class="row paras" style="overflow:auto"><slot name="content"></slot></div>
         <slot name="buttons">
           <div class="row" style="border: none; display: flex">
-            <button class="row-item button" role="button" @click="closeModal">Close</button>
+            <div style="width:100%">
+              <react-button v-bind="reactProps" @click="closeModal">Close</react-button>
+            </div>
           </div>
         </slot>
       </div>

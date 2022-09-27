@@ -7,3 +7,8 @@ export const renderOptions = {
   recursive: Symbol('Render option: display nested circuits recursively.'),
   nested: Symbol('Render option: circuit is nested.')
 }
+
+export const gateInfoProps = {
+  op: Symbol('Gate info prop: op to display the info for.'),
+  visible: Symbol('Gate info prop: whether gate info is visible.')
+}

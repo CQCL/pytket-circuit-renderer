@@ -1,11 +1,11 @@
 <script>
-import { teleportFrom } from '@/components/teleport/init'
+import { applyPureReactInVue } from 'veaury'
+import { Dialog, Button } from '@cqcl-dev/quantinuum-ui'
+
 import { chartList, chartMatrix } from '@/components/charts/init'
 import mathjaxContent from '@/components/mathjaxContent/mathjaxContent'
 
 import { CONTROLLED_OPS } from './consts'
-
-import infoModal from './infoModal'
 import gateInfoSubCircuit from './gateInfoSubCircuit'
 import gateInfoClassical from './gateInfoClassical'
 import { renderOptions } from './provideKeys'
@@ -15,11 +15,11 @@ export default {
   components: {
     chartList,
     chartMatrix,
-    infoModal,
-    teleportFrom,
     mathjaxContent,
     gateInfoSubCircuit,
-    gateInfoClassical
+    gateInfoClassical,
+    reactDialog: applyPureReactInVue(Dialog),
+    reactButton: applyPureReactInVue(Button)
   },
   props: {
     op: { type: Object, required: true },
@@ -135,6 +135,9 @@ export default {
       this.$nextTick(() => {
         this.$refs.infoModal.onResize()
       })
+    },
+    setDialogVisibility (visible) {
+      this.visible = visible
     }
   }
 }
@@ -146,16 +149,12 @@ export default {
 
     <!-- content to be rendered in the info modal -->
     <div style="display: none">
-      <teleport-from
-          :to="visible ? teleportId : ''"
-          :parent="teleportParent"
-          @register-teleport="(...args) => $emit('register-teleport', ...args)"
-      >
-        <info-modal ref="infoModal" v-model="visible" class="tool-tip-content">
+        <react-dialog :isOpen="visible" :isDismissable="true" :setIsOpen="setDialogVisibility">
           <template #title>
             [[# opType #]]
           </template>
-          <template #content v-if="visible"> <!-- Defer rendering contents until modal is opened -->
+          <div>
+            <div v-if="visible"> <!-- Defer rendering contents until modal is opened -->
             <div v-if="hasLongParams">
               <h4>Box params</h4>
               <div v-for="(param, i) in params" :key="i" class="complex-number">
@@ -268,17 +267,20 @@ export default {
               </table>
             </div>
 
-            <gate-info-sub-circuit @updated="onCircuitDisplayUpdate" :op="displayOp"></gate-info-sub-circuit>
+            <gate-info-sub-circuit :op="displayOp"></gate-info-sub-circuit>
 
             <gate-info-classical :op="displayOp"></gate-info-classical>
+          </div>
+          </div>
+          <template #footer-content>
+            <react-button @click="visible = false">Close</react-button>
           </template>
-        </info-modal>
-      </teleport-from>
+        </react-dialog>
     </div>
   </div>
 </template>
 
-<style scoped>
+<style>
 .tool-tip-container{
     margin: calc(0px - var(--block-height)) auto 0;
     padding-top: var(--block-height);
