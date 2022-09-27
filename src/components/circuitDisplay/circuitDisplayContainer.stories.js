@@ -8,7 +8,9 @@ export default {
   component: CircuitDisplayContainer,
   argTypes: {
     circuitPreset: {
-      options: Object.keys(CircuitStories),
+      options: Object.keys(CircuitStories).filter(key => {
+        return !CircuitStories.default.excludeStories.includes(key)
+      }),
       control: { type: 'select' }
     }
   },

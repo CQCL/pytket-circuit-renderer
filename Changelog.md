@@ -23,6 +23,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ### Added
 - Option to export rendered circuits as images.
+- New gates introduced in pytket 1.6
 
 ## [0.2.0] 2022-07-13
 ### Added
