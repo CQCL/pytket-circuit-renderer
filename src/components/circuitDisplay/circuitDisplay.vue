@@ -20,8 +20,10 @@ export default {
     gateInfo
   },
   props: {
-    circuit: { type: Object }
+    circuit: { type: Object },
+    navigatorStyling: { type: Object }
   },
+  emits: ['updated'],
   inject: {
     condenseCBits: { from: renderOptions.condenseCBits },
     zxStyle: { from: renderOptions.zxStyle },
@@ -157,8 +159,14 @@ export default {
     getRenderedCircuitEl () {
       return {
         circuit: this.$refs.renderedCircuit,
-        width: this.$refs.renderedCircuitDimensions.clientWidth,
-        height: this.$refs.renderedCircuitDimensions.clientHeight
+        width: this.$refs.renderedCircuitDimensions?.clientWidth,
+        height: this.$refs.renderedCircuitDimensions?.clientHeight
+      }
+    },
+    getDisplayedCircuitDimensions () {
+      return {
+        x: this.$refs.renderedCircuit?.clientWidth,
+        y: this.$refs.renderedCircuit?.clientHeight
       }
     },
     onDisplayUpdate () {
@@ -172,7 +180,7 @@ export default {
   <teleport-container :names="infoModal.teleport.names" ref="teleportParent"
     :class="{condensed: condensed, 'circuit-preview circuit_variables': !nested}"
   >
-    <div v-if="circuit" tabindex="0" :class="{'nested-circuit-container': condensed}">
+    <div v-if="circuit" tabindex="0" :class="{'nested-circuit-container': condensed, 'parent': !nested}">
       <!--  Pre-processing for the commands we want to display  -->
       <div style="display:none">
         <circuit-command
@@ -202,36 +210,36 @@ export default {
         </circuit-command>
       </div>
 
-      <div :class="{'circuit-inner-scroll': condensed}">
+      <div ref="navigatorContent" :class="{'circuit-inner-scroll': condensed}" :style="navigatorStyling">
         <div ref="renderedCircuit">
           <div ref="renderedCircuitDimensions" class="circuit-container"
               :class="{nested: nested || condensed, zx: zxStyle}">
-          <circuit-layer
-              :qubits="true"
-              :style="{'text-align': 'right'}"
-              :argList="activeArgs"
-              :condensed-registers="recursive ? {} : condensedRegisters.toggles"
-              @toggle="updateCondensedRegisterToggles">
-          </circuit-layer>
+            <circuit-layer
+                :qubits="true"
+                :style="{'text-align': 'right'}"
+                :argList="activeArgs"
+                :condensed-registers="recursive ? {} : condensedRegisters.toggles"
+                @toggle="updateCondensedRegisterToggles">
+            </circuit-layer>
 
-          <!--  Circuit commands will actually render in here:  -->
-          <div v-if="commandRefs.length === 0"></div>
-          <split-circuit-layers v-else
-              :register-order="circuitDetails.registerOrder"
-              :command-refs="commandRefs"
-              :id-command-ref="idCommandRef"
-              :condensed-registers="condensedRegisters.toggles"
-              @updated="onDisplayUpdate">
-          </split-circuit-layers>
+            <!--  Circuit commands will actually render in here:  -->
+            <div v-if="commandRefs.length === 0"></div>
+            <split-circuit-layers v-else
+                :register-order="circuitDetails.registerOrder"
+                :command-refs="commandRefs"
+                :id-command-ref="idCommandRef"
+                :condensed-registers="condensedRegisters.toggles"
+                @updated="onDisplayUpdate">
+            </split-circuit-layers>
 
-          <circuit-layer
-              :qubits="true"
-              :style="{'text-align': 'left'}"
-              :argList="activeArgs"
-              :condensed-registers="recursive ? {} : condensedRegisters.toggles"
-              @toggle="updateCondensedRegisterToggles">
-          </circuit-layer>
-        </div>
+            <circuit-layer
+                :qubits="true"
+                :style="{'text-align': 'left'}"
+                :argList="activeArgs"
+                :condensed-registers="recursive ? {} : condensedRegisters.toggles"
+                @toggle="updateCondensedRegisterToggles">
+            </circuit-layer>
+          </div>
         </div>
       </div>
     </div>
@@ -289,6 +297,9 @@ export default {
     background: var(--box-col-overlay);
     box-shadow: 0 0 0 var(--box-border) var(--box-col) inset;
 }
+.nested-circuit-container.parent{
+  overflow: hidden;
+}
 .nested-circuit-container:focus,
 .nested-circuit-container:focus-visible {
     box-shadow: inset 0 0 0 6px var(--accent-col-outline, #ccffcc);
@@ -298,7 +309,7 @@ export default {
     overflow: visible;
     width: -moz-fit-content;
     width: fit-content;
-    margin: auto;
+    margin: auto 0;
 }
 
 .circuit-container:not(.nested) > .circuit-layer:nth-child(2),

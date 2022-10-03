@@ -3,6 +3,7 @@ import { computed } from 'vue'
 import circuitDisplay from './circuitDisplay'
 import infoModal from './infoModal'
 import exportImage from '@/components/exportImage/exportImage'
+import { navigatorController, navigatorPreview } from '@/components/navigator/init'
 import { renderOptions } from './provideKeys'
 
 export default {
@@ -10,7 +11,9 @@ export default {
   components: {
     circuitDisplay,
     infoModal,
-    exportImage
+    exportImage,
+    navigatorController,
+    navigatorPreview
   },
   props: {
     circuitRaw: { type: Object, default: undefined },
@@ -20,22 +23,26 @@ export default {
     return {
       embeddedCircuit: undefined,
       zoom: 1,
+      scrollX: 0,
+      scrollY: 0,
+      width: 0,
       renderOptions: {
         zxStyle: true,
         condenseCBits: true,
         recursive: false,
         condensed: true
       },
-      zoomOptions: {
-        zoomOut: -0.1,
-        zoomIn: 0.1
-      },
       circuitEl: undefined,
       circuitDimensions: {
         width: undefined,
         height: undefined
       },
+      displayedCircuitDimensions: {
+        x: undefined,
+        y: undefined
+      },
       exportImageModal: false, // toggle export dialog
+      menuOptions: false, // toggle display options menu
       options: {
         zxStyle: {
           title: 'Render gates using zx styles',
@@ -64,8 +71,13 @@ export default {
         save: {
           title: 'Export',
           icon: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16"><path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/><path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/></svg>'
+        },
+        menu: {
+          title: 'Display Options',
+          icon: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-list" viewBox="0 0 16 16"> <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"/></svg>'
         }
-      }
+      },
+      navPreviews: []
     }
   },
   provide () {
@@ -90,27 +102,37 @@ export default {
         zxStyle: false,
         condenseCBits: false,
         recursive: !this.renderOptions.condensed,
-        condensed: this.renderOptions.recursive,
-        zoomOut: this.zoom <= 0.2,
-        zoomIn: this.zoom >= 1
+        condensed: this.renderOptions.recursive
       }
     },
     zoomStyling () {
+      if (!this.renderOptions.condensed) {
+        return {
+          width: `calc(100% / ${this.zoom})`,
+          transform: `scale(${this.zoom}) translate(-${this.scrollX * 100}%, -${this.scrollY * 100}%)`,
+          transformOrigin: 'top left'
+        }
+      }
       return {
-        transform: `scale(${this.zoom})`,
-        transformOrigin: '0% 0% 0px',
-        width: `calc(100% / ${this.zoom})`
+        transform: `scale(${this.zoom}) translate(-${this.scrollX * 100}%, -${this.scrollY * 100}%)`,
+        transformOrigin: 'top left',
+        height: '100%'
       }
     }
   },
   watch: {
     circuitElementStr () {
       this.getCircuitFromDOM()
+    },
+    zoomStyling () {
+      this.updateNav()
     }
   },
   mounted () {
     // Collect the circuit from a designated element
     this.getCircuitFromDOM()
+    this.navPreviews = [this.$refs.navX, this.$refs.navY]
+    this.updateNav()
   },
   methods: {
     getCircuitFromDOM () {
@@ -125,52 +147,67 @@ export default {
         this.embeddedCircuit = circuit
       }
     },
-    onWheelZoom (e) {
-      if (e.deltaY < 0) {
-        this.zoom = Math.min(1, this.zoom - e.deltaY * 0.01)
-      } else if (e.deltaY > 0) {
-        this.zoom = Math.max(0.2, this.zoom - e.deltaY * 0.01)
-      }
-    },
-    prepareExport () {
-      this.$refs.imageExport.resetState()
+    getCircuitDims () {
       const { circuit, width, height } = this.$refs.circuitDisplay.getRenderedCircuitEl()
       this.circuitEl = circuit
       this.circuitDimensions.width = width
       this.circuitDimensions.height = height
+    },
+    prepareExport () {
+      this.$refs.imageExport.resetState()
+      this.getCircuitDims()
       this.exportImageModal = true
     },
     modalContentUpdate (targetRef) {
       this.$refs[targetRef].onResize()
+    },
+    updateNav () {
+      if (this.$refs.circuitDisplay) {
+        const { x, y } = this.$refs.circuitDisplay.getDisplayedCircuitDimensions()
+        this.displayedCircuitDimensions.x = x
+        this.displayedCircuitDimensions.y = y
+        this.$refs.navController.initDimensions()
+      }
     }
   }
 }
 </script>
 
 <template>
-  <div class="circuit-display-container theme_variables" @wheel.ctrl.prevent.stop="onWheelZoom">
+  <navigator-controller class="circuit-display-container theme_variables"
+                        ref="navController" :navigator-previews="navPreviews"
+                        :options="{ overrideStyle: true, externalZooming: true, externalScrolling: true, externalContent: true }"
+                        v-model:ext-zoom-x="zoom" v-model:ext-zoom-y="zoom"
+                        v-model:ext-offset-x="scrollX" v-model:ext-offset-y="scrollY"
+                        :ext-content-x="displayedCircuitDimensions.x" :ext-content-y="displayedCircuitDimensions.y"
+  >
     <div class="display-options-container" v-if="circuit">
-      <div v-for="(val, option) in renderOptions" :key="option">
-        <div v-if="option in options"
-             :title="options[option].title"
-             class="icon" :class="{'active': renderOptions[option], 'disabled': disabledOptions[option]}"
-             role="checkbox"
-             @click="renderOptions[option] = disabledOptions[option] ? renderOptions[option] : !renderOptions[option]"
-             @keyup.space="renderOptions[option] = disabledOptions[option] ? renderOptions[option] : !renderOptions[option]"
-             v-html="options[option].icon">
+      <div class="icon" :class="{'active': menuOptions}" role="checkbox" tabindex="0"
+           :title="options.menu.title" v-html="options.menu.icon"
+           @click="menuOptions = !menuOptions" @keyup.space="menuOptions = !menuOptions"
+      ></div>
+      <div v-if="menuOptions" class="display-options-menu">
+        <div v-for="(val, option) in renderOptions" :key="option">
+          <div v-if="option in options" class="display-options-menu-entry"
+               tabindex="0"
+               @click="renderOptions[option] = disabledOptions[option] ? renderOptions[option] : !renderOptions[option]"
+               @keyup.space="renderOptions[option] = disabledOptions[option] ? renderOptions[option] : !renderOptions[option]"
+          >
+            <div :title="options[option].title"
+                 class="icon" :class="{'active': renderOptions[option], 'disabled': disabledOptions[option]}"
+                 role="checkbox"
+                 v-html="options[option].icon"
+            ></div>
+            <div class="icon-label">[[# options[option].title #]]</div>
+          </div>
         </div>
       </div>
-      <div v-for="(val, option) in zoomOptions" :key="option">
-        <div v-if="option in options"
-             :title="options[option].title"
-             class="icon" :class="{'disabled': disabledOptions[option]}"
-             role="button"
-             @click="zoom += disabledOptions[option] ? 0 : val"
-             @keyup.space="zoom += disabledOptions[option] ? 0 : val"
-             v-html="options[option].icon">
-        </div>
-      </div>
-      <div>
+    </div>
+
+    <navigator-preview ref="navX" :controller="$refs.navController" direction="x" :fit-zoom="true"></navigator-preview>
+    <navigator-preview ref="navY" :controller="$refs.navController" direction="y"></navigator-preview>
+
+    <div class="download-button">
         <div :title="options['save'].title"
              class="icon"
              role="button"
@@ -178,11 +215,8 @@ export default {
              @keyup.space="prepareExport"
              v-html="options['save'].icon">
         </div>
-      </div>
     </div>
-    <div :style="zoomStyling">
-      <circuit-display ref="circuitDisplay" style="flex-grow: 1" :circuit="circuit" :render-options="renderOptions"></circuit-display>
-    </div>
+
     <info-modal v-model="exportImageModal" ref="imageExportModal">
       <template #title>Export circuit as an image</template>
       <template #content>
@@ -194,30 +228,68 @@ export default {
         </export-image>
       </template>
     </info-modal>
-  </div>
+
+    <template #content>
+      <circuit-display @click="menuOptions = false" @updated="updateNav" ref="circuitDisplay" style="flex-grow: 1"
+                       :circuit="circuit" :navigator-styling="zoomStyling">
+      </circuit-display>
+    </template>
+  </navigator-controller>
 </template>
 
 <style scoped>
 .circuit-display-container {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  grid-template-rows: auto 1fr;
+  grid-template-areas:
+    "menu    nav-x   download"
+    "preview preview nav-y";
+  grid-gap: 0.25em;
   min-height: 3em;
   padding: 1em;
-  display: flex;
-  position: relative;
-  padding-top: 3.5em;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.download-button {
+  grid-area: download;
 }
 
 .display-options-container {
+  grid-area: menu;
   display: flex;
   flex-direction: row;
   align-content: flex-start;
   justify-content: flex-start;
   align-items: center;
-  border-bottom: 1px solid var(--mid-col);
-  padding-bottom: 0.5em;
+}
+
+.display-options-menu {
   position: absolute;
-  top: 1em;
-  right: 1em;
-  left: 1em;
+  top: 3em;
+  left: 0;
+  margin: 0.6em;
+  background: var(--main-bg);
+  border-radius: 0.4em;
+  box-shadow: 0px 5px 10px 0px var(--faint-col-overlay);
+  border: 1px solid var(--faint-col);
+  overflow: hidden;
+  z-index: 1;
+}
+.display-options-menu-entry {
+  display: flex;
+  padding: 0.4em;
+  border-bottom: 1px solid var(--faint-col);
+}
+.display-options-menu-entry:hover {
+  background: var(--faint-col-overlay);
+}
+.display-options-menu-entry .icon-label {
+  margin: auto 0.4em;
 }
 </style>
 
