@@ -7,4 +7,11 @@ const CONTROLLED_OPS = [
   'Condition', 'Conditional'
 ]
 
-export { CONTROLLED_OPS }
+const SPLIT_RENDERING = {
+  none: 'none',
+  start: 'start',
+  middle: 'middle',
+  end: 'end'
+}
+
+export { CONTROLLED_OPS, SPLIT_RENDERING }

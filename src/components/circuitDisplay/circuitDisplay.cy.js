@@ -19,9 +19,11 @@ describe('Circuit display component', () => {
         waitForRender()
       })
 
-      it('renders the right number of commands', () => {
+      it('renders the right number of commands', {
+        defaultCommandTimeout: 30000 // Give more time to load all gates in the circuit.
+      }, () => {
         cy.mount({ name, ...components[name]() })
-        waitForRender()
+        waitForRender({ all: true })
 
         cy.get('.circuit-container')
           .first()
@@ -40,18 +42,22 @@ describe('Circuit display component', () => {
         }
         const component = composeStory(story, stories.default)
 
-        it(`displays the right number of registers when${condenseCBits ? ' ' : ' not '}condensing bits`, () => {
+        it(`displays the right number of registers when${condenseCBits ? ' ' : ' not '}condensing bits`, {
+          defaultCommandTimeout: 30000 // Give more time to load all gates in the circuit.
+        }, () => {
           cy.log(story)
           cy.mount({ name, ...component() })
-          waitForRender()
+          waitForRender({ all: true })
 
           cy.log('Expecting ' + nWires + ' bits.')
           countRegisters(nWires)
         })
 
-        it(`renders (at most) the right number of wires for each circuit layer when${condenseCBits ? ' ' : ' not '}condensing bits`, () => {
+        it(`renders (at most) the right number of wires for each circuit layer when${condenseCBits ? ' ' : ' not '}condensing bits`, {
+          defaultCommandTimeout: 30000 // Give more time to load all gates in the circuit.
+        }, () => {
           cy.mount({ name, ...component() })
-          waitForRender()
+          waitForRender({ all: true })
 
           cy.log('Expecting ' + nWires + ' wires.')
           cy.get('[data-command=true]').invoke('css', 'font-size').as('1em')
@@ -93,12 +99,20 @@ const countRegisters = function (nRegisters) {
     .should('have.length', nRegisters)
 }
 
-const waitForRender = function () {
+const waitForRender = function (options) {
+  if (typeof options === 'undefined') {
+    options = {}
+  }
   return cy
     .get('[data-command=true]')
-    .should('exist')
+    .should('exist') // At least one command has rendered
     .then(() => {
-      cy.get('.loading')
-        .should('not.exist')
+      if (options.all) {
+        // Make sure all blocks have rendered
+        cy.get('[data-cy=loading]')
+          .should('not.exist')
+        cy.get('[data-cy=rendering-complete]')
+          .should('exist')
+      }
     })
 }

@@ -4,13 +4,7 @@ import CircuitLayer from './circuitLayer'
 import GenericGate from './genericGate'
 import GateInfo from './gateInfo'
 import { renderOptions } from './provideKeys'
-
-export const SPLIT_RENDERING = {
-  none: 'none',
-  start: 'start',
-  middle: 'middle',
-  end: 'end'
-}
+import { SPLIT_RENDERING } from './consts'
 
 export default {
   name: 'render-circuit-layers',
@@ -33,7 +27,8 @@ export default {
   data () {
     return {
       layersToRender: [],
-      ready: false
+      ready: false,
+      rendered: false
     }
   },
   computed: {
@@ -51,6 +46,7 @@ export default {
     updateLayers: {
       async handler () {
         this.ready = false
+        this.rendered = false
         await window.setTimeout(async () => {
           // Set timeout so vue knows to render a fallback while we compute the layers
           this.layersToRender = await this.async_getLayersToRender()
@@ -63,21 +59,28 @@ export default {
   render () {
     if (this.ready) {
       if (this.layersToRender.length > 0) {
+        const lastBlock = (this.split === SPLIT_RENDERING.end) || (this.split === SPLIT_RENDERING.none)
         return this.layersToRender.map((children, i) => {
           return h(
             CircuitLayer,
-            { key: i },
+            {
+              key: i,
+              'data-cy': lastBlock && (i === this.layersToRender.length - 1)
+                ? this.rendered ? 'rendering-complete' : 'loading'
+                : ''
+            },
             { default: () => children }
           )
         })
       }
       return 'No commands'
     }
-    return ''
+    return h('div', { 'data-cy': 'loading' }, [''])
   },
   updated () {
     if (this.layersToRender.length > 0) {
       this.$emit('layersRendered')
+      this.rendered = true
     } else {
       this.$emit('updated')
     }

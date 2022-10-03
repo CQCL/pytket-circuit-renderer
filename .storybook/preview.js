@@ -11,4 +11,4 @@ export const parameters = {
   }
 }
 
-app.config.unwrapInjectedRef = true  // temp config to allow inject/provide to use computed properties
+app.config.unwrapInjectedRef = true // temp config to allow inject/provide to use computed properties

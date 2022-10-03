@@ -1,7 +1,8 @@
 <script>
 import { h } from 'vue'
 import CircuitLayer from './circuitLayer'
-import RenderCircuitLayers, { SPLIT_RENDERING } from './renderCircuitLayers'
+import RenderCircuitLayers from './renderCircuitLayers'
+import { SPLIT_RENDERING } from './consts'
 
 const BLOCK_LENGTH = 10
 
@@ -33,9 +34,6 @@ export default {
       }
       return blocks
     }
-  },
-  updated () {
-
   },
   render () {
     if (this.nBlocks > 0) {
@@ -73,12 +71,12 @@ export default {
       this.readyUpTo = 0
     },
     getSplit (i) {
-      return this.nBlocks > 0
+      return this.nBlocks > 1
         ? (i > 0
-            ? (i === this.nBlocks
-                ? SPLIT_RENDERING.last
+            ? (i === this.nBlocks - 1
+                ? SPLIT_RENDERING.end
                 : SPLIT_RENDERING.middle)
-            : SPLIT_RENDERING.first)
+            : SPLIT_RENDERING.start)
         : SPLIT_RENDERING.none
     }
   }
