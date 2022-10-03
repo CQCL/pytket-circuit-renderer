@@ -82,7 +82,7 @@ export default {
   <div>
     <div v-show="modelValue" class="info-modal" :style="{zIndex: 1, ...styles.infoModal}">
       <div class="info-modal-backdrop" @click="closeModal" :style="styles.infoModalBackdrop"></div>
-      <div class="info-modal-container" :style="{...modalStyle, ...styles.infoModalContainer}" ref="modal">
+      <div class="info-modal-container" :style="{...modalStyle, ...styles.infoModalContainer}" ref="modal" @wheel.stop>
         <div class="row row-heading"><slot name="title"></slot></div>
         <div class="row paras" style="overflow:auto"><slot name="content"></slot></div>
         <slot name="buttons">

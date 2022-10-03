@@ -37,7 +37,9 @@ export const FromDOM = (args) => ({
     }
   },
   template: `<div>
-  <circuit-display-container :circuit-element-str="circuitElementStr"></circuit-display-container>
+      <div style="position: relative; width: 100%; height: 400px">
+        <circuit-display-container :circuit-element-str="circuitElementStr"></circuit-display-container>
+      </div>
       <div id="circuitJSON">${JSON.stringify(CircuitStories[args.circuitPreset].args.circuit)}</div>
     </div>`
 })
