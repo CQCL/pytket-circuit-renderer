@@ -11,7 +11,7 @@ export default {
     condenseCBits: false,
     recursive: true,
     condensed: true,
-    nested: false,
+    nested: false
   }
 }
 
