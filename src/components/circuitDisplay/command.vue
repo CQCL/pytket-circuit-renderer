@@ -4,7 +4,6 @@ import { CONTROLLED_OPS } from './consts'
 
 import controlledGate from './controlledGate'
 import genericGate from './genericGate'
-import { renderOptions } from './provideKeys'
 
 const GLOBAL_CONDENSED_NAME = ['Global Classical', ['n'], 'condensed'] // Name for the global condensed register
 
@@ -14,10 +13,8 @@ export default {
     command: { type: Object, required: true },
     registerOrder: { type: Object, required: true },
     classicalThreshold: { type: Number, required: true },
+    renderOptions: { type: Object, required: true },
     condensedRegisters: { type: Object, required: true }
-  },
-  inject: {
-    condenseCBits: { from: renderOptions.condenseCBits }
   },
   emits: ['mounted'],
   computed: {
@@ -61,7 +58,7 @@ export default {
       // Account for condensed registers
       let adjustedFirstArg = firstArg
       let adjustedLastArg = lastArg
-      if (this.condenseCBits) {
+      if (this.renderOptions.condenseCBits) {
         adjustedFirstArg = Math.min(firstArg, this.classicalThreshold)
         adjustedLastArg = lastArg >= this.classicalThreshold ? this.registerOrder.length - 1 : lastArg
       } else {
@@ -82,7 +79,7 @@ export default {
       // Need to sort the args according to order to ensure condensed registers are in the right place:
       return [
         ...this.argList,
-        ...this.overlappingCondensedRegisters[this.condenseCBits ? 'global' : 'names']
+        ...this.overlappingCondensedRegisters[this.renderOptions.condenseCBits ? 'global' : 'names']
       ]
         .map(arg => this.indexedArgDetails.details[arg])
         .sort((arg1, arg2) => arg1.order - arg2.order)
@@ -186,6 +183,7 @@ export default {
         'data-command': true, // mark this as containing a command from the circuit definition for testing.
         command: this.command,
         indexedArgs: this.indexedArgs,
+        renderOptions: this.renderOptions,
         condensedRegisters: this.condensedRegisters.toggles
       }
       return [

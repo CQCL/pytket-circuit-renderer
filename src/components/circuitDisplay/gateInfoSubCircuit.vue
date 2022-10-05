@@ -1,32 +1,30 @@
 <script>
 import { extractSubCircuit, extractControlledCommand } from './utils'
-import { renderOptions } from './provideKeys'
 
 export default {
   name: 'gate-info-sub-circuit',
   components: {},
   props: {
-    op: { type: Object, required: true }
-  },
-  emits: ['updated'],
-  provide () {
-    return {
-      [renderOptions.recursive]: false,
-      [renderOptions.condensed]: true,
-      [renderOptions.nested]: true
-    }
+    op: { type: Object, required: true },
+    renderOptions: { type: Object, required: true }
   },
   computed: {
     opType () {
       return this.op.type
     },
     subCircuit () {
+      const newRenderOptions = { ...this.renderOptions }
+      newRenderOptions.condensed = true
+      newRenderOptions.nested = true
+      newRenderOptions.recursive = false
+
       // Default is that this box contains a circuit directly
       let circuit = extractSubCircuit(this.op)
       if (circuit) {
         return {
           circuit,
-          type: 'Nested'
+          type: 'Nested',
+          renderOptions: newRenderOptions
         }
       }
 
@@ -40,7 +38,8 @@ export default {
       if (circuit) {
         return {
           circuit,
-          type: 'Controlled'
+          type: 'Controlled',
+          renderOptions: newRenderOptions
         }
       }
       return false
@@ -56,7 +55,11 @@ export default {
   <div v-if="subCircuit" style="overflow: auto;width: 100%">
     <h4>[[# subCircuit.type #]] Circuit</h4>
     <div class="gate_container nested">
-      <circuit-display @updated="$emit('updated')" :circuit="subCircuit.circuit"></circuit-display>
+      <circuit-display
+          :circuit="subCircuit.circuit"
+          :render-options="subCircuit.renderOptions"
+      >
+      </circuit-display>
     </div>
   </div>
 </template>

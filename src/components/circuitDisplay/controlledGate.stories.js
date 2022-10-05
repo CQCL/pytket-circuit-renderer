@@ -1,21 +1,21 @@
 import ControlledGate from './controlledGate.vue'
-import { setupProvideRenderOptions } from './circuitDisplay.stories'
 
 export default {
   title: 'Circuits/ControlledGate',
   component: ControlledGate,
   args: {
-    zxStyle: true,
-    condenseCBits: true,
-    recursive: false,
-    condensed: true
+    renderOptions: {
+      zxStyle: true,
+      condenseCBits: true,
+      recursive: false,
+      condensed: true
+    }
   }
 }
 
 const Template = (args) => ({
   components: { ControlledGate },
   setup () {
-    setupProvideRenderOptions(args)
     return { args }
   },
   template: '<div class="circuit-display-container circuit-container circuit-preview theme_variables circuit_variables"><controlled-gate v-bind="args" /></div>'

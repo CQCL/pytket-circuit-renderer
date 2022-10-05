@@ -1,7 +1,6 @@
 <script>
 import wire from './wire'
 import { formatClassicalExp, formatPosStr } from './utils'
-import { renderOptions } from './provideKeys'
 
 export default {
   name: 'gate-component',
@@ -13,10 +12,8 @@ export default {
     posAdjust: { type: Number, required: true },
     split: { type: Boolean, default: false },
     command: { type: Object, required: true },
-    linkVertical: { type: Boolean, default: false }
-  },
-  inject: {
-    zxStyle: { from: renderOptions.zxStyle }
+    linkVertical: { type: Boolean, default: false },
+    renderOptions: { type: Object, required: true }
   },
   computed: {
     opType () {
@@ -33,13 +30,13 @@ export default {
         connected: this.arg.pos !== -1,
         gate_reset: this.opType === 'Reset',
         gate_barrier: this.opType === 'Barrier',
-        'zx-hadamard': this.opType === 'H' && this.zxStyle,
-        'zx-spider': this.zxStyle && this.asSpider(this.opType)
+        'zx-hadamard': this.opType === 'H' && this.renderOptions.zxStyle,
+        'zx-spider': this.renderOptions.zxStyle && this.asSpider(this.opType)
       }
     },
     specialGateContentClasses () {
       if (this.opType === 'Reset') {
-        return ['gate', 'gate_box', { 'zx-spider x': this.zxStyle }]
+        return ['gate', 'gate_box', { 'zx-spider x': this.renderOptions.zxStyle }]
       }
       return ['gate_name']
     },
@@ -98,7 +95,7 @@ export default {
 
       // If this should be a spider, return the phase to display.
       const phase = this.spiderPhase(this.opType, this.paramStr)
-      if (phase && this.zxStyle) {
+      if (phase && this.renderOptions.zxStyle) {
         return phase
       }
       return name + this.paramStr

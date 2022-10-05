@@ -1,12 +1,9 @@
-import { provide } from 'vue'
 import CircuitDisplay from './circuitDisplay.vue'
 import * as circuitFixtures from '@/../cypress/fixtures/circuits.js'
-import { renderOptions } from './provideKeys'
 
 export default {
   title: 'Circuits/CircuitDisplay',
   component: CircuitDisplay,
-  excludeStories: ['setupProvideRenderOptions', 'Template'],
   argTypes: {
     circuit: { control: false }
   },
@@ -15,29 +12,26 @@ export default {
     condenseCBits: true,
     recursive: false,
     condensed: true,
-    nested: false,
     circuit: { qubits: [['Q', [0]]], commands: [], bits: [], phase: 0, implicit_permutation: ['Q', [0]] } // Empty circuit with 1 qubit.
   }
 }
 
-const setupProvideRenderOptions = function (args) {
-  provide(renderOptions.zxStyle, args.zxStyle)
-  provide(renderOptions.condenseCBits, args.condenseCBits)
-  provide(renderOptions.recursive, args.recursive)
-  provide(renderOptions.condensed, args.condensed)
-  provide(renderOptions.nested, args.nested)
-}
-export { setupProvideRenderOptions }
-
-export const Template = (args) => ({
+const Template = (args) => ({
   components: { CircuitDisplay },
   setup () {
-    setupProvideRenderOptions(args)
-    return { circuit: args.circuit }
+    return {
+      ...args,
+      renderOptions: {
+        zxStyle: args.zxStyle,
+        condenseCBits: args.condenseCBits,
+        recursive: args.recursive,
+        condensed: args.condensed
+      }
+    }
   },
   template: `<div class="circuit-display-container theme_variables">
-    <circuit-display :circuit="circuit" />
-  </div>`
+    <circuit-display :circuit="circuit" :render-options="renderOptions" />
+    </div>`
 })
 
 export const Basic = Template.bind({})
@@ -52,6 +46,7 @@ ZX.args = {
 
 export const Classical = Template.bind({})
 Classical.args = {
+  condenseCBits: false,
   circuit: circuitFixtures.Classical
 }
 
@@ -63,19 +58,4 @@ Boxes.args = {
 export const QIR = Template.bind({})
 QIR.args = {
   circuit: circuitFixtures.QIR
-}
-
-export const Control = Template.bind({})
-Control.args = {
-  circuit: circuitFixtures.Control
-}
-
-export const Deep = Template.bind({})
-Deep.args = {
-  circuit: circuitFixtures.Deep
-}
-
-export const Nested = Template.bind({})
-Nested.args = {
-  circuit: circuitFixtures.Nested
 }
