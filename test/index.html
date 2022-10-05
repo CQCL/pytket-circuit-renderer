@@ -66,7 +66,7 @@
         const circuitDisplayContainer = window["pytket-circuit-renderer"].default;
 
         // Create the root Vue component
-        const app = createApp({
+        createApp({
           components: { circuitDisplayContainer },
           data () {
               return {
@@ -86,11 +86,7 @@
                 }
             }
           }
-        })
-        app.config.unwrapInjectedRef = true;
-        app.config.performance = true;
-
-        app.mount("#app");
+        }).mount("#app");
     </script>
   </body>
 </html>

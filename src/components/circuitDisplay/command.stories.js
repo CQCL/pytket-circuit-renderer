@@ -1,34 +1,31 @@
-import { h, ref } from 'vue'
+import { h } from 'vue'
 import CircuitCommand from './command.vue'
-import { setupProvideRenderOptions } from './circuitDisplay.stories'
 
 export default {
   title: 'Circuits/Command',
   component: CircuitCommand,
   excludeStories: ['SubstituteCommand'],
   args: {
-    zxStyle: true,
-    condenseCBits: false,
-    recursive: true,
-    condensed: true,
-    nested: false
+    renderOptions: {
+      zxStyle: true,
+      condenseCBits: false,
+      recursive: true,
+      condensed: true
+    }
   }
 }
 
 const Wrapper = {
   props: ['commandRef', 'ready'],
   render () {
-    return this.ready ? this.commandRef.renderSelf(h) : 'loading'
+    return this.ready ? this.commandRef.renderSelf(h) : 'loading...'
   }
 }
 
 const Template = (args) => ({
   components: { CircuitCommand, Wrapper },
-  setup () {
-    setupProvideRenderOptions(args)
-    const commandRef = ref()
-    const isReady = ref(false)
-    return { args, h, commandRef, isReady }
+  data () {
+    return { args, h, commandRef: undefined, isReady: false }
   },
   methods: {
     onMounted () {
@@ -36,17 +33,13 @@ const Template = (args) => ({
       this.isReady = true
     }
   },
-  template: `<div class="circuit-display-container theme_variables">
-    <div style="justify-content: flex-start" class="circuit-container circuit-preview circuit_variables condensed">
-      <div class="circuit-inner-scroll" data-cy="command-container">
-        <circuit-command :ref="'commandRef'" v-bind="args" @mounted="onMounted">
-          <template #gate-info>
-            <div data-description="placeholder"></div>
-          </template>
-        </circuit-command>
-        <wrapper :command-ref="commandRef" :ready="isReady"></wrapper>
-      </div>
-    </div>
+  template: `<div class="circuit-display-container circuit-container circuit-preview theme_variables circuit_variables">
+    <circuit-command :ref="'commandRef'" v-bind="args" @mounted="onMounted">
+      <template #gate-info>
+        <div data-description="placeholder"></div>
+      </template>
+    </circuit-command>
+    <wrapper :command-ref="commandRef" :ready="isReady"></wrapper>
   </div>`
 })
 

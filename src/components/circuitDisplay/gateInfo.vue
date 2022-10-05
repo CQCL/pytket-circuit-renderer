@@ -8,7 +8,6 @@ import { CONTROLLED_OPS } from './consts'
 import infoModal from './infoModal'
 import gateInfoSubCircuit from './gateInfoSubCircuit'
 import gateInfoClassical from './gateInfoClassical'
-import { renderOptions } from './provideKeys'
 
 export default {
   name: 'gate-info',
@@ -24,12 +23,10 @@ export default {
   props: {
     op: { type: Object, required: true },
     teleportId: { type: String, required: true },
-    teleportParent: { required: true } // ref to the parent. Undefined until parent is mounted.
+    teleportParent: { required: true }, // ref to the parent. Undefined until parent is mounted.
+    renderOptions: { type: Object, required: true }
   },
-  inject: {
-    recursive: { from: renderOptions.recursive }
-  },
-  emits: ['register-teleport', 'updated'],
+  emits: ['register-teleport'],
   data () {
     return {
       controlledOps: CONTROLLED_OPS,
@@ -79,7 +76,7 @@ export default {
     },
     hasContent () {
       return (this.contentOps.includes(this.opType) &&
-          (!this.recursive || !['CircBox'].includes(this.opType))) ||
+          (!this.renderOptions.recursive || !['CircBox'].includes(this.opType))) ||
           this.hasLongParams
     },
     hasLongParams () {
@@ -129,12 +126,6 @@ export default {
         formattedMatrix.push((basis, row.map((x) => x ? '1' : '0')))
       }
       return formattedMatrix
-    },
-    onCircuitDisplayUpdate () {
-      // Make sure info modal resizes when the circuit is loaded
-      this.$nextTick(() => {
-        this.$refs.infoModal.onResize()
-      })
     }
   }
 }
@@ -151,11 +142,11 @@ export default {
           :parent="teleportParent"
           @register-teleport="(...args) => $emit('register-teleport', ...args)"
       >
-        <info-modal ref="infoModal" v-model="visible" class="tool-tip-content">
+        <info-modal v-model="visible" class="tool-tip-content">
           <template #title>
             [[# opType #]]
           </template>
-          <template #content v-if="visible"> <!-- Defer rendering contents until modal is opened -->
+          <template #content>
             <div v-if="hasLongParams">
               <h4>Box params</h4>
               <div v-for="(param, i) in params" :key="i" class="complex-number">
@@ -268,7 +259,7 @@ export default {
               </table>
             </div>
 
-            <gate-info-sub-circuit @updated="onCircuitDisplayUpdate" :op="displayOp"></gate-info-sub-circuit>
+            <gate-info-sub-circuit :op="displayOp" :render-options="renderOptions"></gate-info-sub-circuit>
 
             <gate-info-classical :op="displayOp"></gate-info-classical>
           </template>

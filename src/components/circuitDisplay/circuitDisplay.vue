@@ -2,10 +2,9 @@
 import { teleportContainer, teleportTo } from '@/components/teleport/init'
 
 import circuitLayer from './circuitLayer'
-import splitCircuitLayers from './splitCircuitLayers'
+import renderCircuitLayers from './renderCircuitLayers'
 import circuitCommand from './command'
 import gateInfo from './gateInfo'
-import { renderOptions } from './provideKeys'
 
 let nCircuits = 0 // circuits needs unique ids.
 
@@ -15,19 +14,13 @@ export default {
     teleportContainer,
     teleportTo,
     circuitLayer,
-    splitCircuitLayers,
+    renderCircuitLayers,
     circuitCommand,
     gateInfo
   },
   props: {
-    circuit: { type: Object }
-  },
-  inject: {
-    condenseCBits: { from: renderOptions.condenseCBits },
-    zxStyle: { from: renderOptions.zxStyle },
-    recursive: { from: renderOptions.recursive },
-    condensed: { from: renderOptions.condensed },
-    nested: { from: renderOptions.nested }
+    circuit: { type: Object },
+    renderOptions: { type: Object, required: true }
   },
   data () {
     nCircuits++
@@ -61,6 +54,7 @@ export default {
           bits: this.circuit.bits,
           qubits: this.circuit.qubits,
           registerOrder: this.circuit.qubits.concat(this.circuit.bits)
+
         }
       }
       return {
@@ -87,7 +81,7 @@ export default {
         }, { filtered: [], included: {} }).filtered
 
         return [...this.circuitDetails.qubits, ...(
-          this.condenseCBits && this.circuitDetails.condensedBits
+          this.renderOptions.condenseCBits && this.circuitDetails.condensedBits
             ? this.circuitDetails.condensedBits.global
             : classicalBits
         )]
@@ -95,8 +89,8 @@ export default {
       return []
     },
     commandRefs () {
-      // Force update each time a new command gets rendered or the circuit changes.
-      return this.nRenderedCommands > 0 ? this.$refs.commands.slice(0, this.circuit.commands.length) : []
+      // Force update each time a new command gets rendered.
+      return this.nRenderedCommands > 0 ? this.$refs.commands : []
     }
   },
   watch: {
@@ -108,7 +102,7 @@ export default {
         }
       }
     },
-    recursive: {
+    'renderOptions.recursive': {
       immediate: true,
       handler: function (recursive) {
         if (recursive) {
@@ -160,9 +154,6 @@ export default {
         width: this.$refs.renderedCircuitDimensions.clientWidth,
         height: this.$refs.renderedCircuitDimensions.clientHeight
       }
-    },
-    onDisplayUpdate () {
-      this.$emit('updated')
     }
   }
 }
@@ -170,9 +161,9 @@ export default {
 
 <template>
   <teleport-container :names="infoModal.teleport.names" ref="teleportParent"
-    :class="{condensed: condensed, 'circuit-preview circuit_variables': !nested}"
+    :class="{condensed: renderOptions.condensed, 'circuit-preview circuit_variables': !renderOptions.nested}"
   >
-    <div v-if="circuit" tabindex="0" :class="{'nested-circuit-container': condensed}">
+    <div v-if="circuit" tabindex="0" :class="{'nested-circuit-container': renderOptions.condensed}">
       <!--  Pre-processing for the commands we want to display  -->
       <div style="display:none">
         <circuit-command
@@ -180,6 +171,7 @@ export default {
             :command="{op: {type: 'ID'}, args: circuitDetails.registerOrder}"
             :register-order="circuitDetails.registerOrder"
             :classicalThreshold="circuitDetails.qubits.length"
+            :render-options="renderOptions"
             :condensed-registers="condensedRegisters"
             @mounted="idCommandRef = $refs['command-id']"
         ></circuit-command>
@@ -188,6 +180,7 @@ export default {
             :command="command"
             :register-order="circuitDetails.registerOrder"
             :classicalThreshold="circuitDetails.qubits.length"
+            :render-options="renderOptions"
             :condensed-registers="condensedRegisters"
             @mounted="nRenderedCommands++"
         >
@@ -196,39 +189,42 @@ export default {
                 :op="command.op"
                 :teleport-id="infoModal.teleport.id"
                 :teleport-parent="$refs.teleportParent"
+                :render-options="renderOptions"
                 @register-teleport="registerTeleport">
             </gate-info>
           </template>
         </circuit-command>
       </div>
 
-      <div :class="{'circuit-inner-scroll': condensed}">
+      <div :class="{'circuit-inner-scroll': renderOptions.condensed}">
         <div ref="renderedCircuit">
           <div ref="renderedCircuitDimensions" class="circuit-container"
-              :class="{nested: nested || condensed, zx: zxStyle}">
+              :class="{nested: renderOptions.nested || renderOptions.condensed, zx: renderOptions.zxStyle}">
           <circuit-layer
+              :nested="renderOptions.nested"
               :qubits="true"
               :style="{'text-align': 'right'}"
               :argList="activeArgs"
-              :condensed-registers="recursive ? {} : condensedRegisters.toggles"
+              :condensed-registers="renderOptions.recursive ? {} : condensedRegisters.toggles"
               @toggle="updateCondensedRegisterToggles">
           </circuit-layer>
 
           <!--  Circuit commands will actually render in here:  -->
           <div v-if="commandRefs.length === 0"></div>
-          <split-circuit-layers v-else
+          <render-circuit-layers v-else
               :register-order="circuitDetails.registerOrder"
               :command-refs="commandRefs"
               :id-command-ref="idCommandRef"
-              :condensed-registers="condensedRegisters.toggles"
-              @updated="onDisplayUpdate">
-          </split-circuit-layers>
+              :render-options="renderOptions"
+              :condensed-registers="condensedRegisters.toggles">
+          </render-circuit-layers>
 
           <circuit-layer
+              :nested="renderOptions.nested"
               :qubits="true"
               :style="{'text-align': 'left'}"
               :argList="activeArgs"
-              :condensed-registers="recursive ? {} : condensedRegisters.toggles"
+              :condensed-registers="renderOptions.recursive ? {} : condensedRegisters.toggles"
               @toggle="updateCondensedRegisterToggles">
           </circuit-layer>
         </div>
