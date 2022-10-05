@@ -4,7 +4,6 @@ export default {
   emits: ['toggle'],
   props: {
     qubits: { type: Boolean, default: false },
-    nested: { type: Boolean, default: false },
     argList: { type: Array, default () { return [] } },
     condensedRegisters: { type: Object, default () { return {} } }
   },

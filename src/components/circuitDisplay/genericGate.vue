@@ -1,4 +1,5 @@
 <script>
+import { computed } from 'vue'
 import { renderIndexedArgs, extractSubCircuit } from './utils'
 
 import wire from './wire'
@@ -7,6 +8,7 @@ import circuitLayer from './circuitLayer'
 import gateSwap from './gateSwap'
 import gateMeasure from './gateMeasure'
 import gateComponent from './gateComponent'
+import { renderOptions } from './provideKeys'
 
 export default {
   name: 'generic-gate',
@@ -23,9 +25,22 @@ export default {
     command: { type: Object, required: true },
     linkVertical: { type: Boolean, default: false },
     split: { type: Boolean, default: false },
-    renderOptions: { type: Object, required: true },
     condensedRegisters: { type: Object, required: true },
     posAdjust: { type: Number, default: 0 }
+  },
+  inject: {
+    condenseCBits: { from: renderOptions.condenseCBits },
+    zxStyle: { from: renderOptions.zxStyle },
+    recursive: { from: renderOptions.recursive },
+    condensed: { from: renderOptions.condensed },
+    nested: { from: renderOptions.nested }
+  },
+  provide () {
+    // Overwrite child renderOptions if displaying a nested circuit.
+    return {
+      [renderOptions.condensed]: computed(() => { return this.nestedCircuitGate ? true : this.condensed }),
+      [renderOptions.nested]: computed(() => { return this.nestedCircuitGate ? true : this.nested })
+    }
   },
   computed: {
     opType () {
@@ -37,13 +52,7 @@ export default {
       return ['SWAP', 'Measure', 'CX', 'CZ'].includes(this.opType)
     },
     nestedCircuitGate () {
-      return this.renderOptions.recursive && this.nestedCircuit
-    },
-    nestedRenderOptions () {
-      const newOptions = { ...this.renderOptions }
-      newOptions.condensed = true
-      newOptions.nested = true
-      return newOptions
+      return this.recursive && this.nestedCircuit
     },
     nestedCircuit () {
       return extractSubCircuit(this.command.op)
@@ -81,19 +90,19 @@ export default {
           <div v-else class="gate gate_connection"></div>
         </div>
 
-        <div v-if="opType === 'CX' && renderOptions.zxStyle" class="gate"
+        <div v-if="opType === 'CX' && zxStyle" class="gate"
              :class="[arg.pos !== -1 ? 'gate_box zx-spider zx-cx' : 'gate_connection', {z: arg.pos === 0, x: arg.pos === 1 }]">
         </div>
-        <div v-if="opType === 'CX' && !renderOptions.zxStyle" class="gate"
+        <div v-if="opType === 'CX' && !zxStyle" class="gate"
              :class="{'z gate_control': arg.pos === 0, 'x gate_box': arg.pos === 1, gate_connection: arg.pos === -1 }">
              <span class="gate_name">[[# arg.pos === 1 ? 'X' : '' #]]</span>
         </div>
 
-        <div v-if="opType === 'CZ' && renderOptions.zxStyle" class="gate"
+        <div v-if="opType === 'CZ' && zxStyle" class="gate"
              :class="[arg.pos !== -1 ? 'gate_box zx-spider z zx-cz' : 'gate_connection']">
           <div v-if="arg.flags.last" class="gate gate-box h zx-hadamard"></div>
         </div>
-        <div v-if="opType === 'CZ' && !renderOptions.zxStyle" class="gate"
+        <div v-if="opType === 'CZ' && !zxStyle" class="gate"
               :class="[arg.pos !== -1 ? 'z gate_control' : 'gate_connection']">
         </div>
 
@@ -116,7 +125,7 @@ export default {
       </circuit-layer>
       <nested-label-layer :args="renderIndexedArgs"></nested-label-layer>
 
-      <circuit-display v-if="nestedCircuit" :circuit="nestedCircuit" :render-options="nestedRenderOptions"></circuit-display>
+      <circuit-display v-if="nestedCircuit" :circuit="nestedCircuit"></circuit-display>
 
       <nested-label-layer :args="renderIndexedArgs"></nested-label-layer>
       <circuit-layer :nested="true">
@@ -134,8 +143,7 @@ export default {
               :pos-adjust="posAdjust"
               :split="split"
               :command="command"
-              :link-vertical="linkVertical"
-              :render-options="renderOptions">
+              :link-vertical="linkVertical">
       </gate-component>
     </div>
   </div>
