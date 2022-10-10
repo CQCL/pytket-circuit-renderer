@@ -29,6 +29,11 @@ const app = {
     ...
 };
 ```
+If using v0.3.0 or later (or v0.2.1), make sure to also enable a required config option in your vue app before mounting:
+```
+app.config.unwrapInjectedRef = true
+```
+
 The component will be exposed as `<circuit-display-component>`.
 
 You can either render json passed directly via the `circuit-raw` prop:
