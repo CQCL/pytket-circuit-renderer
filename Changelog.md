@@ -13,6 +13,13 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## Unreleased
 
+## [0.3.0] 2022-10-10
+### Internal
+- Un-revert: Refactor code to optimise rendering
+
+### Added
+- Un-revert: New gates introduced in pytket 1.6
+
 ## [0.2.2] 2022-10-06
 ### Fixed
 - Revert changes that require different vue config option.
