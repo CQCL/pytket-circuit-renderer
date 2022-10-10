@@ -170,7 +170,7 @@ export default {
 
 <template>
   <teleport-container :names="infoModal.teleport.names" ref="teleportParent"
-    :class="{condensed: condensed, 'circuit-preview circuit_variables': !nested}"
+    :class="{condensed: condensed, 'circuit-preview': !nested}" class="circuit_variables"
   >
     <div v-if="circuit" tabindex="0" :class="{'nested-circuit-container': condensed}">
       <!--  Pre-processing for the commands we want to display  -->
@@ -248,8 +248,6 @@ export default {
     width: 100%;
     height: 100%;
     text-align: center;
-    color: black;
-    font-size: 1rem;
 }
 .condensed{
     display: flex;
@@ -266,6 +264,7 @@ export default {
     margin: auto;
     width: -moz-fit-content;
     width: fit-content;
+    z-index: 0;  /* Ensure nice interaction with modals when using react components */
 }
 .circuit-preview.condensed > .circuit-container{
     flex-wrap: nowrap;

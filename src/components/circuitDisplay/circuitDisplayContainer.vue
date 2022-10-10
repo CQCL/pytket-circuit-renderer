@@ -197,7 +197,7 @@ export default {
   </div>
 </template>
 
-<style scoped>
+<style>
 .circuit-display-container {
   min-height: 3em;
   padding: 1em;
