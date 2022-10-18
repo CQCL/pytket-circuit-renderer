@@ -44,6 +44,7 @@ export default {
   },
   watch: {
     updateLayers: {
+      deep: true,
       async handler () {
         this.ready = false
         this.rendered = false
