@@ -71,7 +71,7 @@ export default {
       if (this.opType === 'CircBox' && 'box' in op && 'circuit' in op.box) {
         name = 'name' in op.box.circuit ? op.box.circuit.name : 'Circuit'
       }
-      if (['Custom', 'Composite', 'CompositeGate'].includes(this.opType) &&
+      if (['Custom', 'CustomGate', 'Composite', 'CompositeGate'].includes(this.opType) &&
           'box' in op && 'gate' in op.box) {
         name = 'name' in op.box.gate ? op.box.gate.name : 'Parametrised Circuit'
       }
