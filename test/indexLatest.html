@@ -6,14 +6,14 @@
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
 
     <script type="application/javascript" src="https://cdn.jsdelivr.net/npm/vue@3"></script>
-    <script type="application/javascript" src="/dist/pytket-circuit-renderer.umd.js"></script>
-    <link rel="stylesheet" href="/dist/pytket-circuit-renderer.css">
+    <script type="application/javascript" src="https://unpkg.com/pytket-circuit-renderer@latest/dist/pytket-circuit-renderer.umd.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/pytket-circuit-renderer@latest/dist/pytket-circuit-renderer.css">
 
     <title>Test Circuit Display App</title>
   </head>
   <body>
     <div id="app">
-        <h1>Sample Pytket-circuit-display (from local build):</h1>
+        <h1>Sample Pytket-circuit-display (from Latest npm version):</h1>
         <div>
             <button @click="circuitElementStr = '#basic-circ'" :class="{'active': circuitElementStr === '#basic-circ'}">
                 Basic
