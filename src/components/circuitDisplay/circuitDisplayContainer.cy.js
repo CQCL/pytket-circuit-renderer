@@ -13,14 +13,52 @@ describe('Circuit display container component', () => {
           cy.mount({ name, ...components[useCase]({ circuitPreset: 'Classical' }) })
         })
 
-        it('can zoom in and out', () => {
+        it('can scroll the circuit', () => {
           cy.mount({ name, ...components[useCase]({ circuitPreset: 'Classical' }) })
-          cy.get('[title="Zoom out"]').click()
-          cy.get('[title="Zoom out"]').click()
-          cy.get('[title="Zoom in"]').click()
-          cy.get('[title="Zoom in"]').click() // for now, manually check this works
+          cy.contains('(a XOR b)').should('not.be.visible')
+          cy.get('.navigator-controller.nav-x')
+            .trigger('mousedown', { which: 1 })
+            .trigger('mousemove', { clientX: 250, clientY: 0 })
+            .trigger('mouseup', { which: 1 })
+          cy.contains('(a XOR b)').should('be.visible')
+          // Jump scrollbar to end
+          cy.get('.navigator-preview-x')
+            .click('right')
+          cy.contains('SetBits(1,1,0,0)').should('not.be.visible')
+          cy.contains('(b RSH 1)').should('be.visible')
         })
-        // it('can toggle display options')
+
+        it('can zoom the circuit', () => {
+          cy.mount({ name, ...components[useCase]({ circuitPreset: 'Classical' }) })
+          cy.contains('(a XOR b)').should('not.be.visible')
+          // zoom out
+          cy.get('.zoom-controller.end.nav-x')
+            .trigger('mousedown', { which: 1 })
+            .trigger('mousemove', { clientX: 250, clientY: 0 })
+            .trigger('mouseup', { which: 1 })
+          cy.contains('(a XOR b)').should('be.visible')
+          // zoom in
+          cy.get('.zoom-controller.end.nav-x')
+            .trigger('mousedown', { which: 1 })
+            .trigger('mousemove', { clientX: 0, clientY: 0 })
+            .trigger('mouseup', { which: 1 })
+          cy.contains('(a XOR b)').should('not.be.visible')
+          // view whole circuit
+          cy.get('[data-cy="fitZoom"]').click()
+          cy.contains('SetBits(1,1,0,0)').should('be.visible')
+          cy.contains('(b RSH 1)').should('be.visible')
+          // reset zoom
+          cy.get('.navigator-controller.nav-x').dblclick()
+          cy.contains('SetBits(1,1,0,0)').should('be.visible')
+          cy.contains('Range[2, ').should('not.be.visible')
+        })
+        it('can toggle display options', () => {
+          cy.mount({ name, ...components[useCase]({ circuitPreset: 'Classical' }) })
+          cy.contains('tk_SCRATCH_BIT[0]').should('not.exist')
+          cy.get('[title="Display Options"').click()
+          cy.contains('Collapse classical registers').click()
+          cy.contains('tk_SCRATCH_BIT[0]').should('exist')
+        })
         // it('can export the circuit as an image')
       })
     })
