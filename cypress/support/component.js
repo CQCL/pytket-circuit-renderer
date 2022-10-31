@@ -7,4 +7,13 @@ import * as globalStorybookConfig from '../../.storybook/preview' // path of you
 
 setGlobalConfig(globalStorybookConfig)
 
-Cypress.Commands.add('mount', mount)
+// Cypress.Commands.add('mount', mount)
+
+Cypress.Commands.add('mount', (component, ...args) => {
+  args.global = args.global || {}
+  args.global.config = {
+    ...args.global.config,
+    unwrapInjectedRef: true
+  }
+  return mount(component, args)
+})
