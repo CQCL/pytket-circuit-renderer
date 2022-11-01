@@ -12,6 +12,14 @@ This is to allow user-facing information to be more easily extracted from this c
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
+### Added
+- Navigator wrapper for the circuit.
+
+### Changed:
+- Render options now behind a menu.
+
+### Fixed
+- Gate name for custom gates uses the user defined name.
 
 ## [0.3.1] 2022-10-18
 ### Fixed
