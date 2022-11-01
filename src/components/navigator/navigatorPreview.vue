@@ -81,16 +81,18 @@ export default {
 .navigator-preview-block-y .fit-zoom-icon:last-child {
   margin-top: 0.25em;
 }
-
-.navigator-preview-x {
-  position: relative;
-  min-height: 2em;
-  flex-grow: 1;
-}
+.navigator-preview-x,
 .navigator-preview-y {
   position: relative;
-  min-width: 2em;
   flex-grow: 1;
+  border-radius: 0.25em;
+  overflow: hidden;
+}
+.navigator-preview-x {
+  min-height: 2em;
+}
+.navigator-preview-y {
+  min-width: 2em;
 }
 
 .navigator-background {
@@ -102,16 +104,18 @@ export default {
   position: absolute;
   background: rgba(240, 240, 240, 0.5);
   cursor: grab;
+  border-radius: 0.25em;
+  overflow: hidden;
 }
 .navigator-controller.nav-x {
   top: 0;
   bottom: 0;
-  min-width: 1em;
+  min-width: 1.5em;
 }
 .navigator-controller.nav-y {
   left: 0;
   right: 0;
-  min-height: 1em;
+  min-height: 1.5em;
 }
 .navigator-controller.scrolling {
   cursor: grabbing;
@@ -122,7 +126,7 @@ export default {
   position: absolute;
 }
 .zoom-controller.nav-x{
-  width: 0.25em;
+  width: 0.5em;
   height: 100%;
   cursor: col-resize;
   top: 0;
@@ -134,7 +138,7 @@ export default {
   right: 0;
 }
 .zoom-controller.nav-y{
-  height: 0.25em;
+  height: 0.5em;
   width: 100%;
   cursor: row-resize;
   left: 0;
