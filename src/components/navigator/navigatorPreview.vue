@@ -75,6 +75,12 @@ export default {
   display: flex;
   flex-direction: column;
 }
+.navigator-preview-block-x .fit-zoom-icon:last-child {
+  margin-left: 0.25em;
+}
+.navigator-preview-block-y .fit-zoom-icon:last-child {
+  margin-top: 0.25em;
+}
 
 .navigator-preview-x {
   position: relative;
