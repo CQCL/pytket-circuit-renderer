@@ -326,7 +326,7 @@ export default {
          @wheel.ctrl.prevent.stop="wheelZoom"
          @wheel.exact.prevent.stop="wheelScroll"
     >
-      <div ref="content" :style="styles.content">
+      <div ref="content" class="no-text-highlighting" :style="styles.content">
         <slot name="content">
           <!--
             Content of the slot can implement methods for
@@ -358,6 +358,17 @@ export default {
 
 .navigator-content {
   grid-area: preview;
+  border-radius: 0.25em;
   overflow: hidden;
+}
+
+.no-text-highlighting {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -o-user-select: none;
+  user-select: none;
 }
 </style>
