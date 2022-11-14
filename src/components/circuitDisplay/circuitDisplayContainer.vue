@@ -75,6 +75,10 @@ export default {
         menu: {
           title: 'Display Options',
           icon: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-list" viewBox="0 0 16 16"> <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"/></svg>'
+        },
+        darkTheme: {
+          title: 'Dark Mode',
+          icon: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-moon-fill" viewBox="0 0 16 16"><path d="M6 .278a.768.768 0 0 1 .08.858 7.208 7.208 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277.527 0 1.04-.055 1.533-.16a.787.787 0 0 1 .81.316.733.733 0 0 1-.031.893A8.349 8.349 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71 0 4.266 2.114 1.312 5.124.06A.752.752 0 0 1 6 .278z"/></svg>'
         }
       },
       navPreviews: []
@@ -175,6 +179,7 @@ export default {
 
 <template>
   <navigator-controller class="circuit-display-container theme_variables"
+                        :class="[renderOptions.darkTheme ? 'dark': 'light']"
                         ref="navController" :navigator-previews="navPreviews"
                         :options="{ overrideStyle: true, externalZooming: true, externalScrolling: true, externalContent: true }"
                         v-model:ext-zoom-x="zoom" v-model:ext-zoom-y="zoom"
@@ -217,7 +222,7 @@ export default {
         </div>
     </div>
 
-    <info-modal v-model="exportImageModal" ref="imageExportModal">
+    <info-modal v-model="exportImageModal" ref="imageExportModal" style="z-index: 10">
       <template #title>Export circuit as an image</template>
       <template #content>
         <export-image ref="imageExport"
@@ -237,7 +242,9 @@ export default {
   </navigator-controller>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
+@import "@/themeVariables.scss";
+
 .circuit-display-container {
   display: grid;
   grid-template-columns: auto 1fr auto;
@@ -253,6 +260,7 @@ export default {
   bottom: 0;
   left: 0;
   right: 0;
+  background: var(--background);
 }
 
 .download-button {
@@ -273,20 +281,23 @@ export default {
   top: 3em;
   left: 0;
   margin: 0.6em;
-  background: var(--main-bg);
+  background: var(--background);
   border-radius: 0.4em;
-  box-shadow: 0px 5px 10px 0px var(--faint-col-overlay);
-  border: 1px solid var(--faint-col);
+  box-shadow: 0px 5px 10px 0px rgba($grey900, 0.1);
+  border: 1px solid var(--paper);
   overflow: hidden;
   z-index: 1;
 }
 .display-options-menu-entry {
   display: flex;
   padding: 0.4em;
-  border-bottom: 1px solid var(--faint-col);
+  border-bottom: 1px solid var(--paper);
+}
+:last-child > .display-options-menu-entry {
+  border-bottom: none;
 }
 .display-options-menu-entry:hover {
-  background: var(--faint-col-overlay);
+  background: var(--paper);
 }
 .display-options-menu-entry .icon-label {
   margin: auto 0.4em;

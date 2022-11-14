@@ -22,6 +22,11 @@ export default {
     opType () {
       return this.command.op.type
     },
+    isSpider () {
+      return [
+        'X', 'U1', 'V', 'Vdg', 'Y', 'Z', 'S', 'Sdg', 'T', 'Tdg'
+      ].includes(this.opType)
+    },
     specialGateClasses () {
       return {
         gate_top: !this.arg.flags.single && !this.split && this.arg.flags.first,
@@ -33,8 +38,9 @@ export default {
         connected: this.arg.pos !== -1,
         gate_reset: this.opType === 'Reset',
         gate_barrier: this.opType === 'Barrier',
+        gate_special: this.zxStyle && (this.opType === 'H' || this.isSpider || this.opType === 'Reset'),
         'zx-hadamard': this.opType === 'H' && this.zxStyle,
-        'zx-spider': this.zxStyle && this.asSpider(this.opType)
+        'zx-spider': this.zxStyle && this.isSpider
       }
     },
     specialGateContentClasses () {
@@ -48,7 +54,7 @@ export default {
       if (this.opType === 'H') {
         return 'h'
       }
-      if (['X', 'Rx', 'V', 'Vdg', 'SX', 'SXdg',
+      if (['X', 'Rx', 'Rxx', 'V', 'Vdg', 'SX', 'SXdg',
         'XXPhase', 'XXPhase3', 'PhasedX', 'NPhasedX'
       ].includes(this.opType)) {
         return 'x'
@@ -124,11 +130,6 @@ export default {
     }
   },
   methods: {
-    asSpider (opType) {
-      return [
-        'X', 'U1', 'V', 'Vdg', 'Y', 'Z', 'S', 'Sdg', 'T', 'Tdg'
-      ].includes(opType)
-    },
     spiderPhase (opType, paramStr) {
       const convert = {
         X: 'π',

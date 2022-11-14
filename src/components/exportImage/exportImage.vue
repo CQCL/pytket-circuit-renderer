@@ -159,12 +159,13 @@ export default {
 }
 .disabled{
   cursor: default !important;
-  color: var(--mid-col) !important;
-  background: var(--faint-col) !important;
+  color: var(--text-secondary) !important;
+  background: var(--paper) !important;
 }
 .tab-options{
-  border: 1px solid var(--accent-col-fill);
-  box-shadow: 0 0 5px 0px var(--faint-col) inset;
+  color: var(--text-title);
+  border: 1px solid var(--primary);
+  box-shadow: 0 0 5px 0px var(--paper) inset;
   margin-bottom: 5px;
   flex-grow: 1;
   border-radius: 5px;
@@ -182,7 +183,7 @@ export default {
 }
 
 .tab-option.selected{
-  background: var(--accent-col-fill)
+  background: var(--primary)
 }
 
 .extra-info{

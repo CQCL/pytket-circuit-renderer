@@ -86,12 +86,12 @@ export default {
         <wire class="wire_in flex_wire" :classical="arg.flags.classical" :condensed="arg.flags.condensed"></wire>
 
         <div v-if="opType === 'SWAP'">
-          <gate-swap v-if="arg.pos !== -1" class="gate gate_connection"></gate-swap>
+          <gate-swap v-if="arg.pos !== -1" class="gate gate_connection gate_special"></gate-swap>
           <div v-else class="gate gate_connection"></div>
         </div>
 
         <div v-if="opType === 'CX' && zxStyle" class="gate"
-             :class="[arg.pos !== -1 ? 'gate_box zx-spider zx-cx' : 'gate_connection', {z: arg.pos === 0, x: arg.pos === 1 }]">
+             :class="[arg.pos !== -1 ? 'gate_box gate_special zx-spider zx-cx' : 'gate_connection', {z: arg.pos === 0, x: arg.pos === 1 }]">
         </div>
         <div v-if="opType === 'CX' && !zxStyle" class="gate"
              :class="{'z gate_control': arg.pos === 0, 'x gate_box': arg.pos === 1, gate_connection: arg.pos === -1 }">
@@ -99,7 +99,7 @@ export default {
         </div>
 
         <div v-if="opType === 'CZ' && zxStyle" class="gate"
-             :class="[arg.pos !== -1 ? 'gate_box zx-spider z zx-cz' : 'gate_connection']">
+             :class="[arg.pos !== -1 ? 'gate_box gate_special zx-spider z zx-cz' : 'gate_connection']">
           <div v-if="arg.flags.last" class="gate gate-box h zx-hadamard"></div>
         </div>
         <div v-if="opType === 'CZ' && !zxStyle" class="gate"
