@@ -1,4 +1,5 @@
 import '../src/theme.scss'
+import '../src/themeVariables.scss'
 import { app } from '@storybook/vue3'
 
 export const parameters = {
