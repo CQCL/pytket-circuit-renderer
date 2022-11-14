@@ -11,33 +11,7 @@ export default {
       width: window.innerWidth,
       height: window.innerHeight,
       modalWidth: 200,
-      modalHeight: 200,
-      styles: {
-        infoModal: {
-          position: 'fixed',
-          top: 0,
-          bottom: 0,
-          left: 0,
-          right: 0
-        },
-        infoModalContainer: {
-          position: 'absolute',
-          overflow: 'auto',
-          padding: '0 20px 20px',
-          borderRadius: '5px',
-          boxShadow: '0px 5px 20px -10px black',
-          background: 'var(--main-bg, #fff)'
-        },
-        infoModalBackdrop: {
-          position: 'absolute',
-          top: 0,
-          bottom: 0,
-          left: 0,
-          right: 0,
-          background: 'black',
-          opacity: 0.1
-        }
-      }
+      modalHeight: 200
     }
   },
   computed: {
@@ -80,9 +54,9 @@ export default {
 
 <template>
   <div>
-    <div v-show="modelValue" class="info-modal" :style="{zIndex: 1, ...styles.infoModal}">
-      <div class="info-modal-backdrop" @click="closeModal" :style="styles.infoModalBackdrop"></div>
-      <div class="info-modal-container" :style="{...modalStyle, ...styles.infoModalContainer}" ref="modal" @wheel.stop>
+    <div v-show="modelValue" class="info-modal">
+      <div class="info-modal-backdrop" @click="closeModal"></div>
+      <div class="info-modal-container" :style="{...modalStyle}" ref="modal" @wheel.stop>
         <div class="row row-heading"><slot name="title"></slot></div>
         <div class="row paras" style="overflow:auto"><slot name="content"></slot></div>
         <slot name="buttons">
@@ -95,36 +69,47 @@ export default {
   </div>
 </template>
 
-<style scoped>
-.vue-modal-backdrop{
+<style scoped lang="scss">
+@import "@/themeVariables.scss";
+
+.info-modal {
     position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-inddex: 1;
+}
+.info-modal-backdrop{
+    position: absolute;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(0,0,0,0.2);
+    background: #000000;
+    opacity: 0.1;
     z-index: 999999;
 }
-.vue-modal-container{
+.info-modal-container{
     position: absolute;
     bottom: 10%;
     right: 10%;
-    width: -moz-fit-content;
     width: fit-content;
-    margin: auto;
+    height: fit-content;
+    overflow: auto;
+    padding: 0 20px 20px;
+    border-radius: 5px;
+    border: 1px solid var(--paper);
+    box-shadow: 0px 5px 20px -10px #000000;
+    background: var(--background);
+    color: var(--text-primary);
     z-index: 1000000;
-    border-radius: 8px;
-    -webkit-box-shadow: 0 0 20px 10px var(--faint-col-overlay);
-    -moz-box-shadow: 0 0 20px 10px var(--faint-col-overlay);
-    box-shadow: 0 0 20px 10px var(--faint-col-overlay);
-    background: var(--main-bg);
 }
 
 .close-modal-btn{
     position: absolute;
     top: 20px;
     right: 20px;
-    color: var(--mid-col);
     font-weight: bold;
     font-size: 0.75em;
     z-index: 1;
@@ -133,6 +118,7 @@ export default {
 .modal-title{
     margin: 0;
     padding-top: 0;
+    color: var(--text-title);
 }
 .modal-content{
     padding: 10px 20px;

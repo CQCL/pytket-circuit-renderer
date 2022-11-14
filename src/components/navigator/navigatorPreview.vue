@@ -65,6 +65,8 @@ export default {
 </template>
 
 <style scoped lang="scss">
+@import "@/themeVariables.scss";
+
 .navigator-preview-block-x {
   grid-area: nav-x;
   display: flex;
@@ -102,7 +104,7 @@ export default {
 
 .navigator-controller {
   position: absolute;
-  background: rgba(240, 240, 240, 0.5);
+  background: var(--paper);
   cursor: grab;
   border-radius: 0.25em;
   overflow: hidden;
@@ -122,7 +124,8 @@ export default {
 }
 
 .zoom-controller {
-  background: rgba(240, 240, 240, 0.7);
+  background: var(--text-secondary);
+  opacity: 0.2;
   position: absolute;
 }
 .zoom-controller.nav-x{

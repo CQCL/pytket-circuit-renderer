@@ -1,20 +1,64 @@
+@import "@/themeVariables.scss";
 
 /* Circuit renderer specific styling options */
 .circuit_variables {
     /* Define some variables */
     --block-height: 3em;
     --box-height: 1.3em;
-    --box-margin: calc((var(--block-height) - var(--box-height)) / 2);
-    --box-border: 1px;
+    --box-margin: calc((var(--block-height) - var(--box-height) - (2 * var(--box-padding))) / 2);
+    --box-padding: 0.3em;
+    --box-border-width: 1px;
 
     --base-wire-height: 2px;
-    --wire-col: #000;
-    --c-wire-col: #ccc;
+    --wire-col: var(--text-title);
+    --c-wire-col: var(--text-secondary);
 
-    --box-col: #ccc;
-    --box-col-overlay: rgba(0,0,0,0.05);
-    --c-box-col: #ddd;
-    --index-col: #888;
+    --box-index-col: var(--text-primary);
+    --box-text-col: var(--text-title);
+}
+.theme_variables.light .circuit_variables {
+    --spider-border: var(--base-wire-height);
+
+    --box-col: #{$grey400};
+    --box-col-overlay: #{rgba($grey400, 0.1)};
+    --c-box-col: #{$grey300};
+
+    --h-main: #{$circuit-h-main};
+    --h-light: #{$circuit-h-light};
+    --h-dark: #{$circuit-h-dark};
+    --x-main: #{$circuit-x-main};
+    --x-light: #{$circuit-x-light};
+    --x-dark: #{$circuit-x-dark};
+    --y-main: #{$circuit-y-main};
+    --y-light: #{$circuit-y-light};
+    --y-dark: #{$circuit-y-dark};
+    --z-main: #{$circuit-z-main};
+    --z-light: #{$circuit-z-light};
+    --z-dark: #{$circuit-z-dark};
+}
+.theme_variables.dark .circuit_variables {
+    --spider-border: 0; // No borders in dark mode.
+    --wire-col: #{$grey500};
+    --c-wire-col: #{$grey700};
+
+    --box-col: #{$grey700};
+    --box-col-overlay: #{rgba($darkLevel1, 0.3)};
+    --c-box-col: #{$grey800};
+
+    --box-border-width: 0px;
+
+    --h-main: #{$darkCircuit-h-main};
+    --h-light: #{$darkCircuit-h-light};
+    --h-dark: #{$darkCircuit-h-dark};
+    --x-main: #{$darkCircuit-x-main};
+    --x-light: #{$darkCircuit-x-dark};
+    --x-dark: #{$darkCircuit-x-light};
+    --y-main: #{$darkCircuit-y-main};
+    --y-light: #{$darkCircuit-y-dark};
+    --y-dark: #{$darkCircuit-y-light};
+    --z-main: #{$darkCircuit-z-main};
+    --z-light: #{$darkCircuit-z-dark};
+    --z-dark: #{$darkCircuit-z-light};
 }
 
 .circuit-preview * {
@@ -22,37 +66,35 @@
 }
 
 .circuit-container {
+  color: var(--wire-col);
+
   /* Box colours */
   .h {
-    --box-col: #ffee00;
-    --box-col-overlay: rgba(255, 255, 0, 0.2);
-    --c-box-col: #ffee88;
-    --index-col: #ffcc00;
+    --box-col: var(--h-main);
+    --c-box-col:  var(--h-light);
+    --box-index-col: var(--h-dark);
   }
 
   .x {
-    --box-col: #ff8888;
-    --box-col-overlay: rgba(255, 0, 0, 0.2);
-    --c-box-col: #e8a6a6;
-    --index-col: red;
+    --box-col: var(--x-main);
+    --c-box-col:  var(--x-light);
+    --box-index-col: var(--x-dark);
   }
 
   .y {
-    --box-col: #6699ff;
-    --box-col-overlay: rgba(0, 0, 255, 0.2);
-    --c-box-col: #86c6f6;
-    --index-col: blue;
+    --box-col: var(--y-main);
+    --c-box-col:  var(--y-light);
+    --box-index-col: var(--y-dark);
   }
 
   .z {
-    --box-col: #ccffcc;
-    --box-col-overlay: rgba(0, 255, 0, 0.2);
-    --c-box-col: #e2ffe2;
-    --index-col: green;
+    --box-col: var(--z-main);
+    --c-box-col:  var(--z-light);
+    --box-index-col: var(--z-dark);
   }
 
   .nested .circuit-layer{
-      margin-bottom: 0px;
+      margin-bottom: 0;
   }
 
   /* Display qubit names at start of circuit */
@@ -125,19 +167,23 @@
 
   .gate_container .classical {
     background: var(--c-box-col);
-    border-color: var(--index-col);
   }
 
   .gate {
-    --border: var(--box-border) solid var(--wire-col);
     position: relative;
     margin: var(--box-margin);
-    border: var(--border);
-    padding: 0.4em;
+    border: var(--box-border-width) solid var(--wire-col);
+    padding: calc(0.4em + var(--box-padding)) 0.4em;
     text-align: left;
     background: var(--box-col);
     display: flex;
     z-index: 1;
+    color: var(--box-text-col)
+  }
+
+  .gate.gate_special {
+    --box-margin: calc((var(--block-height) - var(--box-height)) / 2);
+    --box-padding: 0em;
   }
 
   .gate.connected {
@@ -146,7 +192,7 @@
   }
 
   .wire-label {
-    color: var(--index-col);
+    color: var(--box-index-col);
     width: -moz-fit-content;
     width: fit-content;
     padding-right: 0.4em;
@@ -159,10 +205,10 @@
 
   /* Multi-qubit gates */
   .gate_bottom {
-    height: calc(var(--box-height) + var(--box-margin));
+    height: calc(var(--box-height) + var(--box-margin) + (2 * var(--box-padding)));
     margin-top: 0;
     padding-top: var(--box-margin);
-    padding-bottom: 0;
+    padding-bottom: var(--box-padding);
     border-top: none;
   }
 
@@ -170,16 +216,16 @@
     height: var(--block-height);
     margin-top: 0;
     margin-bottom: 0;
-    padding-top: var(--box-margin);
-    padding-bottom: var(--box-margin);
+    padding-top: calc(var(--box-margin) + var(--box-padding));
+    padding-bottom: calc(var(--box-margin) + var(--box-padding));
     border-top: none;
     border-bottom: none;
   }
 
   .gate_top {
-    height: calc(var(--box-height) + var(--box-margin) + 1px);
+    height: calc(var(--box-height) + var(--box-margin) + (2 * var(--box-padding)) + 1px);
     margin-bottom: 0;
-    padding-top: 0;
+    padding-top: var(--box-padding);
     padding-bottom: var(--box-margin);
     border-bottom: none;
   }
@@ -191,11 +237,12 @@
 
   /* Single qubit gate*/
   .gate_box {
-    height: calc(var(--box-height) + var(--box-border));
+    height: calc(var(--box-height) + var(--box-border-width) + (2 * var(--box-padding)));
+    min-width: calc(var(--box-height) + var(--box-border-width) + (2 * var(--box-padding)));
     margin-left: 0;
     margin-right: 0;
-    padding-top: 0;
-    padding-bottom: 0;
+    padding-top: var(--box-padding);
+    padding-bottom: var(--box-padding);
     text-align: center;
   }
 
@@ -215,6 +262,7 @@
     width: var(--box-height);
     margin: var(--box-margin) 0;
     background: transparent;
+    color: var(--wire-col);
   }
 
   .gate_swap > svg,
@@ -233,7 +281,7 @@
     height: 0.5em;
     margin: calc(var(--block-height) / 2 - 0.25em) calc(50% - 0.25em);
     padding: 0;
-    border: var(--box-border) solid var(--wire-col);
+    border: var(--spider-border) solid var(--wire-col);
     background: var(--wire-col);
   }
 
@@ -252,7 +300,7 @@
 
   .control_index.measure {
     right: calc(50% - 1.2em);
-    color: var(--index-col);
+    color: var(--box-index-col);
   }
 
   .gate_reset {
@@ -301,7 +349,7 @@
 
   /* Special ZX style gates */
   .zx-spider {
-    border: var(--base-wire-height) solid var(--wire-col);
+    border: var(--spider-border) solid var(--wire-col);
     border-radius: calc(var(--box-height) / 2);
     height: var(--box-height);
     min-width: var(--box-height);
@@ -310,7 +358,7 @@
 
   .zx-cz > .zx-hadamard {
     top: calc(0px - var(--box-height));
-    left: 0.2em; /* depends on the box internal padding */
+    left: calc(50% - (var(--box-height) / 4) );
     margin: 0;
   }
 
@@ -319,9 +367,10 @@
     top: calc(var(--box-height) / 4);
     left: calc(0px - var(--box-height) / 4);
     width: calc(var(--box-height) / 2);
+    min-width: unset;
     height: calc(var(--box-height) / 2);
     padding: 0;
-    border: var(--base-wire-height) solid var(--wire-col);
+    border: var(--spider-border) solid var(--wire-col);
     background: var(--box-col);
   }
 

@@ -295,14 +295,14 @@ export default {
     display: flex;
     overflow: auto;
     background: var(--box-col-overlay);
-    box-shadow: 0 0 0 var(--box-border) var(--box-col) inset;
+    box-shadow: 0 0 0 var(--box-border-width) var(--box-col) inset;
 }
 .nested-circuit-container.parent{
   overflow: hidden;
 }
 .nested-circuit-container:focus,
 .nested-circuit-container:focus-visible {
-    box-shadow: inset 0 0 0 6px var(--accent-col-outline, #ccffcc);
+    box-shadow: inset 0 0 0 6px var(--primary-alpha, #ccffcc);
 }
 
 .circuit-inner-scroll{
