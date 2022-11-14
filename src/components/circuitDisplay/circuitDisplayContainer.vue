@@ -17,7 +17,8 @@ export default {
   },
   props: {
     circuitRaw: { type: Object, default: undefined },
-    circuitElementStr: { type: String, default: undefined }
+    circuitElementStr: { type: String, default: undefined },
+    initRenderOptions: { type: Object, default: () => { return {} } }
   },
   data () {
     return {
@@ -27,10 +28,11 @@ export default {
       scrollY: 0,
       width: 0,
       renderOptions: {
-        zxStyle: true,
-        condenseCBits: true,
-        recursive: false,
-        condensed: true
+        zxStyle: 'zxStyle' in this.initRenderOptions ? this.initRenderOptions.zxStyle : true,
+        condenseCBits: 'condenseCBits' in this.initRenderOptions ? this.initRenderOptions.condenseCBits : true,
+        recursive: 'recursive' in this.initRenderOptions ? this.initRenderOptions.recursive : false,
+        condensed: 'condensed' in this.initRenderOptions ? this.initRenderOptions.condensed : true,
+        darkTheme: 'darkTheme' in this.initRenderOptions ? this.initRenderOptions.darkTheme : false
       },
       circuitEl: undefined,
       circuitDimensions: {
@@ -50,7 +52,7 @@ export default {
         },
         condenseCBits: {
           title: 'Collapse classical registers together',
-          icon: '<svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="currentColor" className="bi bi-arrows-collapse"><path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 1 8zm7-8a.5.5 0 0 1 .5.5v3.793l1.146-1.147a.5.5 0 0 1 .708.708l-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 1 1 .708-.708L7.5 4.293V.5A.5.5 0 0 1 8 0zm-.5 11.707-1.146 1.147a.5.5 0 0 1-.708-.708l2-2a.5.5 0 0 1 .708 0l2 2a.5.5 0 0 1-.708.708L8.5 11.707V15.5a.5.5 0 0 1-1 0v-3.793z"/></svg>'
+          icon: '<svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-arrows-collapse"><path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 1 8zm7-8a.5.5 0 0 1 .5.5v3.793l1.146-1.147a.5.5 0 0 1 .708.708l-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 1 1 .708-.708L7.5 4.293V.5A.5.5 0 0 1 8 0zm-.5 11.707-1.146 1.147a.5.5 0 0 1-.708-.708l2-2a.5.5 0 0 1 .708 0l2 2a.5.5 0 0 1-.708.708L8.5 11.707V15.5a.5.5 0 0 1-1 0v-3.793z"/></svg>'
         },
         recursive: {
           title: 'Render nested circuits recursively',
@@ -119,8 +121,7 @@ export default {
       }
       return {
         transform: `scale(${this.zoom}) translate(-${this.scrollX * 100}%, -${this.scrollY * 100}%)`,
-        transformOrigin: 'top left',
-        height: '100%'
+        transformOrigin: 'top left'
       }
     }
   },
@@ -137,6 +138,11 @@ export default {
     this.getCircuitFromDOM()
     this.navPreviews = [this.$refs.navX, this.$refs.navY]
     this.updateNav()
+
+    // Detect system theme if not overriden
+    if (!('darkTheme' in this.initRenderOptions)) {
+      this.renderOptions.darkTheme = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+    }
   },
   methods: {
     getCircuitFromDOM () {
