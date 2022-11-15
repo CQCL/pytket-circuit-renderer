@@ -130,7 +130,7 @@ const TemplateCirc = (args) => ({
       </navigator-preview>
       
       <template #content>
-        <div class="circuit-display-container theme_variables">
+        <div class="circuit-display-container theme_variables light">
           <circuit-display :style="styleContent" :circuit="circuit" @updated="initNav">
           </circuit-display>
         </div>
