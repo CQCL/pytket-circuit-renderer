@@ -5,6 +5,7 @@ export default {
   title: 'Circuits/GenericGate',
   component: GenericGate,
   args: {
+    darkTheme: true,
     zxStyle: true,
     condenseCBits: true,
     recursive: false,
@@ -15,13 +16,20 @@ export default {
   }
 }
 
+const htmlTemplate = `
+  <div class="circuit-display-container theme_variables" :class="[args.darkTheme ? 'dark' : 'light']">
+    <div class="circuit-container circuit-preview circuit_variables">
+      <generic-gate v-bind="args" />
+    </div>
+  </div>`
+
 const Template = (args) => ({
   components: { GenericGate },
   setup () {
     setupProvideRenderOptions(args)
     return { args }
   },
-  template: '<div class="circuit-display-container circuit-container circuit-preview theme_variables circuit_variables"><generic-gate v-bind="args" /></div>'
+  template: htmlTemplate
 })
 
 export const Generic = Template.bind({})
@@ -371,7 +379,7 @@ const Template2Q = (args) => ({
     setupProvideRenderOptions(args)
     return { args }
   },
-  template: '<div class="circuit-display-container circuit-container circuit-preview theme_variables circuit_variables"><generic-gate v-bind="args" /></div>'
+  template: htmlTemplate
 })
 
 export const Special2Qubits = Template2Q.bind({})
@@ -408,7 +416,7 @@ const Template1Q = (args) => ({
     setupProvideRenderOptions(args)
     return { args }
   },
-  template: '<div class="circuit-display-container circuit-container circuit-preview theme_variables circuit_variables"><generic-gate v-bind="args" /></div>'
+  template: htmlTemplate
 })
 
 export const Special1Qubit = Template1Q.bind({})

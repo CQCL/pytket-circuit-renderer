@@ -7,6 +7,7 @@ export default {
   component: CircuitCommand,
   excludeStories: ['SubstituteCommand'],
   args: {
+    darkTheme: true,
     zxStyle: true,
     condenseCBits: false,
     recursive: true,
@@ -28,7 +29,7 @@ const Template = (args) => ({
     setupProvideRenderOptions(args)
     const commandRef = ref()
     const isReady = ref(false)
-    return { args, h, commandRef, isReady }
+    return { args, h, commandRef, isReady, darkTheme: args.darkTheme }
   },
   methods: {
     onMounted () {
@@ -36,7 +37,7 @@ const Template = (args) => ({
       this.isReady = true
     }
   },
-  template: `<div class="circuit-display-container theme_variables">
+  template: `<div class="circuit-display-container theme_variables" :class="[darkTheme ? 'dark' : 'light']">
     <div style="justify-content: flex-start" class="circuit-container circuit-preview circuit_variables condensed">
       <div class="circuit-inner-scroll" data-cy="command-container">
         <circuit-command :ref="'commandRef'" v-bind="args" @mounted="onMounted">

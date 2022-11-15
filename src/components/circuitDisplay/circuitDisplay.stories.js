@@ -11,6 +11,7 @@ export default {
     circuit: { control: false }
   },
   args: {
+    darkTheme: true,
     zxStyle: true,
     condenseCBits: true,
     recursive: false,
@@ -33,9 +34,9 @@ export const Template = (args) => ({
   components: { CircuitDisplay },
   setup () {
     setupProvideRenderOptions(args)
-    return { circuit: args.circuit }
+    return { circuit: args.circuit, darkTheme: args.darkTheme }
   },
-  template: `<div class="circuit-display-container theme_variables">
+  template: `<div class="circuit-display-container theme_variables" :class="[darkTheme ? 'dark' : 'light']">
     <circuit-display :circuit="circuit" />
   </div>`
 })
