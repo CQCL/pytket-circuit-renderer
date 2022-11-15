@@ -37,7 +37,7 @@
     --z-dark: #{$circuit-z-dark};
 }
 .theme_variables.dark .circuit_variables {
-    --spider-border: 0; // No borders in dark mode.
+    --spider-border: 0px; // No borders in dark mode.
     --wire-col: #{$grey500};
     --c-wire-col: #{$grey700};
 
