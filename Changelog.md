@@ -14,6 +14,8 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ## Unreleased
 ### Added
 - Navigator wrapper for the circuit.
+- Dark theme render option.
+- Way to initialise the render options.
 
 ### Changed:
 - Render options now behind a menu.
