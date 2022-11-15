@@ -12,6 +12,8 @@ This is to allow user-facing information to be more easily extracted from this c
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
+
+## [0.4.0] 2022-11-15
 ### Added
 - Navigator wrapper for the circuit.
 - Dark theme render option.
