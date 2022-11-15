@@ -46,14 +46,14 @@ Or collect it from an element on the page by specifying the query string:
 <circuit-display-container :circuit-element-str="'#circuit-json-to-display'"></circuit-display-container>
 ```
 
-Note that the display container includes a choice of rendering options. If you would rather specify these yourself,
-you can use the `circuit-display` component directly, passing your own render options object.
-In this case, you must also pass a parsed version of the circuit as a javascript object.
+Note that the display container includes a choice of rendering options. You can choose to specify 
+default options when first mounting the component:
 ```
-<circuit-display :circuit="circuitObject" :render-options="{'zxStyle': true, ...}"></circuit-display>
+<circuit-display-container :circuit-raw="circuitJson" :init-render-options="{'zxStyle': true, ...}"></circuit-display>
 ```
 
 The render options you can specify are the following:
+- `darkTheme` : Default to dark mode.
 - `zxStyle`: Render gates as zx-spiders where applicable.
 - `condenseCBits`: Display classical wires as a single wire.
 - `recursive`: Display nested circuits recursively where possible.
