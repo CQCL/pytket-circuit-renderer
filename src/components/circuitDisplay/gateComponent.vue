@@ -164,7 +164,7 @@ export default {
     <div v-if="opType === 'Barrier'" style="height:var(--block-height)">
       <wire :classical="arg.flags.classical" :condensed="arg.flags.condensed"></wire>
       <div class="gate_container" :class="[gateColor]">
-        <div v-if="arg.pos !== -1" class="link" :class="specialGateClasses"></div>
+        <div v-if="arg.pos !== -1" class="link gate" :class="specialGateClasses"></div>
       </div>
     </div>
 
