@@ -309,7 +309,9 @@ export default {
 .nested-circuit-container{
     display: flex;
     overflow: auto;
-    background: var(--box-col-overlay);
+    /*background: var(--box-col-overlay);*/
+    background: var(--paper);
+    /*z-index: 1;*/
     box-shadow: 0 0 0 var(--box-border-width) var(--box-col) inset;
 }
 .theme_variables.dark .nested-circuit-container:not(.parent){

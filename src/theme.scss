@@ -51,12 +51,21 @@
     border: 1px solid var(--text-secondary);
     color: var(--text-primary);
     cursor: pointer;
-  }
 
-  .icon.active {
-    border-color: var(--primary-dark);
-    box-shadow: 0 0 0 2px var(--primary-dark) inset;
-    background: var(--primary-alpha);
+    &.active {
+      border-color: var(--primary-dark);
+      box-shadow: 0 0 0 2px var(--primary-dark) inset;
+      background: var(--primary-alpha);
+
+      &.disabled {
+        box-shadow: 0 0 0 3px var(--grey300-alpha) inset;
+      }
+    }
+
+    > svg {
+      height: 100%;
+      width: 100%;
+    }
   }
 
   .icon.disabled, .icon-label.disabled {
@@ -64,15 +73,6 @@
     border-color: var(--text-disabled);
     box-shadow: none;
     cursor: default;
-  }
-
-  .icon.active.disabled {
-    box-shadow: 0 0 0 3px var(--grey300-alpha) inset;
-  }
-
-  .icon > svg {
-    height: 100%;
-    width: 100%;
   }
 
   .row {

@@ -178,7 +178,7 @@ const extractControlledCommand = function (controlCommand, argDetails) {
     converting = convert(converting.cc, converting.details)
   }
 
-  // mark which args are in the controlled command
+  // mark which args are in the final controlled command
   if (argDetails) {
     converting.cc.args.forEach(arg => {
       if (arg in converting.details) converting.details[arg].controlled = true
