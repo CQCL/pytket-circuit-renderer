@@ -23,6 +23,13 @@ export default {
   data () {
     return {
       embeddedCircuit: undefined,
+      embeddedCircuitObserver: new MutationObserver((mutationList) => {
+        for (const mutation of mutationList) {
+          if (mutation.addedNodes.length > 0) {
+            this.getCircuitFromDOM()
+          }
+        }
+      }),
       zoom: 1,
       scrollX: 0,
       scrollY: 0,
@@ -127,15 +134,15 @@ export default {
   },
   watch: {
     circuitElementStr () {
-      this.getCircuitFromDOM()
+      this.watchCircuitFromDOM(true)
     },
     zoomStyling () {
       this.updateNav()
     }
   },
   mounted () {
-    // Collect the circuit from a designated element
-    this.getCircuitFromDOM()
+    // Collect the circuit from a designated element. Make sure we watch for changes.
+    this.watchCircuitFromDOM(false)
     this.navPreviews = [this.$refs.navX, this.$refs.navY]
     this.updateNav()
 
@@ -144,7 +151,25 @@ export default {
       this.renderOptions.darkTheme = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
     }
   },
+  beforeUnmount () {
+    this.embeddedCircuitObserver.disconnect()
+  },
   methods: {
+    watchCircuitFromDOM (changedRef) {
+      if (this.circuitElementStr) {
+        this.getCircuitFromDOM()
+        // Update the mutation observer to the new element
+        if (changedRef) {
+          this.embeddedCircuitObserver.disconnect()
+        }
+        this.embeddedCircuitObserver.observe(document.querySelector(this.circuitElementStr), {
+          characterData: false,
+          attributes: false,
+          childList: true,
+          subtree: false
+        })
+      }
+    },
     getCircuitFromDOM () {
       if (this.circuitElementStr) {
         const circuitJson = document.querySelector(this.circuitElementStr).innerText

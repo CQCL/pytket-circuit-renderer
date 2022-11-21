@@ -1,4 +1,5 @@
 import CircuitDisplayContainer from './circuitDisplayContainer.vue'
+import { reactive } from 'vue'
 
 // Get sample circuit data
 import * as CircuitStories from './circuitDisplay.stories.js'
@@ -44,10 +45,14 @@ export const FromRaw = (args) => ({
   template: '<circuit-display-container :circuit-raw="circuitRaw" :init-render-options="initRenderOptions"></circuit-display-container>'
 })
 
-export const FromDOM = (args) => ({
+export const FromDOMReactive = (args) => ({
   components: { CircuitDisplayContainer },
   setup () {
+    const circuitPreset = reactive({ val: args.circuitPreset })
     return {
+      circuitStories: CircuitStories,
+      circuitPreset,
+      presets: Object.keys(CircuitStories).filter(key => !CircuitStories.default.excludeStories.includes(key)),
       circuitElementStr: '#circuitJSON',
       initRenderOptions: args.initOptions
         ? {
@@ -65,6 +70,16 @@ export const FromDOM = (args) => ({
         <circuit-display-container :circuit-element-str="circuitElementStr" :init-render-options="initRenderOptions">
         </circuit-display-container>
       </div>
-      <div id="circuitJSON">${JSON.stringify(CircuitStories[args.circuitPreset].args.circuit)}</div>
+      
+      Reactive circuit choice:
+      <select v-model="circuitPreset.val">
+        <option v-for="preset in presets" :value="preset">
+          {{ preset }}
+        </option>
+      </select>
+      
+      <div id="circuitJSON" style="margin-top: 20px; font-size: 10px">
+        {{ JSON.stringify(circuitStories[circuitPreset.val].args.circuit) }}
+      </div>
     </div>`
 })

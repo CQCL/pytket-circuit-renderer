@@ -12,6 +12,10 @@ This is to allow user-facing information to be more easily extracted from this c
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
+### Added
+- Renderer now updates when changes are made to the circuit json dumped to the DOM
+### Fixed
+- Scrolling issue within navigator on moz browsers.
 
 ## [0.4.0] 2022-11-15
 ### Added
