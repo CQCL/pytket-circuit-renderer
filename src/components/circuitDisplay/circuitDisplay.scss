@@ -211,7 +211,7 @@
   .gate_bottom {
     height: calc(var(--box-height) + var(--box-margin) + (2 * var(--box-padding)));
     margin-top: 0;
-    padding-top: var(--box-margin);
+    padding-top: calc(var(--box-padding) + var(--box-margin));
     padding-bottom: var(--box-padding);
     border-top: none;
   }
@@ -230,7 +230,7 @@
     height: calc(var(--box-height) + var(--box-margin) + (2 * var(--box-padding)) + 1px);
     margin-bottom: 0;
     padding-top: var(--box-padding);
-    padding-bottom: var(--box-margin);
+    padding-bottom: calc(var(--box-padding) + var(--box-margin));
     border-bottom: none;
   }
 
