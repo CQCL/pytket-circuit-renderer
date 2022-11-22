@@ -34,7 +34,7 @@ export default {
     flex-shrink: 0;
 }
 .nested-label-layer:deep() .wire-label{
-    padding: var(--box-margin) 0;
+    padding: calc(var(--box-margin) + var(--box-padding)) 0;
     height: var(--block-height);
     margin: auto;
 }

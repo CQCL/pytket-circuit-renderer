@@ -297,6 +297,9 @@ export default {
     background: var(--box-col-overlay);
     box-shadow: 0 0 0 var(--box-border-width) var(--box-col) inset;
 }
+.theme_variables.dark .nested-circuit-container{
+    box-shadow: 0 0 0 1px var(--paper) inset;
+}
 .navigator-content .nested-circuit-container.parent{
   overflow: hidden;
 }
