@@ -1,0 +1,36 @@
+{
+  "name":"Simple Nested circuit",
+  "phase":"0.0",
+  "qubits":[["q",[0]],["q",[1]],["p",[0]],["q",[2]]],
+  "bits":[["c",[0]],["c",[1]],["c",[2]],["c",[3]]],
+  "commands":[
+    {"op":{"type":"CX"},"args":[["q",[1]],["q",[0]]]},
+    {"op":{"type":"CH"},"args":[["p",[0]],["q",[2]]]},
+    {"op":{"type":"CnRy","params":["0.25898888888"]},"args":[["q",[2]],["q",[0]],["p",[0]]]},
+    {"op":{"type":"H"},"args":[["q",[0]]]},
+    {"op":{"type":"Rxx","params":["0.25"]},"args":[["q",[1]],["q",[2]]]},
+    {"op":{"type":"X"},"args":[["q",[0]]]},
+    {"op":{"type":"Reset"},"args":[["q",[1]]]},
+    {"op":{"type":"SWAP"},"args":[["q",[0]],["q",[2]]]},
+    {"op":{"type":"CSWAP"},"args":[["p",[0]],["q",[2]],["q",[1]]]},
+    {"op":{"type":"CCX"},"args":[["q",[0]],["q",[1]],["q",[2]]]},
+    {"op":{"type":"CVdg"},"args":[["q",[0]],["q",[2]]]},
+    {"op":{"type":"CRz","params":["0.25"]},"args":[["q",[2]],["q",[0]]]},
+    {"op":{"type":"CircBox","box":{"id":"621ee04f-bc1f-4ae3-bbf5-0db8385e9e01","type":"CircBox","circuit":{
+      "name": "Nested Circbox Level 0",
+      "phase":"0.0",
+      "qubits":[["q",[0]],["q",[1]],["q",[2]],["q",[3]]],
+      "bits":[],"commands":[
+        {"op":{"type":"SWAP"},"args":[["q",[1]],["q",[3]]]},
+        {"op":{"type":"Rx","n_qb":1,"params":["cy", "alpha^2 + beta^3"]},"args":[["q",[1]]]},
+        {"op":{"type":"SWAP"},"args":[["q",[3]],["q",[1]]]},
+        {"op":{"type":"CX"},"args":[["q",[2]],["q",[0]]]}
+      ],
+      "implicit_permutation":[[["q",[0]],["q",[0]]],[["q",[1]],["q",[1]]],[["q",[2]],["q",[2]]],[["q",[3]],["q",[3]]]]}}},
+      "args":[["q",[0]],["q",[1]],["p",[0]],["q",[2]]]
+    },
+    {"op":{"type":"Measure"},"args":[["q",[0]],["c",[0]]]},
+    {"op":{"type":"Measure"},"args":[["q",[2]],["c",[1]]]}
+  ],
+  "implicit_permutation":[[["q",[0]],["q",[0]]],[["q",[1]],["q",[1]]]]
+}

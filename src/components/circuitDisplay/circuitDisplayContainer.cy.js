@@ -52,12 +52,45 @@ describe('Circuit display container component', () => {
           cy.contains('SetBits(1,1,0,0)').should('be.visible')
           cy.contains('Range[2, ').should('not.be.visible')
         })
+
         it('can toggle display options', () => {
           cy.mount({ name, ...components[useCase]({ circuitPreset: 'Classical' }) })
           cy.contains('tk_SCRATCH_BIT[0]').should('not.exist')
           cy.get('[title="Display Options"').click()
           cy.contains('Collapse classical registers').click()
           cy.contains('tk_SCRATCH_BIT[0]').should('exist')
+        })
+
+        it('Can view nested info modals', () => {
+          cy.mount({ name, ...components[useCase]({ circuitPreset: 'SimpleNested' }) })
+          cy.get('.navigator-controller.nav-x')
+            .trigger('mousedown', { which: 1 })
+            .trigger('mousemove', { clientX: 350, clientY: 0 })
+            .trigger('mouseup', { which: 1 })
+          cy.get('[data-cy=open-tool-tip-CircBox]').should('be.visible').click()
+          cy.get('[data-cy=teleport-to] [data-cy=teleported-CircBox]').within(() => {
+            cy.contains('Rx(cy').should('exist')
+            cy.get('[data-cy=open-tool-tip-Rx]').should('be.visible').click()
+            cy.get('[data-cy=teleported-Rx]').within(() => {
+              cy.contains('Box params')
+            })
+          })
+        })
+        it('Can view nested info modals when displaying circuits recursively', () => {
+          cy.mount({
+            name,
+            ...components[useCase]({
+              circuitPreset: 'SimpleNested', initOptions: true, condensed: true, recursive: true
+            })
+          })
+          cy.get('.navigator-controller.nav-x')
+            .trigger('mousedown', { which: 1 })
+            .trigger('mousemove', { clientX: 350, clientY: 0 })
+            .trigger('mouseup', { which: 1 })
+          cy.get('[data-cy=open-tool-tip-Rx]').should('be.visible').click()
+          cy.get('[data-cy=teleport-to] [data-cy=teleported-Rx]').within(() => {
+            cy.contains('Box params').should('be.visible')
+          })
         })
         // it('can export the circuit as an image')
       })
