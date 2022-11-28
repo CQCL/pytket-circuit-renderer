@@ -5,6 +5,7 @@ const QIR = require('./circuits/qir.json')
 const ZX = require('./circuits/zx.json')
 const Boxes = require('./circuits/boxes.json')
 const Nested = require('./circuits/nested.json')
+const SimpleNested = require('./circuits/simple-nested.json')
 const Deep = require('./circuits/1000gates.json')
 
 export {
@@ -15,5 +16,6 @@ export {
   ZX,
   Boxes,
   Nested,
+  SimpleNested,
   Deep
 }

@@ -80,3 +80,8 @@ export const Nested = Template.bind({})
 Nested.args = {
   circuit: circuitFixtures.Nested
 }
+
+export const SimpleNested = Template.bind({})
+SimpleNested.args = {
+  circuit: circuitFixtures.SimpleNested
+}
