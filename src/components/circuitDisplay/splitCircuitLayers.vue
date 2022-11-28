@@ -1,5 +1,6 @@
 <script>
 import { h } from 'vue'
+import { RefValidator } from '@/components/propValidators'
 import CircuitLayer from './circuitLayer'
 import RenderCircuitLayers from './renderCircuitLayers'
 import { SPLIT_RENDERING } from './consts'
@@ -11,8 +12,14 @@ export default {
   components: { RenderCircuitLayers, CircuitLayer },
   props: {
     registerOrder: { type: Array, required: true },
-    commandRefs: { type: Array, required: true },
-    idCommandRef: { type: Object, required: true },
+    commandRefs: {
+      type: Array,
+      validator: (data) => {
+        return data.reduce((acc, ref) => acc && RefValidator(ref), true)
+      },
+      required: true
+    },
+    idCommandRef: { type: Object, validator: RefValidator, required: true },
     condensedRegisters: { type: Object, required: true }
   },
   emits: ['updated'],

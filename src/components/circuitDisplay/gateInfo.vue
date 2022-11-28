@@ -8,7 +8,7 @@ import { CONTROLLED_OPS } from './consts'
 import infoModal from './infoModal'
 import gateInfoSubCircuit from './gateInfoSubCircuit'
 import gateInfoClassical from './gateInfoClassical'
-import { renderOptions } from './provideKeys'
+import { renderOptions, teleportConfig } from './provideKeys'
 
 export default {
   name: 'gate-info',
@@ -22,12 +22,11 @@ export default {
     gateInfoClassical
   },
   props: {
-    op: { type: Object, required: true },
-    teleportId: { type: String, required: true },
-    teleportParent: { required: true } // ref to the parent. Undefined until parent is mounted.
+    op: { type: Object, required: true }
   },
   inject: {
-    recursive: { from: renderOptions.recursive }
+    recursive: { from: renderOptions.recursive },
+    teleportId: { from: teleportConfig.to }
   },
   emits: ['register-teleport', 'updated'],
   data () {
@@ -44,7 +43,8 @@ export default {
         'MultiBit', 'RangePredicate',
         'UnitaryTableauBox', 'WASM'
       ],
-      visible: false
+      visible: false,
+      teleportToId: this.teleportId
     }
   },
   computed: {
@@ -142,16 +142,12 @@ export default {
 
 <template>
   <div v-if="hasContent || hasNestedContent">
-    <div @click="visible = true" class="tool-tip-container"></div>
+    <div @click="visible = true" class="tool-tip-container" :data-cy="'open-tool-tip-' + this.opType"></div>
 
     <!-- content to be rendered in the info modal -->
     <div style="display: none">
-      <teleport-from
-          :to="visible ? teleportId : ''"
-          :parent="teleportParent"
-          @register-teleport="(...args) => $emit('register-teleport', ...args)"
-      >
-        <info-modal ref="infoModal" v-model="visible" class="tool-tip-content">
+      <teleport-from :to="visible ? teleportToId : ''">
+        <info-modal ref="infoModal" v-model="visible" class="tool-tip-content" :data-cy="'teleported-'+this.opType">
           <template #title>
             [[# opType #]]
           </template>

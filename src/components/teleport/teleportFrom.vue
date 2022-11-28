@@ -1,11 +1,15 @@
 <script>
+import { teleportConfig } from '@/components/circuitDisplay/provideKeys'
+
 let nTeleports = 0 // teleport-from needs a unique id.
 
 export default {
   name: 'teleport-from',
+  inject: {
+    parent: { from: teleportConfig.parent }
+  },
   props: {
     to: { type: String, required: true },
-    parent: { required: true }, // Ref to teleport-container. Undefined until parent is mounted.
     disabled: { type: Boolean, default: false }
   },
   emits: ['register-teleport'],
@@ -34,6 +38,7 @@ export default {
           this.parent.registerTeleport(false, prev, this)
         }
       } else {
+        console.error('must register teleport via events')
         // Fallback: propagate change via events instead.
         // Ensure these are handled if teleport containers can become nested.
         if (next) {
