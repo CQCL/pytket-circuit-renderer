@@ -1,14 +1,15 @@
 <script>
 import { navigator } from './provideKeys'
+import { RefValidator } from '@/components/propValidators'
 
 export default {
   name: 'navigator-preview',
   components: {
   },
   props: {
-    direction: { type: String, required: true }, // 'x' | 'y'
+    direction: { type: String, required: true, validator: (val) => val === 'x' || val === 'y' },
     fitZoom: { type: Boolean, default: false },
-    controller: { type: Object, required: true } // Ref to navigator controller
+    controller: { validator: RefValidator, required: true } // Ref to navigator controller
   },
   inject: {
     styles: { from: navigator.styles }

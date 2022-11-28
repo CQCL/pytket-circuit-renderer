@@ -7,3 +7,8 @@ export const renderOptions = {
   recursive: Symbol('Render option: display nested circuits recursively.'),
   nested: Symbol('Render option: circuit is nested.')
 }
+
+export const teleportConfig = {
+  parent: Symbol('Root teleport container ref'),
+  to: Symbol('Teleport-to id to send modals to')
+}

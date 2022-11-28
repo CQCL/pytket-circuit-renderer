@@ -1,11 +1,13 @@
 <script>
+import { computed } from 'vue'
 import { teleportContainer, teleportTo } from '@/components/teleport/init'
+import { PendingDataValidator } from '@/components/propValidators'
 
 import circuitLayer from './circuitLayer'
 import splitCircuitLayers from './splitCircuitLayers'
 import circuitCommand from './command'
 import gateInfo from './gateInfo'
-import { renderOptions } from './provideKeys'
+import { renderOptions, teleportConfig } from './provideKeys'
 
 let nCircuits = 0 // circuits needs unique ids.
 
@@ -20,8 +22,8 @@ export default {
     gateInfo
   },
   props: {
-    circuit: { type: Object },
-    navigatorStyling: { type: Object }
+    circuit: { validator: PendingDataValidator(Object) },
+    navigatorStyling: { type: Object, required: false, default: () => { return {} } }
   },
   emits: ['updated'],
   inject: {
@@ -29,7 +31,19 @@ export default {
     zxStyle: { from: renderOptions.zxStyle },
     recursive: { from: renderOptions.recursive },
     condensed: { from: renderOptions.condensed },
-    nested: { from: renderOptions.nested }
+    nested: { from: renderOptions.nested },
+    globalTeleportParent: { from: teleportConfig.parent, default: false },
+    globalTeleportToId: { from: teleportConfig.to, default: false }
+  },
+  provide () {
+    return {
+      [teleportConfig.parent]: computed(() => {
+        return this.nested && this.globalTeleportParent ? this.globalTeleportParent : this.infoModal.teleport.parent
+      }),
+      [teleportConfig.to]: computed(() => {
+        return this.nested && this.globalTeleportToId ? this.globalTeleportToId : this.infoModal.teleport.id
+      })
+    }
   },
   data () {
     nCircuits++
@@ -37,6 +51,7 @@ export default {
     return {
       infoModal: {
         teleport: {
+          parent: null,
           names: {},
           id
         },
@@ -44,7 +59,7 @@ export default {
         closeCallback: null
       },
       nRenderedCommands: 0,
-      idCommandRef: undefined,
+      idCommandRef: null,
       condensedRegisters: {
         names: {},
         toggles: {},
@@ -124,6 +139,7 @@ export default {
   },
   mounted () {
     // Initialise the teleport components
+    this.infoModal.teleport.parent = this.$refs.teleportParent
     this.infoModal.teleport.names[this.infoModal.teleport.id] = this.$refs.infoModals
   },
   methods: {
@@ -203,7 +219,6 @@ export default {
             <gate-info
                 :op="command.op"
                 :teleport-id="infoModal.teleport.id"
-                :teleport-parent="$refs.teleportParent"
                 @register-teleport="registerTeleport">
             </gate-info>
           </template>
@@ -245,7 +260,7 @@ export default {
     </div>
 
     <!-- Gates in circuit will send extra info modals here. -->
-    <teleport-to :name="infoModal.teleport.id" ref="infoModals" style="z-index:10"></teleport-to>
+    <teleport-to :name="infoModal.teleport.id" ref="infoModals" style="z-index:10" data-cy="teleport-to"></teleport-to>
   </teleport-container>
 </template>
 
@@ -297,7 +312,7 @@ export default {
     background: var(--box-col-overlay);
     box-shadow: 0 0 0 var(--box-border-width) var(--box-col) inset;
 }
-.theme_variables.dark .nested-circuit-container{
+.theme_variables.dark .nested-circuit-container:not(.parent){
     box-shadow: 0 0 0 1px var(--paper) inset;
 }
 .navigator-content .nested-circuit-container.parent{

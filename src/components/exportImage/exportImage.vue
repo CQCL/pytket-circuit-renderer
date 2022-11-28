@@ -1,12 +1,13 @@
 <script>
 import domToImage from 'dom-to-image'
+import { RefValidator } from '@/components/propValidators'
 
 export default {
   name: 'export-image',
   emits: ['updated'],
   props: {
     defaultFileName: { type: String, required: false },
-    elementToRender: { type: Object, required: true },
+    elementToRender: { validator: RefValidator, required: true },
     baseDimensions: { type: Object, default: () => { return { width: false, height: false } } }
 
   },

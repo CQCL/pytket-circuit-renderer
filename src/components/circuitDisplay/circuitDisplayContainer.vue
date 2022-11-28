@@ -16,8 +16,8 @@ export default {
     navigatorPreview
   },
   props: {
-    circuitRaw: { type: Object, default: undefined },
-    circuitElementStr: { type: String, default: undefined },
+    circuitRaw: { type: Object, required: false, default: undefined },
+    circuitElementStr: { type: String, required: false, default: undefined },
     initRenderOptions: { type: Object, default: () => { return {} } }
   },
   data () {
@@ -41,7 +41,7 @@ export default {
         condensed: 'condensed' in this.initRenderOptions ? this.initRenderOptions.condensed : true,
         darkTheme: 'darkTheme' in this.initRenderOptions ? this.initRenderOptions.darkTheme : false
       },
-      circuitEl: undefined,
+      circuitEl: null,
       circuitDimensions: {
         width: undefined,
         height: undefined
