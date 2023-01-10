@@ -8,8 +8,8 @@ export default {
   props: {
     defaultFileName: { type: String, required: false },
     elementToRender: { validator: RefValidator, required: true },
-    baseDimensions: { type: Object, default: () => { return { width: false, height: false } } }
-
+    baseDimensions: { type: Object, default: () => { return { width: false, height: false } } },
+    defaultBackground: { type: String, default: '#ffffff' }
   },
   data () {
     return {
@@ -67,7 +67,7 @@ export default {
       return {
         cacheBust: true,
         quality: this.options.quality.value,
-        bgcolor: this.options.fileType.value === 'jpeg' ? '#ffffff' : 'transparent',
+        bgcolor: this.options.fileType.value === 'jpeg' ? this.defaultBackground : 'transparent',
         ...this.resolution,
         style: {
           transform: `scale(${this.options.scale.value})`,

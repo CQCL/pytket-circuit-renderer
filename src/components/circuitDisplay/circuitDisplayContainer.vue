@@ -46,6 +46,7 @@ export default {
         width: undefined,
         height: undefined
       },
+      backgroundCol: '#ffffff',
       displayedCircuitDimensions: {
         x: undefined,
         y: undefined
@@ -188,9 +189,17 @@ export default {
       this.circuitDimensions.width = width
       this.circuitDimensions.height = height
     },
+    getDefaultBackground () {
+      if (this.circuitEl) { // compute the current background variable value
+        this.backgroundCol = getComputedStyle(this.circuitEl).getPropertyValue('--background')
+      } else { // fallback to theme-relative default
+        this.backgroundCol = this.renderOptions.darkTheme ? '#000000' : '#ffffff'
+      }
+    },
     prepareExport () {
       this.$refs.imageExport.resetState()
       this.getCircuitDims()
+      this.getDefaultBackground()
       this.exportImageModal = true
     },
     modalContentUpdate (targetRef) {
@@ -258,6 +267,7 @@ export default {
       <template #content>
         <export-image ref="imageExport"
                       default-file-name="circuit"
+                      :default-background="backgroundCol"
                       :element-to-render="circuitEl"
                       :base-dimensions="circuitDimensions"
                       @updated="modalContentUpdate('imageExportModal')">
