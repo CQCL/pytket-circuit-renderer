@@ -102,7 +102,7 @@ export default {
     border: 1px solid var(--paper);
     box-shadow: 0px 5px 20px -10px #000000;
     background: var(--background);
-    color: var(--text-primary);
+    color: var(--text-secondary);
     z-index: 1000000;
 }
 
@@ -118,7 +118,7 @@ export default {
 .modal-title{
     margin: 0;
     padding-top: 0;
-    color: var(--text-title);
+    color: var(--text-primary);
 }
 .modal-content{
     padding: 10px 20px;

@@ -125,8 +125,8 @@ export default {
 }
 
 .zoom-controller {
-  background: var(--text-secondary);
-  opacity: 0.2;
+  background: var(--paper-dark);
+  opacity: 1;
   position: absolute;
 }
 .zoom-controller.nav-x{

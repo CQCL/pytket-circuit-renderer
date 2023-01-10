@@ -10,14 +10,14 @@
     --box-border-width: 1px;
 
     --base-wire-height: 2px;
-    --wire-col: var(--text-title);
-    --c-wire-col: var(--text-secondary);
 
-    --box-index-col: var(--text-primary);
-    --box-text-col: var(--text-title);
+    --box-index-col: var(--text-secondary);
+    --box-text-col: var(--text-primary);
 }
 .theme_variables.light .circuit_variables {
     --spider-border: var(--base-wire-height);
+    --wire-col: #{$grey900};
+    --c-wire-col: #{$grey400};
 
     --box-col: #{$grey400};
     --box-col-overlay: #{rgba($grey400, 0.1)};
@@ -41,9 +41,9 @@
     --wire-col: #{$grey500};
     --c-wire-col: #{$grey700};
 
-    --box-col: #{$grey700};
-    --box-col-overlay: #{rgba($darkLevel1, 0.3)};
-    --c-box-col: #{$grey800};
+    --box-col: #{$grey600};
+    --box-col-overlay: #{rgba($grey700, 0.2)};
+    --c-box-col: #{$grey700};
 
     --box-border-width: 0px;
 
