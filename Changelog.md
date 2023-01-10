@@ -12,6 +12,8 @@ This is to allow user-facing information to be more easily extracted from this c
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
+### Changed:
+- Theme updated to match quantinuum-ui 2.0
 
 ## [0.4.2] 2022-11-28
 ### Fixed
