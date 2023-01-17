@@ -173,6 +173,7 @@ const extractControlledCommand = function (controlCommand, argDetails) {
     cc: { ...controlCommand },
     details: argDetails ? { ...argDetails } : false
   }
+  // Keep converting while the nested command is a control op.
   while (CONTROLLED_OPS.includes(converting.cc.op.type)) {
     converting = convert(converting.cc, converting.details)
   }
@@ -183,6 +184,11 @@ const extractControlledCommand = function (controlCommand, argDetails) {
       if (arg in converting.details) converting.details[arg].controlled = true
       else converting.details[arg] = { controlled: true }
     })
+    // Can get controlled 0-q gates (eg Phase) which need special handling:
+    if (!converting.cc.args || converting.cc.args.length === 0) {
+      // Assign the phase to the first register involved.
+      converting.details[controlCommand.args[0]].controlled = true
+    }
   }
 
   return { command: converting.cc, argDetails: converting.details }

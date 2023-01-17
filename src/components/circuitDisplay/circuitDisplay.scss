@@ -143,7 +143,7 @@
   }
 
   .wire.transparent-wire {
-    background: transparent;
+    background: transparent !important;
   }
 
   /* Generic base for our gates */
@@ -188,6 +188,11 @@
   .gate.gate_special {
     --box-margin: calc((var(--block-height) - var(--box-height)) / 2);
     --box-padding: 0em;
+  }
+
+  .gate.gate_0q {
+    border-color: transparent;
+    background: var(--paper-dark);
   }
 
   .gate.connected {

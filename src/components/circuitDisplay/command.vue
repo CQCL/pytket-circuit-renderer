@@ -29,22 +29,37 @@ export default {
     },
     commandArgs () {
       const [firstArg, lastArg, argDetails] = [{}, {}, {}]
-      this.command.args.forEach((arg, pos) => {
-        const order = this.registerOrder.findIndex(reg => registerEquality(reg, arg))
-        if (!('order' in firstArg) || order < firstArg.order) {
-          firstArg.order = order
-          firstArg.name = arg
-        }
-        if (!('order' in lastArg) || order > lastArg.order) {
-          lastArg.order = order
-          lastArg.name = arg
-        }
-        argDetails[arg] = {
-          name: arg,
-          pos, // index of arg in the command
-          order // index of arg in the display order
-        }
-      })
+      if (!this.command.args || this.command.args.length === 0) {
+        // There are no args for this command. Render it in the correct layer, but passing through all wires.
+        firstArg.order = 0
+        firstArg.name = this.registerOrder[0]
+        lastArg.order = this.registerOrder.length - 1
+        lastArg.name = this.registerOrder[this.registerOrder.length - 1]
+        this.registerOrder.forEach((arg, order) => {
+          argDetails[arg] = {
+            name: arg,
+            pos: order,
+            order
+          }
+        })
+      } else {
+        this.command.args.forEach((arg, pos) => {
+          const order = this.registerOrder.findIndex(reg => registerEquality(reg, arg))
+          if (!('order' in firstArg) || order < firstArg.order) {
+            firstArg.order = order
+            firstArg.name = arg
+          }
+          if (!('order' in lastArg) || order > lastArg.order) {
+            lastArg.order = order
+            lastArg.name = arg
+          }
+          argDetails[arg] = {
+            name: arg,
+            pos, // index of arg in the command
+            order // index of arg in the display order
+          }
+        })
+      }
       return {
         details: argDetails,
         first: firstArg ? argDetails[firstArg.name] : undefined,
@@ -120,7 +135,7 @@ export default {
           flags: {
             first: order === this.commandArgs.first.order,
             last: order === this.commandArgs.last.order,
-            single: this.command.args.length === 1,
+            single: this.command.args && this.command.args.length === 1,
             classical,
             condensed: false,
             globalClassical: false

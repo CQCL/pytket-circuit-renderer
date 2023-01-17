@@ -35,10 +35,10 @@ export default {
         gate_box: this.command.args.length === 1 || this.arg.flags.single || this.split,
         classical: this.arg.flags.classical,
         condensed: this.arg.flags.condensed,
-        connected: this.arg.pos !== -1,
         gate_reset: this.opType === 'Reset',
         gate_barrier: this.opType === 'Barrier',
         gate_special: this.zxStyle && (this.opType === 'H' || this.isSpider || this.opType === 'Reset'),
+        gate_0q: this.opType === 'Phase',
         'zx-hadamard': this.opType === 'H' && this.zxStyle,
         'zx-spider': this.zxStyle && this.isSpider
       }
@@ -171,9 +171,10 @@ export default {
     <!-- Generic single block gate -->
     <div v-else class="gate_container nested" style="height:var(--block-height)">
       <wire v-if="arg.pos !== -1" class="wire_in" :class="{flex_wire: arg.flags.single}" :classical="arg.flags.classical" :condensed="arg.flags.condensed"></wire>
+      <wire v-else class="wire_in transparent-wire" :class="{flex_wire: arg.flags.single}" :classical="arg.flags.classical" :condensed="arg.flags.condensed"></wire>
 
       <div class="gate_container" :class="[gateColor, {'generic': !arg.flags.single}]">
-        <div class="gate" :class="specialGateClasses">
+        <div class="gate connected" :class="specialGateClasses">
           <span v-if="arg.pos !== -1 && !arg.flags.single" class="wire-label">
             [[# posStr #]]
           </span>
@@ -185,6 +186,7 @@ export default {
       </div>
 
       <wire v-if="arg.pos !== -1" class="wire_in" :class="{flex_wire: arg.flags.single}" :classical="arg.flags.classical" :condensed="arg.flags.condensed"></wire>
+      <wire v-else class="wire_in transparent-wire" :class="{flex_wire: arg.flags.single}" :classical="arg.flags.classical" :condensed="arg.flags.condensed"></wire>
     </div>
 
   </div>

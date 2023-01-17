@@ -51,6 +51,24 @@ export default {
       // Note: we will only have a controlled operation here if we need to render it specially.
       return ['SWAP', 'Measure', 'CX', 'CZ'].includes(this.opType)
     },
+    special0qGate () {
+      // Construct a fake arg for display purposes if this gate doesn't have any.
+      const flag = !(this.opType === 'ID' || (this.command.args && this.command.args.length > 0))
+      if (flag) {
+        const fakeArg = this.indexedArgs[0]
+        fakeArg.flags.first = true
+        fakeArg.flags.last = true
+        fakeArg.flags.single = true
+        fakeArg.pos = -1
+        return {
+          flag: flag,
+          fakeCommandArgs: [this.indexedArgs[0].name],
+          fakeIndexedArg: fakeArg,
+          name: this.$refs.special0qGateComponent ? this.$refs.special0qGateComponent.name : this.opType
+        }
+      }
+      return { flag }
+    },
     nestedCircuitGate () {
       return this.recursive && this.nestedCircuit
     },
@@ -75,7 +93,7 @@ export default {
       </div>
     </div>
 
-    <!-- Special -->
+    <!-- Special: 2Q Gate -->
     <div v-if="special2qGate" data-gate="Special">
       <div v-for="(arg, i) in renderIndexedArgs" :key="i"
           class="gate_container nested" style="height:var(--block-height)"
@@ -115,7 +133,21 @@ export default {
       </div>
     </div>
 
-    <!-- Nested -->
+    <!-- Special: No args -->
+    <div v-if="special0qGate.flag" data-gate="Special:no-args">
+      <div v-for="(arg, i) in renderIndexedArgs" :key="i" class="gate_container">
+        <gate-component v-if="i === 0" ref="special0qGateComponent"
+            :arg="special0qGate.fakeIndexedArg"
+            :pos-adjust="posAdjust"
+            :split="split"
+            :command="{ op: command.op, args: special0qGate.fakeCommandArgs }"
+            :link-vertical="linkVertical">
+        </gate-component>
+        <wire v-else :classical="arg.flags.classical" :condensed="arg.flags.condensed"></wire>
+      </div>
+    </div>
+
+    <!-- Special: Nested -->
     <div v-if="nestedCircuitGate" class="gate_container nested">
       <circuit-layer :nested="true">
         <div v-for="(arg, i) in renderIndexedArgs" :key="i" class="gate_container">
@@ -137,7 +169,7 @@ export default {
     </div>
 
     <!-- Generic -->
-    <div v-if="opType !== 'ID' && !special2qGate && !nestedCircuitGate">
+    <div v-if="opType !== 'ID' && !special2qGate && !special0qGate.flag && !nestedCircuitGate">
       <gate-component v-for="(arg, i) in renderIndexedArgs" :key="i"
               :arg="arg"
               :pos-adjust="posAdjust"
