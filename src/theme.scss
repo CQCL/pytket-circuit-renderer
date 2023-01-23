@@ -4,8 +4,8 @@
   font-family: "roboto", system-ui, sans-serif;
 }
 .theme_variables.light {
-  --primary-dark: #{$primaryDark};
-  --primary-light: #{$primaryLight};
+  --primary-light: #{$primaryDark};
+  --primary-dark: #{$primaryLight};
   --primary-alpha: #{rgba($primaryLight, 0.2)};
 
   --text-primary: #{$grey800};
@@ -21,7 +21,7 @@
 .theme_variables.dark {
   --primary-dark: #{$primaryDark};
   --primary-light: #{$primaryLight};
-  --primary-alpha: #{rgba($primaryLight, 0.3)};
+  --primary-alpha: #{rgba($primaryDark, 0.3)};
 
   --text-primary: #{$grey50};
   --text-secondary: #{$grey200};
@@ -49,7 +49,7 @@
 
   .icon.active {
     border-color: var(--primary-dark);
-    box-shadow: 0 0 0 3px var(--primary-alpha) inset;
+    box-shadow: 0 0 0 2px var(--primary-dark) inset;
   }
 
   .icon.disabled {
