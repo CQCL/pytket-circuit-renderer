@@ -14,7 +14,8 @@
 
   --divider: #{$grey300};
 
-  --background: #{$grey50};
+  --circuit-background: #{$grey50};  // Background for circuits only
+  --background: #{$grey50};  // Background for other components (generally overlayed)
   --paper: #{$grey100};
   --paper-dark: #{$grey200};
 }
@@ -29,9 +30,14 @@
 
   --divider: #{$grey600};
 
+  --circuit-background: #{$grey900};
   --background: #{$grey900};
   --paper: #{$grey800};
   --paper-dark: #{$grey700};
+}
+
+.theme_variables.transparent_bg {
+  --circuit-background: transparent;
 }
 
 .circuit-display-container {
