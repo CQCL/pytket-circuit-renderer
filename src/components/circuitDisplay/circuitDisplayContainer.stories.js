@@ -19,6 +19,7 @@ export default {
     circuitPreset: 'default',
     initOptions: false,
     darkTheme: false,
+    transparentBg: false,
     condensed: false,
     condenseCBits: true,
     zxStyle: true,
@@ -37,7 +38,8 @@ export const FromRaw = (args) => ({
             condensed: args.condensed,
             condenseCBits: args.condenseCBits,
             zxStyle: args.zxStyle,
-            recursive: args.recursive
+            recursive: args.recursive,
+            transparentBg: args.transparentBg
           }
         : {}
     }
@@ -60,7 +62,8 @@ export const FromDOMReactive = (args) => ({
             condensed: args.condensed,
             condenseCBits: args.condenseCBits,
             zxStyle: args.zxStyle,
-            recursive: args.recursive
+            recursive: args.recursive,
+            transparentBg: args.transparentBg
           }
         : {}
     }

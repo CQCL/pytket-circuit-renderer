@@ -39,14 +39,15 @@ export default {
         condenseCBits: 'condenseCBits' in this.initRenderOptions ? this.initRenderOptions.condenseCBits : true,
         recursive: 'recursive' in this.initRenderOptions ? this.initRenderOptions.recursive : false,
         condensed: 'condensed' in this.initRenderOptions ? this.initRenderOptions.condensed : true,
-        darkTheme: 'darkTheme' in this.initRenderOptions ? this.initRenderOptions.darkTheme : false
+        darkTheme: 'darkTheme' in this.initRenderOptions ? this.initRenderOptions.darkTheme : false,
+        transparentBg: 'transparentBg' in this.initRenderOptions ? this.initRenderOptions.transparentBg : false
       },
       circuitEl: null,
       circuitDimensions: {
         width: undefined,
         height: undefined
       },
-      backgroundCol: '#ffffff',
+      backgroundCol: '#ffffff', // default background for jpeg image export.
       displayedCircuitDimensions: {
         x: undefined,
         y: undefined
@@ -219,7 +220,7 @@ export default {
 
 <template>
   <navigator-controller class="circuit-display-container theme_variables"
-                        :class="[renderOptions.darkTheme ? 'dark': 'light']"
+                        :class="[renderOptions.darkTheme ? 'dark': 'light', { 'transparent_bg': renderOptions.transparentBg }]"
                         ref="navController" :navigator-previews="navPreviews"
                         :options="{ overrideStyle: true, externalZooming: true, externalScrolling: true, externalContent: true }"
                         v-model:ext-zoom-x="zoom" v-model:ext-zoom-y="zoom"
@@ -301,7 +302,7 @@ export default {
   bottom: 0;
   left: 0;
   right: 0;
-  background: var(--background);
+  background: var(--circuit-background);
 }
 
 .download-button {

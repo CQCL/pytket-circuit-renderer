@@ -58,5 +58,7 @@ The render options you can specify are the following:
 - `condenseCBits`: Display classical wires as a single wire.
 - `recursive`: Display nested circuits recursively where possible.
 - `condensed`: Display the circuit on one line only, rather than wrapping around.
+- `transparentBg`: Display the circuit with a transparent background. 
+  It is advised that you also set the theme to avoid clashes.
 
 Check the example folder for a basic sample app that uses this component.
