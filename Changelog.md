@@ -13,6 +13,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## Unreleased
 ### Changed:
+- Added render option for transparent background.
 - Theme updated to match quantinuum-ui 2.0
 
 ## [0.4.2] 2022-11-28
