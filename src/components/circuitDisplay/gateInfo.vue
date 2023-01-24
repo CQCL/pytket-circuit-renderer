@@ -41,7 +41,8 @@ export default {
         'ExplicitPredicate', 'ExplicitModifier',
         'ClassicalTransform', 'SetBits', 'CopyBits',
         'MultiBit', 'RangePredicate',
-        'UnitaryTableauBox', 'WASM'
+        'UnitaryTableauBox', 'WASM', 'ToffoliBox',
+        'MultiplexorBox', 'MultiplexedRotationBox', 'MultiplexedU2Box'
       ],
       visible: false,
       teleportToId: this.teleportId
@@ -261,6 +262,39 @@ export default {
                   <td>WASM uid</td>
                   <td>[[# op.wasm.wasm_uid #]]</td>
                 </tr>
+              </table>
+            </div>
+
+            <div v-if="displayOp.type === 'ToffoliBox'">
+              <h4>Cycles</h4>
+              <div v-for="(cycle, i) in displayOp.box.cycles" :key="i">
+                <chart-matrix :matrix="cycle" :display-title="false" entry-type="bool">
+                </chart-matrix>
+              </div>
+            </div>
+
+            <div v-if="['MultiplexorBox', 'MultiplexedU2Box', 'MultiplexedRotationBox'].includes(displayOp.type)">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Values</th>
+                    <th>Op</th>
+                    <th>Params</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="(entry, i) in displayOp.box.op_map" :key="i">
+                    <td>
+                      [[# entry[0] #]]
+                    </td>
+                    <td>
+                      [[# entry[1].type #]]
+                    </td>
+                    <td>
+                      <chart-list :chart="entry[1].params"></chart-list>
+                    </td>
+                  </tr>
+                </tbody>
               </table>
             </div>
 
