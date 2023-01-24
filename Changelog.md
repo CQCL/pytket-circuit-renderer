@@ -14,6 +14,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ## Unreleased
 ### Added:
 - Added render option for transparent background.
+- Gate info for new Pytket box types: Toffoli, MultiplexorBox, Multiplexed2qBox, MultiplexedRotationBox.
 
 ### Changed:
 - Theme updated to match quantinuum-ui 2.0
