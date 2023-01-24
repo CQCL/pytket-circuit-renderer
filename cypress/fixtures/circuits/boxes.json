@@ -22,10 +22,14 @@
       [[0.0, 0.0], [0.0, 0.0], [0.0, 0.0], [0.0, 0.0], [0.0, 0.0], [1.0, 0.0], [0.0, 0.0], [0.0, 0.0]],
       [[0.0, 0.0], [0.0, 0.0], [0.0, 0.0], [0.0, 0.0], [-0.0, -1.0], [0.0, 0.0], [0.0, 0.0], [0.0, 0.0]]
     ], "type": "Unitary3qBox"}, "type": "Unitary3qBox"}},
-    {"args": [["q", [0]], ["q", [1]]], "op": {"box": {"id": "d5803067-615e-4275-8795-bd298c6c85c5", "paulis": ["X", "Y"], "phase": "0.1", "type": "PauliExpBox"}, "type": "PauliExpBox"}},
-    {"args": [["q", [0]], ["q", [1]]], "op": {"box": {"id": "f7937806-29f0-4a09-90bc-6087943d5f11", "paulis": ["Y", "X"], "phase": "-0.1", "type": "PauliExpBox"}, "type": "PauliExpBox"}},
-    {"args": [["q", [0]], ["q", [1]], ["q", [2]], ["q", [3]]], "op": {"box": {"id": "1595a725-9c9c-46bb-80d7-77b83a1f0696", "paulis": ["X", "Y", "Y", "Y"], "phase": "0.2", "type": "PauliExpBox"}, "type": "PauliExpBox"}},
-    {"args": [["q", [0]], ["q", [1]], ["q", [2]], ["q", [3]]], "op": {"box": {"id": "4dabba8f-3b09-4be6-8a2b-d86af503c579", "paulis": ["Y", "X", "Y", "Y"], "phase": "-0.2", "type": "PauliExpBox"}, "type": "PauliExpBox"}},
+    {"args": [["q", [0]], ["q", [1]]], "op": {"box": {"id": "d5803067-615e-4275-8795-bd298c6c85c5",
+      "paulis": ["X", "Y"], "phase": "0.1", "type": "PauliExpBox"}, "type": "PauliExpBox"}},
+    {"args": [["q", [0]], ["q", [1]]], "op": {"box": {"id": "f7937806-29f0-4a09-90bc-6087943d5f11",
+      "paulis": ["Y", "X"], "phase": "-0.1", "type": "PauliExpBox"}, "type": "PauliExpBox"}},
+    {"args": [["q", [0]], ["q", [1]], ["q", [2]], ["q", [3]]], "op": {"box": {"id": "1595a725-9c9c-46bb-80d7-77b83a1f0696",
+      "paulis": ["X", "Y", "Y", "Y"], "phase": "0.2", "type": "PauliExpBox"}, "type": "PauliExpBox"}},
+    {"args": [["q", [0]], ["q", [1]], ["q", [2]], ["q", [3]]], "op": {"box": {"id": "4dabba8f-3b09-4be6-8a2b-d86af503c579",
+      "paulis": ["Y", "X", "Y", "Y"], "phase": "-0.2", "type": "PauliExpBox"}, "type": "PauliExpBox"}},
     {"args": [["q", [0]], ["q", [1]], ["q", [2]]], "op": {"box": {"id": "05ae75f6-894e-4d37-92cf-37a1f5807819",
       "tab": {"qubits": [["q", [0]], ["q", [1]], ["q", [2]]], "tab": {"nqubits": 3, "nrows": 6,
         "phase": [[false], [false], [true], [true], [false], [true]],
@@ -45,7 +49,30 @@
           [true, true, false],
           [false, false, true]
         ]}
-      }, "type": "UnitaryTableauBox"}, "type": "UnitaryTableauBox"}}
+      }, "type": "UnitaryTableauBox"}, "type": "UnitaryTableauBox"}},
+    {"args": [["q", [0]], ["q", [1]], ["q", [2]]], "op": {"box": {"id": "0fe4a8be-9927-4948-9653-33d5b1ffdc95",
+      "op_map": [
+        [[false, false], {"params": ["0.3"], "type": "Rz"}],
+        [[true, true], {"type": "H"}]
+      ], "type": "MultiplexorBox"}, "type": "MultiplexorBox"}},
+    {"args": [["q", [0]], ["q", [1]], ["q", [2]]], "op": {"box": {"id": "fa501638-fadc-4562-a679-6586261b9f61",
+      "impl_diag": true,
+      "op_map": [
+        [[false, false], {"params": ["0.3"], "type": "Rz"}],
+        [[true, true], {"type": "H"}]
+      ], "type": "MultiplexedU2Box"}, "type": "MultiplexedU2Box"}},
+    {"args": [["q", [0]], ["q", [1]], ["q", [2]]], "op": {"box": {"id": "c274a6c7-a8c4-47c3-97aa-5f437ba78544",
+      "op_map": [
+        [[false, false], {"params": ["0.3"], "type": "Rz"}],
+        [[true, true], {"params": ["1.7"], "type": "Rz"}]
+      ], "type": "MultiplexedRotationBox"}, "type": "MultiplexedRotationBox"}},
+    {"args": [["q", [0]], ["q", [1]], ["q", [2]]], "op": {"box": {"id": "773b9e33-a8c5-49e4-8641-8b4784de6a0e",
+      "op_map": [
+        [[false, false], {"params": ["0.3"], "type": "Rz"}],
+        [[true, true], {"params": ["1.7"], "type": "Rz"}]
+      ], "type": "MultiplexedRotationBox"}, "type": "MultiplexedRotationBox"}},
+    {"args": [["q", [0]], ["q", [1]]], "op": {"box": { "id": "69cc878a-beb5-4b00-95fe-70f4258f83ba",
+      "cycles": [[[false, false], [true, true]]], "n_qubits": 2, "type": "ToffoliBox"}, "type": "ToffoliBox"}}
   ],
   "implicit_permutation": [[["q", [0]], ["q", [0]]], [["q", [1]], ["q", [1]]], [["q", [2]], ["q", [2]]], [["q", [3]], ["q", [3]]]],
   "phase": "0.0"
