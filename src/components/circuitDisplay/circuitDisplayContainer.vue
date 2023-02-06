@@ -38,7 +38,7 @@ export default {
         zxStyle: 'zxStyle' in this.initRenderOptions ? this.initRenderOptions.zxStyle : true,
         condenseCBits: 'condenseCBits' in this.initRenderOptions ? this.initRenderOptions.condenseCBits : true,
         recursive: 'recursive' in this.initRenderOptions ? this.initRenderOptions.recursive : false,
-        condensed: 'condensed' in this.initRenderOptions ? this.initRenderOptions.condensed : true,
+        wrap: 'condensed' in this.initRenderOptions ? !this.initRenderOptions.condensed : false,
         darkTheme: 'darkTheme' in this.initRenderOptions ? this.initRenderOptions.darkTheme : false,
         transparentBg: 'transparentBg' in this.initRenderOptions ? this.initRenderOptions.transparentBg : false
       },
@@ -67,9 +67,9 @@ export default {
           title: 'Render nested circuits recursively',
           icon: '<svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-list-nested"><path fill-rule="evenodd" d="M4.5 11.5A.5.5 0 0 1 5 11h10a.5.5 0 0 1 0 1H5a.5.5 0 0 1-.5-.5zm-2-4A.5.5 0 0 1 3 7h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm-2-4A.5.5 0 0 1 1 3h10a.5.5 0 0 1 0 1H1a.5.5 0 0 1-.5-.5z"/></svg>'
         },
-        condensed: {
-          title: 'Render on one line only',
-          icon: '<svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-arrows-angle-contract"><path fill-rule="evenodd" d="M.172 15.828a.5.5 0 0 0 .707 0l4.096-4.096V14.5a.5.5 0 1 0 1 0v-3.975a.5.5 0 0 0-.5-.5H1.5a.5.5 0 0 0 0 1h2.768L.172 15.121a.5.5 0 0 0 0 .707zM15.828.172a.5.5 0 0 0-.707 0l-4.096 4.096V1.5a.5.5 0 1 0-1 0v3.975a.5.5 0 0 0 .5.5H14.5a.5.5 0 0 0 0-1h-2.768L15.828.879a.5.5 0 0 0 0-.707z"/></svg>'
+        wrap: {
+          title: 'Wrap circuit to fit display',
+          icon: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-text-wrap" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M2 3.5a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5Zm0 4a.5.5 0 0 1 .5-.5h9a2.5 2.5 0 0 1 0 5h-1.293l.647.646a.5.5 0 0 1-.708.708l-1.5-1.5a.5.5 0 0 1 0-.708l1.5-1.5a.5.5 0 0 1 .708.708l-.647.646H11.5a1.5 1.5 0 0 0 0-3h-9a.5.5 0 0 1-.5-.5Zm0 4a.5.5 0 0 1 .5-.5H7a.5.5 0 0 1 0 1H2.5a.5.5 0 0 1-.5-.5Z"/></svg>'
         },
         zoomIn: {
           title: 'Zoom in',
@@ -90,6 +90,10 @@ export default {
         darkTheme: {
           title: 'Dark Mode',
           icon: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-moon-fill" viewBox="0 0 16 16"><path d="M6 .278a.768.768 0 0 1 .08.858 7.208 7.208 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277.527 0 1.04-.055 1.533-.16a.787.787 0 0 1 .81.316.733.733 0 0 1-.031.893A8.349 8.349 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71 0 4.266 2.114 1.312 5.124.06A.752.752 0 0 1 6 .278z"/></svg>'
+        },
+        transparentBg: {
+          title: 'Remove Background',
+          icon: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-droplet-half" viewBox="0 0 16 16"> <path fill-rule="evenodd" d="M7.21.8C7.69.295 8 0 8 0c.109.363.234.708.371 1.038.812 1.946 2.073 3.35 3.197 4.6C12.878 7.096 14 8.345 14 10a6 6 0 0 1-12 0C2 6.668 5.58 2.517 7.21.8zm.413 1.021A31.25 31.25 0 0 0 5.794 3.99c-.726.95-1.436 2.008-1.96 3.07C3.304 8.133 3 9.138 3 10c0 0 2.5 1.5 5 .5s5-.5 5-.5c0-1.201-.796-2.157-2.181-3.7l-.03-.032C9.75 5.11 8.5 3.72 7.623 1.82z"/><path fill-rule="evenodd" d="M4.553 7.776c.82-1.641 1.717-2.753 2.093-3.13l.708.708c-.29.29-1.128 1.311-1.907 2.87l-.894-.448z"/></svg>'
         }
       },
       navPreviews: []
@@ -100,7 +104,7 @@ export default {
       [renderOptions.condenseCBits]: computed(() => this.renderOptions.condenseCBits),
       [renderOptions.zxStyle]: computed(() => this.renderOptions.zxStyle),
       [renderOptions.recursive]: computed(() => this.renderOptions.recursive),
-      [renderOptions.condensed]: computed(() => this.renderOptions.condensed),
+      [renderOptions.condensed]: computed(() => !this.renderOptions.wrap),
       [renderOptions.nested]: false
     }
   },
@@ -116,12 +120,13 @@ export default {
       return {
         zxStyle: false,
         condenseCBits: false,
-        recursive: !this.renderOptions.condensed,
-        condensed: this.renderOptions.recursive
+        recursive: this.renderOptions.wrap,
+        condensed: this.renderOptions.recursive,
+        wrap: this.renderOptions.recursive
       }
     },
     zoomStyling () {
-      if (!this.renderOptions.condensed) {
+      if (this.renderOptions.wrap) {
         return {
           width: `calc(100% / ${this.zoom})`,
           transform: `scale(${this.zoom}) translate(-${this.scrollX * 100}%, -${this.scrollY * 100}%)`,
@@ -244,18 +249,21 @@ export default {
                  role="checkbox"
                  v-html="options[option].icon"
             ></div>
-            <div class="icon-label">[[# options[option].title #]]</div>
+            <div class="icon-label" :class="{'active': renderOptions[option], 'disabled': disabledOptions[option]}">
+              [[# options[option].title #]]
+            </div>
           </div>
         </div>
       </div>
     </div>
 
-    <navigator-preview ref="navX" :controller="$refs.navController" direction="x" :fit-zoom="true"></navigator-preview>
+    <navigator-preview ref="navX" :controller="$refs.navController" direction="x" :fit-zoom="!renderOptions.wrap" :reset-zoom="true">
+    </navigator-preview>
     <navigator-preview ref="navY" :controller="$refs.navController" direction="y"></navigator-preview>
 
     <div class="download-button">
         <div :title="options['save'].title"
-             class="icon"
+             class="icon" :class="{'active': exportImageModal}"
              role="button"
              @click="prepareExport"
              @keyup.space="prepareExport"

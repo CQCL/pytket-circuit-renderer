@@ -10,7 +10,7 @@
 
   --text-primary: #{$grey800};
   --text-secondary: #{$grey700};
-  --text-disabled: #{$grey600};
+  --text-disabled: #{$grey400};
 
   --divider: #{$grey300};
 
@@ -26,7 +26,7 @@
 
   --text-primary: #{$grey50};
   --text-secondary: #{$grey200};
-  --text-disabled: #{$grey400};
+  --text-disabled: #{$grey500};
 
   --divider: #{$grey600};
 
@@ -56,11 +56,12 @@
   .icon.active {
     border-color: var(--primary-dark);
     box-shadow: 0 0 0 2px var(--primary-dark) inset;
+    background: var(--primary-alpha);
   }
 
-  .icon.disabled {
-    color: var(--grey500);
-    border-color: var(--grey300);
+  .icon.disabled, .icon-label.disabled {
+    color: var(--text-disabled);
+    border-color: var(--text-disabled);
     box-shadow: none;
     cursor: default;
   }
