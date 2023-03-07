@@ -2,6 +2,7 @@
 import wire from './wire'
 import { formatClassicalExp, formatPosStr } from './utils'
 import { renderOptions } from './provideKeys'
+import { evaluate } from 'mathjs'
 
 export default {
   name: 'gate-component',
@@ -16,7 +17,8 @@ export default {
     linkVertical: { type: Boolean, default: false }
   },
   inject: {
-    zxStyle: { from: renderOptions.zxStyle }
+    zxStyle: { from: renderOptions.zxStyle },
+    cropParams: { from: renderOptions.cropParams }
   },
   computed: {
     opType () {
@@ -113,16 +115,26 @@ export default {
       const op = this.command.op
       let params = 'params' in op && op.params ? op.params : []
       params = params.concat('box' in op && op.box.params ? op.box.params : [])
-      params = params.map((p) => {
-        const num = Number(p)
-        if (isNaN(p)) {
-          return p.length > 5 ? p.slice(0, 4) + '...' : p
-        } else {
+      if (this.cropParams) {
+        params = params.map((p) => {
+          const num = Number(p)
+          if (isNaN(p)) {
+            try {
+              // Evaluate as a number and round that
+              const pEval = evaluate(p)
+              if (!isNaN(pEval)) {
+                return Math.round(pEval * 1000) / 1000
+              }
+            } catch (e) {
+              // Just truncate the string
+              return p.length > 5 ? p.slice(0, 4) + '...' : p
+            }
+          }
           return Math.round(num * 1000) / 1000
-        }
-      })
+        })
+      }
       return params.length > 0
-        ? (params.length > 3 ? `(${params.slice(0, 4)}...)` : `(${params})`)
+        ? ((params.length > 3 && this.cropParams) ? `(${params.slice(0, 4)}...)` : `(${params})`)
         : ''
     },
     posStr () {

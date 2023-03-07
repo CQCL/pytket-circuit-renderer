@@ -5,7 +5,8 @@ export const renderOptions = {
   zxStyle: Symbol('Render option: display zx style gates.'),
   condensed: Symbol('Render option: condense circuit into one line.'),
   recursive: Symbol('Render option: display nested circuits recursively.'),
-  nested: Symbol('Render option: circuit is nested.')
+  nested: Symbol('Render option: circuit is nested.'),
+  cropParams: Symbol('Render option: truncate params in main display if too long.')
 }
 
 export const teleportConfig = {
