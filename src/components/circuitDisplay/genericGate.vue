@@ -136,7 +136,7 @@ export default {
     <!-- Special: No args -->
     <div v-if="special0qGate.flag" data-gate="Special:no-args">
       <div v-for="(arg, i) in renderIndexedArgs" :key="i" class="gate_container">
-        <gate-component v-if="i === 0" ref="special0qGateComponent"
+        <gate-component v-if="i === renderIndexedArgs.length - 1" ref="special0qGateComponent"
             :arg="special0qGate.fakeIndexedArg"
             :pos-adjust="posAdjust"
             :split="split"

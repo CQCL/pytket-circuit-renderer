@@ -12,7 +12,8 @@
       },
       "args": [["c", [0]]]
     },
-    {"op": {"type": "Phase", "params": ["0.25"]}, "args": null},
+    {"op": {"type": "Phase", "params": ["0.25 * pi"]}, "args": null},
+    {"op": {"type": "Phase", "params": ["pi"]}, "args": null},
     {"op": {"type": "Fake Gate", "params": ["0.25"]}, "args": null},
     {"op":{"type":"CircBox","box":{"id":"621ee04f-bc1f-4ae3-bbf5-0db8385e9e01","type":"CircBox","circuit":{
       "name": "Circbox with Phase Gate",

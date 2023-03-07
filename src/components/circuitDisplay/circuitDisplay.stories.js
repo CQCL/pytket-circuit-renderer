@@ -17,6 +17,7 @@ export default {
     recursive: false,
     condensed: true,
     nested: false,
+    cropParams: true,
     circuit: { qubits: [['Q', [0]]], commands: [], bits: [], phase: 0, implicit_permutation: ['Q', [0]] } // Empty circuit with 1 qubit.
   }
 }
@@ -27,6 +28,7 @@ const setupProvideRenderOptions = function (args) {
   provide(renderOptions.recursive, args.recursive)
   provide(renderOptions.condensed, args.condensed)
   provide(renderOptions.nested, args.nested)
+  provide(renderOptions.cropParams, args.cropParams)
 }
 export { setupProvideRenderOptions }
 

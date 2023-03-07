@@ -85,7 +85,7 @@ export default {
     },
     hasLongParams () {
       return (this.params.length > 3) || (this.params.reduce((acc, param) => {
-        return acc || param.length > 5
+        return acc || param.length > 5 || isNaN(Number(param))
       }, false))
     },
     params () {

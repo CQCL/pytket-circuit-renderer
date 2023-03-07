@@ -17,13 +17,15 @@ export default {
   },
   args: {
     circuitPreset: 'default',
+    circuitRaw: undefined,
     initOptions: false,
     darkTheme: false,
     transparentBg: false,
     condensed: false,
     condenseCBits: true,
     zxStyle: true,
-    recursive: false
+    recursive: false,
+    cropParams: true
   }
 }
 
@@ -31,7 +33,7 @@ export const FromRaw = (args) => ({
   components: { CircuitDisplayContainer },
   setup () {
     return {
-      circuitRaw: CircuitStories[args.circuitPreset].args.circuit,
+      circuitRaw: args.circuitRaw ? args.circuitRaw : CircuitStories[args.circuitPreset].args.circuit,
       initRenderOptions: args.initOptions
         ? {
             darkTheme: args.darkTheme,
@@ -39,7 +41,8 @@ export const FromRaw = (args) => ({
             condenseCBits: args.condenseCBits,
             zxStyle: args.zxStyle,
             recursive: args.recursive,
-            transparentBg: args.transparentBg
+            transparentBg: args.transparentBg,
+            cropParams: args.cropParams
           }
         : {}
     }
@@ -63,7 +66,8 @@ export const FromDOMReactive = (args) => ({
             condenseCBits: args.condenseCBits,
             zxStyle: args.zxStyle,
             recursive: args.recursive,
-            transparentBg: args.transparentBg
+            transparentBg: args.transparentBg,
+            cropParams: args.cropParams
           }
         : {}
     }
