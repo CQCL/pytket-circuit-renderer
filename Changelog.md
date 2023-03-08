@@ -12,6 +12,8 @@ This is to allow user-facing information to be more easily extracted from this c
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
+
+## [0.6.0] 2023-10-30
 ### Changed:
 - Controlled gates now display as large blocks, and recursive display is enabled for controlled sub-circuits.
 - Updated UI icons to make their functionality clearer.
@@ -20,6 +22,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ### Added:
 - Transparent background toggle to render options.
 - Truncate long params render option (enabled by default). When disabled, long parameters are displayed in full.
+- Note about SVG image export.
 
 ## [0.5.0] 2023-10-30
 ### Added:

@@ -116,6 +116,9 @@ export default {
 
 <template>
     <div class="download-image-container" :class="{rendering: rendering}">
+      <p>Note: when exporting as an SVG, the image is intended for browser display only, and is not displayed by image editors.</p>
+      <p>To get a high quality image for inclusion in slides, you can use a PNG format at higher resolution.</p>
+      <div class="divider"></div>
       <form>
         <div class="flex" v-for="(option, name) in options" :key="name">
           <span class="tab-option-label">[[# option.title #]]</span>

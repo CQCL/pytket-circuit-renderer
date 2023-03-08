@@ -75,6 +75,13 @@
     cursor: default;
   }
 
+  .divider {
+    border-bottom: 1px solid var(--divider);
+    height: 0;
+    width: 100%;
+    margin: 20px 0;
+  }
+
   .row {
     color: var(--text-secondary);
     display: flex;
