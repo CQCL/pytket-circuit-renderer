@@ -335,13 +335,15 @@ export default {
 .display-options-menu {
   position: absolute;
   top: 3em;
+  bottom: 0;
+  max-height: calc(100% - 5em);
   left: 0;
   margin: 0.6em;
   background: var(--background);
   border-radius: 0.4em;
   box-shadow: 0px 5px 10px 0px rgba($grey900, 0.1);
   border: 1px solid var(--paper);
-  overflow: hidden;
+  overflow: auto;
   z-index: 1;
 }
 .display-options-menu-entry {
