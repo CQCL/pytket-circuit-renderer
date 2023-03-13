@@ -61,7 +61,7 @@ export default {
         fakeArg.flags.single = true
         fakeArg.pos = -1
         return {
-          flag: flag,
+          flag,
           fakeCommandArgs: [this.indexedArgs[0].name],
           fakeIndexedArg: fakeArg,
           name: this.$refs.special0qGateComponent ? this.$refs.special0qGateComponent.name : this.opType

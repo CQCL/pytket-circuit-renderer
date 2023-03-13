@@ -15,7 +15,7 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "build-lib": "vue-cli-service build --target lib --name pytket-circuit-renderer src/main.js",
+    "build-lib": "vue-cli-service build --target lib --name pytket-circuit-renderer src/main.js --mode production",
     "lint": "npx eslint 'src/**/*.vue' 'src/**/*.js' 'cypress/**/*.js' '.storybook/**/*.js' './*.js'",
     "lint-fix": "npx eslint 'src/**/*.vue' 'src/**/*.js' 'cypress/**/*.js' '.storybook/**/*.js' './*.js' --fix",
     "test": "npx cypress run --component",
@@ -25,15 +25,14 @@
   "main": "./dist/pytket-circuit-renderer.common.js",
   "dependencies": {
     "dom-to-image": "^2.6.0",
-    "mathjs": "^11.6.0",
-    "vue": "^3.2.39"
+    "vue": "^3.2.39",
+    "mathjs": "^11.6.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",
     "@babel/eslint-parser": "^7.12.16",
     "@cypress/vue": "^3.1.2",
     "@cypress/webpack-dev-server": "^2.0.0",
-    "@storybook/testing-vue3": "0.0.2",
     "@storybook/addon-actions": "^6.5.10",
     "@storybook/addon-essentials": "^6.5.10",
     "@storybook/addon-interactions": "^6.5.10",
@@ -41,6 +40,7 @@
     "@storybook/builder-webpack5": "^6.5.10",
     "@storybook/manager-webpack5": "^6.5.10",
     "@storybook/testing-library": "0.0.13",
+    "@storybook/testing-vue3": "0.0.2",
     "@storybook/vue3": "^6.5.10",
     "@vue/cli-plugin-babel": "~5.0.0",
     "@vue/cli-plugin-eslint": "~5.0.0",

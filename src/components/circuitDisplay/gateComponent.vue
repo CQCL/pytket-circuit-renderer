@@ -2,7 +2,15 @@
 import wire from './wire'
 import { formatClassicalExp, formatPosStr } from './utils'
 import { renderOptions } from './provideKeys'
-import { evaluate } from 'mathjs'
+import { create, evaluateDependencies, piDependencies, eDependencies, iDependencies } from 'mathjs'
+
+// Must explicitly choose which constants to support: pi, e, i
+const { evaluate } = create({
+  evaluateDependencies,
+  piDependencies,
+  eDependencies,
+  iDependencies
+}, {})
 
 export default {
   name: 'gate-component',
@@ -125,6 +133,7 @@ export default {
               if (!isNaN(pEval)) {
                 return Math.round(pEval * 1000) / 1000
               }
+              throw new Error('Can\'t evaluate')
             } catch (e) {
               // Just truncate the string
               return p.length > 5 ? p.slice(0, 4) + '...' : p
