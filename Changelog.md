@@ -17,6 +17,9 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ### Changed:
 - Refactor mathjs to reduce component size.
 
+### Fixed
+- Allow scrolling on the render options menu.
+
 ## [0.6.0] 2023-03-08
 ### Changed:
 - Controlled gates now display as large blocks, and recursive display is enabled for controlled sub-circuits.
