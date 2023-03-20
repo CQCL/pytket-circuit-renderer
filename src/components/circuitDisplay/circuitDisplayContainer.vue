@@ -337,6 +337,7 @@ export default {
   top: 3em;
   bottom: 0;
   max-height: calc(100% - 5em);
+  height: fit-content;
   left: 0;
   margin: 0.6em;
   background: var(--background);
