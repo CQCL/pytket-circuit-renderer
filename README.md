@@ -62,3 +62,16 @@ The render options you can specify are the following:
   It is advised that you also set the theme to avoid clashes.
 
 Check the example folder for a basic sample app that uses this component.
+
+
+## Development
+To get started with the project locally, first install the npm dependencies via `npm install`.
+
+### Test
+You should then be able to run storybook to manually inspect the components via `npm run storybook`.
+Automated tests via cypress can be run using `npm run test`.
+
+### Build
+To compile the component library use `npm run build-lib`.
+Opening `test\index.html` gives an example app that uses the locally built circuit renderer.
+Note that you must be serving the local files, for example by first running `serve .` in the project root directory.
