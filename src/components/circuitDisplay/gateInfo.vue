@@ -40,7 +40,7 @@ export default {
         'ProjectorAssertionBox', 'StabiliserAssertionBox',
         'ExplicitPredicate', 'ExplicitModifier',
         'ClassicalTransform', 'SetBits', 'CopyBits',
-        'MultiBit', 'RangePredicate',
+        'MultiBit', 'RangePredicate', 'StatePreparationBox',
         'UnitaryTableauBox', 'WASM', 'ToffoliBox',
         'MultiplexorBox', 'MultiplexedRotationBox', 'MultiplexedU2Box'
       ],
@@ -295,6 +295,22 @@ export default {
                     </td>
                   </tr>
                 </tbody>
+              </table>
+            </div>
+
+            <div v-if="displayOp.type === 'StatePreparationBox'">
+              <table>
+                <tr>
+                  <th>StateVector</th>
+                  <td>
+                    <chart-matrix :matrix="op.box.statevector" :display-title="false" entry-type="complex">
+                    </chart-matrix>
+                  </td>
+                </tr>
+                <tr>
+                  <th>Inverse</th>
+                  <td>[[# op.box.is_inverse #]]</td>
+                </tr>
               </table>
             </div>
 

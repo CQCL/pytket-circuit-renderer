@@ -12,6 +12,8 @@ This is to allow user-facing information to be more easily extracted from this c
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
+### Added:
+- Gate info for StatePreparationBox optype.
 
 ## [0.6.1] 2023-03-13
 ### Changed:
