@@ -15,6 +15,9 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ### Added:
 - Gate info for StatePreparationBox optype.
 
+### Fixed:
+- 'Expand parameter expression' render option color in dark mode.
+
 ## [0.6.1] 2023-03-13
 ### Changed:
 - Refactor mathjs to reduce component size.
