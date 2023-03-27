@@ -72,7 +72,12 @@
         [[true, true], {"params": ["1.7"], "type": "Rz"}]
       ], "type": "MultiplexedRotationBox"}, "type": "MultiplexedRotationBox"}},
     {"args": [["q", [0]], ["q", [1]]], "op": {"box": { "id": "69cc878a-beb5-4b00-95fe-70f4258f83ba",
-      "cycles": [[[false, false], [true, true]]], "n_qubits": 2, "type": "ToffoliBox"}, "type": "ToffoliBox"}}
+      "cycles": [[[false, false], [true, true]]], "n_qubits": 2, "type": "ToffoliBox"}, "type": "ToffoliBox"}},
+    {"args": [["q", [0]]], "op": {"box": {"id": "db927c8d-d074-40ab-81a1-d2151d2074bf", "is_inverse": false,
+      "statevector": [[[1.0, 0.0]], [[0.0, 0.0]]], "type": "StatePreparationBox"}, "type": "StatePreparationBox"}},
+    {"args": [["q", [1]], ["q", [2]]], "op": {"box": {"id": "1db089ab-de99-4c4a-8141-0e647a4ecaf1", "is_inverse": true,
+      "statevector": [[[0.7071067811865475, 0.0]], [[0.0, 0.0]], [[0.0, 0.0]], [[0.7071067811865475, 0.0]]],
+      "type": "StatePreparationBox"}, "type": "StatePreparationBox"}}
   ],
   "implicit_permutation": [[["q", [0]], ["q", [0]]], [["q", [1]], ["q", [1]]], [["q", [2]], ["q", [2]]], [["q", [3]], ["q", [3]]]],
   "phase": "0.0"
