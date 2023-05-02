@@ -1,11 +1,12 @@
 <script>
-import { chartList } from '@/components/charts/init'
+import { chartList, chartDef } from '@/components/charts/init'
 import { formatClassicalExp } from './utils'
 
 export default {
   name: 'gate-info-classical',
   components: {
-    chartList
+    chartList,
+    chartDef
   },
   props: {
     op: { type: Object, required: true }
@@ -41,34 +42,26 @@ export default {
 
 <template>
 <div v-if="op">
-    <div v-if="opType === 'ClassicalExpBox'">
-      <h4>Expression</h4>
-      <p>[[# formatClassicalExp(op.box.exp) #]]</p>
+    <chart-def v-if="opType === 'ClassicalExpBox'" title="Expression" vertical hover>
+      [[# formatClassicalExp(op.box.exp) #]]
+    </chart-def>
+
+    <div v-if="hasClassicalTable">
+      <chart-def v-for="key in Object.keys(classicalTable)" :key="key" :title="key" hover>
+        [[# classicalTable[key] #]]
+      </chart-def>
     </div>
-
-    <table v-if="hasClassicalTable">
-      <tr v-for="key in Object.keys(classicalTable)" :key="key">
-        <th>[[# key #]]</th>
-        <td>[[# classicalTable[key] #]]</td>
-      </tr>
-    </table>
-    <table v-if="'classical' in op">
-      <tr v-if="'values' in op.classical">
-        <th>Values</th>
-        <td>
-          <chart-list :chart="op.classical.values"></chart-list>
-        </td>
-      </tr>
-
-      <tr v-if="'n' in op.classical">
-        <th>Multi</th>
-        <td> [[# op.classical.n #]]</td>
-      </tr>
-      <tr v-if="'op' in op.classical">
-        <th>Operation</th>
-        <td> [[# op.classical.op.classical.name #]]</td>
-      </tr>
-    </table>
+    <div v-if="'classical' in op">
+      <chart-def v-if="'values' in op.classical" title="Values" hover>
+        <chart-list :chart="op.classical.values"></chart-list>
+      </chart-def>
+      <chart-def v-if="'n' in op.classical" title="Multi" hover>
+        [[# op.classical.n #]]
+      </chart-def>
+      <chart-def v-if="'op' in op.classical" title="Operation" hover>
+        [[# op.classical.op.classical.name #]]
+      </chart-def>
+    </div>
   </div>
 </template>
 

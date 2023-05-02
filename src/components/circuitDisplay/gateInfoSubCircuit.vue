@@ -1,10 +1,11 @@
 <script>
 import { extractSubCircuit, extractControlledCommand } from './utils'
 import { renderOptions } from './provideKeys'
+import { chartDef } from '@/components/charts/init'
 
 export default {
   name: 'gate-info-sub-circuit',
-  components: {},
+  components: { chartDef },
   props: {
     op: { type: Object, required: true }
   },
@@ -54,7 +55,7 @@ export default {
 
 <template>
   <div v-if="subCircuit" style="overflow: auto;width: 100%">
-    <h4>[[# subCircuit.type #]] Circuit</h4>
+    <chart-def :title="subCircuit.type + ' Circuit'"></chart-def>
     <div class="gate_container nested">
       <circuit-display @updated="$emit('updated')" :circuit="subCircuit.circuit"></circuit-display>
     </div>

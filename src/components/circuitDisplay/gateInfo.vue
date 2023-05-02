@@ -1,6 +1,6 @@
 <script>
 import { teleportFrom } from '@/components/teleport/init'
-import { chartList, chartMatrix } from '@/components/charts/init'
+import { chartList, chartMatrix, chartDef, chartMapping } from '@/components/charts/init'
 import mathjaxContent from '@/components/mathjaxContent/mathjaxContent'
 
 import { CONTROLLED_OPS } from './consts'
@@ -13,8 +13,10 @@ import { renderOptions, teleportConfig } from './provideKeys'
 export default {
   name: 'gate-info',
   components: {
+    chartMapping,
     chartList,
     chartMatrix,
+    chartDef,
     infoModal,
     teleportFrom,
     mathjaxContent,
@@ -42,7 +44,8 @@ export default {
         'ClassicalTransform', 'SetBits', 'CopyBits',
         'MultiBit', 'RangePredicate', 'StatePreparationBox',
         'UnitaryTableauBox', 'WASM', 'ToffoliBox',
-        'MultiplexorBox', 'MultiplexedRotationBox', 'MultiplexedU2Box'
+        'MultiplexorBox', 'MultiplexedRotationBox',
+        'MultiplexedU2Box', 'DiagonalBox'
       ],
       visible: false,
       teleportToId: this.teleportId
@@ -97,25 +100,6 @@ export default {
     }
   },
   methods: {
-    formatMapping (mapping, coerceFrom, coerceTo) {
-      const coerce = {
-        register: (reg) => reg, // `${reg[0]}[${reg[1][0]}]`,
-        bool: (x) => x ? '1' : '0'
-      }
-      const formattedMapping = []
-      for (const elFrom in mapping) {
-        formattedMapping.push(
-          coerceFrom
-            ? coerce[coerceFrom](elFrom)
-            : elFrom +
-            ' → ' +
-            coerceFrom
-              ? coerce[coerceTo](mapping[elFrom])
-              : mapping[elFrom]
-        )
-      }
-      return formattedMapping
-    },
     formatBoolMatrix (matrix) {
       const nQubits = Math.round(Math.log(matrix.length))
       const basis = []
@@ -152,75 +136,82 @@ export default {
           <template #title>
             [[# opType #]]
           </template>
+
           <template #content v-if="visible"> <!-- Defer rendering contents until modal is opened -->
-            <div v-if="hasLongParams">
-              <h4>Box params</h4>
-              <div v-for="(param, i) in params" :key="i" class="complex-number">
-                <mathjax-content :formula="'\`' + param + '\`'"></mathjax-content>
+            <chart-def v-if="hasLongParams" title="Box params" hover>
+              <div style="display: flex">
+                <div v-for="(param, i) in params" :key="i" class="complex-number">
+                  <mathjax-content :formula="'\`' + param + '\`'"></mathjax-content>
+                </div>
               </div>
-            </div>
+            </chart-def>
 
-            <div v-if="matrix">
-              <chart-matrix :matrix="matrix" entry-type="complex"></chart-matrix>
-            </div>
+            <chart-def v-if="matrix" title="Matrix" hover vertical>
+              <chart-matrix :matrix="matrix" entry-type="complex" :display-title="false"></chart-matrix>
+            </chart-def>
 
-            <table v-if="displayOp.type === 'PauliExpBox'">
-              <tr><th>Phase</th><th>Paulis</th></tr>
-              <tr>
-                <td><mathjax-content :formula="'\`' + displayOp.box.phase + '\`'"></mathjax-content></td>
-                <td><chart-list :chart="displayOp.box.paulis"></chart-list></td>
-              </tr>
-            </table>
+            <div v-if="displayOp.type === 'PauliExpBox'">
+              <chart-def title="Phase" hover>
+                <mathjax-content :formula="'\`' + displayOp.box.phase + '\`'"></mathjax-content>
+              </chart-def>
+              <chart-def title="Paulis" hover>
+                <chart-list :chart="displayOp.box.paulis"></chart-list>
+              </chart-def>
+            </div>
 
             <div v-if="displayOp.type === 'PhasePolyBox'">
-              <div class="row">Encapsulating [[# displayOp.box.n_qubits #]] gates</div>
-
-              <h4>Qubit Mapping</h4>
-              <chart-list :chart="formatMapping(displayOp.box.qubit_indices, 'register', false)"></chart-list>
-
-              <h4>Phase Polynomial</h4>
-              <chart-list :chart="formatMapping(displayOp.box.phase_polynomial, 'bool', false)"></chart-list>
-
-              <h4>Linear Transformation</h4>
-              <chart-matrix :matrix="formatBoolMatrix(displayOp.box.linear_transformation)" :display-title="false" entry-type="bool"></chart-matrix>
+              <chart-def title="Encapsulating" hover>
+                [[# displayOp.box.n_qubits #]] gates
+              </chart-def>
+              <chart-def title="Qubit Mapping" hover vertical>
+                <chart-mapping :mapping="displayOp.box.qubit_indices" coerce-from="register"></chart-mapping>
+              </chart-def>
+              <chart-def title="Phase Polynomial"></chart-def>
+              <div>
+                <chart-def v-for="(entry, i) in displayOp.box.phase_polynomial" :key="i" title="" hover>
+                  <template #title>
+                    <chart-matrix :matrix="entry[0]" :depth="1" :display-title="false" entry-type="boolStr"></chart-matrix>
+                  </template>
+                  <mathjax-content :formula="'\`' + entry[1] + '\`'"></mathjax-content>
+                </chart-def>
+              </div>
+              <chart-def title="Linear Transformation" hover vertical>
+                <chart-matrix :matrix="formatBoolMatrix(displayOp.box.linear_transformation)" :display-title="false" entry-type="bool"></chart-matrix>
+              </chart-def>
             </div>
 
-            <table v-if="['Custom', 'Composite', 'CompositeGate'].includes(displayOp.type)" class="mathjax-content hover-highlight">
-              <tr><th>Parameter</th><th>Value</th></tr>
-              <tr v-for="(param, i) in displayOp.box.params" :key="i">
-                <td><mathjax-content :formula="'\`' + displayOp.box.gate.args[i] + '\`'"></mathjax-content></td>
-                <td><mathjax-content :formula="'\`' + param + '\`'"></mathjax-content></td>
-              </tr>
-            </table>
+            <div v-if="['Custom', 'Composite', 'CompositeGate'].includes(displayOp.type)" class="mathjax-content hover-highlight">
+              <chart-def title="Parameters"></chart-def>
+              <chart-def v-for="(param, i) in displayOp.box.params" :key="i" title="" hover>
+                <template #title>
+                  <mathjax-content :formula="'\`' + displayOp.box.gate.args[i] + '\`'"></mathjax-content>
+                </template>
+                <mathjax-content :formula="'\`' + param + '\`'"></mathjax-content>
+              </chart-def>
+            </div>
 
-            <table v-if="isCondition">
-              <tr>
-                <th>Condition value</th>
-                <td>[[# op.conditional.value #]]</td>
-              </tr>
-            </table>
+            <chart-def v-if="isCondition" title="Condition value" hover>
+              [[# op.conditional.value #]]
+            </chart-def>
 
             <div v-if="displayOp.type === 'StabiliserAssertionBox'">
-              <h4>Stabilisers</h4>
-              <table class="hover-highlight">
-                <tr v-for="(stab, i) in displayOp.box.stabilisers" :key="i">
-                  <td>[[# stab.string #]]</td>
-                  <td>[[# stab.coeff #]]</td>
-                </tr>
-              </table>
+              <chart-def title="Stabilisers"></chart-def>
+              <chart-def v-for="(stab, i) in displayOp.box.stabilisers" :key="i" :title="stab.string[0]" hover>
+                [[# stab.coeff #]]
+              </chart-def>
             </div>
 
             <div v-if="displayOp.type === 'UnitaryTableauBox'">
-              <h4>Tableau</h4>
-              <table>
-                <thead>
-                  <tr>
-                    <th>X</th>
-                    <th>Z</th>
-                    <th>Phase</th>
+              <chart-def title="Qubits" hover>
+                <chart-list :chart="displayOp.box.tab.qubits.map((reg) => `${reg[0]}[${reg[1].join(',')}]`)" :display-title="false"></chart-list>
+              </chart-def>
+              <chart-def title="Tableau" vertical hover>
+                <table>
+                  <tr class="text-2">
+                    <td>X</td>
+                    <td>Z</td>
+                    <td>Phase</td>
                   </tr>
-                </thead>
-                <tbody>
                   <tr>
                     <td>
                       <chart-matrix :matrix="displayOp.box.tab.tab.xmat" :display-title="false" entry-type="boolStr">
@@ -235,83 +226,82 @@ export default {
                       </chart-matrix>
                     </td>
                   </tr>
-                </tbody>
-              </table>
+                </table>
+              </chart-def>
             </div>
 
             <div v-if="displayOp.type === 'WASM'">
-              <h4>WASM</h4>
-              <table class="hover-highlight">
-                <tr>
-                  <td>Function</td>
-                  <td>[[# op.wasm.func_name #]]</td>
-                </tr>
-                <tr>
-                  <td>N</td>
-                  <td>[[# op.wasm.n #]]</td>
-                </tr>
-                <tr>
-                  <td>Input vector</td>
-                  <td>[[# op.wasm.ni_vec #]]</td>
-                </tr>
-                <tr>
-                  <td>Output vector</td>
-                  <td>[[# op.wasm.no_vec #]]</td>
-                </tr>
-                <tr>
-                  <td>WASM uid</td>
-                  <td>[[# op.wasm.wasm_uid #]]</td>
-                </tr>
-              </table>
+              <chart-def title="WASM"></chart-def>
+              <chart-def title="Function" hover>
+                [[# op.wasm.func_name #]]
+              </chart-def>
+              <chart-def title="N" hover>
+                [[# op.wasm.n #]]
+              </chart-def>
+              <chart-def title="Input vector" hover>
+                [[# op.wasm.ni_vec #]]
+              </chart-def>
+              <chart-def title="Output vector" hover>
+                [[# op.wasm.no_vec #]]
+              </chart-def>
+              <chart-def title="WASM uid" hover>
+                [[# op.wasm.wasm_uid #]]
+              </chart-def>
             </div>
 
             <div v-if="displayOp.type === 'ToffoliBox'">
-              <h4>Cycles</h4>
-              <div v-for="(cycle, i) in displayOp.box.cycles" :key="i">
-                <chart-matrix :matrix="cycle" :display-title="false" entry-type="bool">
+              <!-- Backwards compatibility -->
+              <chart-def v-if="displayOp.box.cycles" title="Cycles" vertical hover>
+                <chart-matrix :depth="3" :matrix="displayOp.box.cycles" :display-title="false" entry-type="boolStr">
                 </chart-matrix>
+              </chart-def>
+
+              <div v-if="displayOp.box.permutation">
+                <chart-def title="Rotation Axis" hover>
+                  [[# displayOp.box.rotation_axis #]]
+                </chart-def>
+                <chart-def title="Permutation" vertical hover>
+                  <chart-matrix :depth="3" :matrix="displayOp.box.permutation" :display-title="false" entry-type="boolStr">
+                  </chart-matrix>
+                </chart-def>
               </div>
             </div>
 
-            <div v-if="['MultiplexorBox', 'MultiplexedU2Box', 'MultiplexedRotationBox'].includes(displayOp.type)">
-              <table>
-                <thead>
-                  <tr>
-                    <th>Values</th>
-                    <th>Op</th>
-                    <th>Params</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr v-for="(entry, i) in displayOp.box.op_map" :key="i">
-                    <td>
-                      [[# entry[0] #]]
-                    </td>
-                    <td>
-                      [[# entry[1].type #]]
-                    </td>
-                    <td>
-                      <chart-list :chart="entry[1].params"></chart-list>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+            <div v-if="[
+                'MultiplexorBox', 'MultiplexedU2Box', 'MultiplexedRotationBox',
+            ].includes(displayOp.type)">
+              <chart-def  v-if="displayOp.type === 'MultiplexedU2Box'" title="Implement diagonal" hover>
+                [[# displayOp.box.impl_diag #]]
+              </chart-def>
+              <div>
+                <chart-def v-for="(entry, i) in displayOp.box.op_map" :key="i" title="" hover>
+                  <template #title>
+                    <chart-matrix :matrix="entry[0]" :depth="1" :display-title="false" entry-type="boolStr">
+                    </chart-matrix>
+                  </template>
+                  [[# entry[1].type #]][[# entry[1].params ? '(' + entry[1].params.join(',') + ')' : '' #]]
+                </chart-def>
+              </div>
             </div>
 
             <div v-if="displayOp.type === 'StatePreparationBox'">
-              <table>
-                <tr>
-                  <th>StateVector</th>
-                  <td>
-                    <chart-matrix :matrix="op.box.statevector" :display-title="false" entry-type="complex">
-                    </chart-matrix>
-                  </td>
-                </tr>
-                <tr>
-                  <th>Inverse</th>
-                  <td>[[# op.box.is_inverse #]]</td>
-                </tr>
-              </table>
+              <chart-def title="State vector" hover>
+                <chart-matrix :matrix="op.box.statevector" :display-title="false" entry-type="complex">
+                </chart-matrix>
+              </chart-def>
+              <chart-def title="Inverse" hover>
+                [[# op.box.is_inverse #]]
+              </chart-def>
+            </div>
+
+            <div v-if="displayOp.type === 'DiagonalBox'">
+              <chart-def title="State vector" hover>
+                <chart-matrix :matrix="displayOp.box.diagonal" :display-title="false" entry-type="complex">
+                </chart-matrix>
+              </chart-def>
+              <chart-def title="Upper triangle" hover>
+                [[# displayOp.box.upper_triangle #]]
+              </chart-def>
             </div>
 
             <gate-info-sub-circuit @updated="onCircuitDisplayUpdate" :op="displayOp"></gate-info-sub-circuit>

@@ -96,6 +96,8 @@
     flex-direction: column;
     text-align: left;
     align-content: stretch;
+    justify-content: stretch;
+    align-items: stretch;
   }
 
   .row-item {
@@ -128,6 +130,14 @@
     color: var(--text-primary);
     border-color: var(--primary-dark);
     width: calc(100% - 20px);
+  }
+
+  .text-1 {
+    color: var(--text-primary)
+  }
+
+  .text-2 {
+    color: var(--text-secondary)
   }
 
   :focus-visible {
@@ -201,11 +211,15 @@
   }
 
   .complex-number {
-    padding: 10px;
-  }
+    padding: 0 10px;
+    border-left: 1px solid var(--paper-dark);
 
-  .complex-number:nth-child(2n+1) {
-    background: rgba(0, 0, 0, 0.1);
+    &:last-child{
+      padding-right: 0;
+    }
+    &:first-child{
+      border: none;
+    }
   }
 
   .matrix_container {
