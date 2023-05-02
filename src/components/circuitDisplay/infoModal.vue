@@ -58,9 +58,9 @@ export default {
       <div class="info-modal-backdrop" @click="closeModal"></div>
       <div class="info-modal-container" :style="{...modalStyle}" ref="modal" @wheel.stop>
         <div class="row row-heading"><slot name="title"></slot></div>
-        <div class="row paras" style="overflow:auto"><slot name="content"></slot></div>
+        <div class="modal-content" style="overflow:auto"><slot name="content"></slot></div>
         <slot name="buttons">
-          <div class="row" style="border: none; display: flex">
+          <div style="border: none; display: flex">
             <button class="row-item button" role="button" @click="closeModal">Close</button>
           </div>
         </slot>
@@ -92,12 +92,13 @@ export default {
 }
 .info-modal-container{
     position: absolute;
+    text-align: left;
     bottom: 10%;
     right: 10%;
     width: fit-content;
     height: fit-content;
     overflow: auto;
-    padding: 0 20px 20px;
+    padding: 0 1em 1em 1em;
     border-radius: 5px;
     border: 1px solid var(--paper);
     box-shadow: 0px 5px 20px -10px #000000;
@@ -121,6 +122,10 @@ export default {
     color: var(--text-primary);
 }
 .modal-content{
-    padding: 10px 20px;
+  padding: 0.5em 0;
+  display: flex;
+  flex-direction: column;
+  border-bottom: 1px solid var(--divider);
+  margin-bottom: 0.5em;
 }
 </style>

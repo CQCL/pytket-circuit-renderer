@@ -8,6 +8,7 @@ export default {
     mathjaxContent
   },
   props: {
+    depth: { type: Number, default: 2 },
     matrix: { type: Array, required: true },
     entryType: { type: String, required: true },
     displayTitle: { type: Boolean, default: true }
@@ -23,15 +24,30 @@ export default {
         numToStr = (boolStr) => boolStr ? '1' : '0'
       }
 
-      const rows = this.matrix.map(row => {
+      const flattenRow = (row) => {
         return row.reduce((prev, next, i) => {
           return `${prev} ${i === 0 ? '' : '&'} ${numToStr(next)}`
         }, '')
-      })
-      const matrixString = rows.reduce((prev, next) => {
-        return `${prev} \\\\ ${next}`
-      })
-      return `$$ \\begin{bmatrix} ${matrixString} \\end{bmatrix} $$`
+      }
+      const stackRows = (rows) => {
+        return rows.reduce((prev, next) => {
+          return `${prev} \\\\ ${next}`
+        })
+      }
+      const wrapMatrix = (matrixType, matrixInsides) => `\\begin{${matrixType}} ${matrixInsides} \\end{${matrixType}}`
+      // depth tells us how far to recurse to find the base entries.
+      if (this.depth === 1) {
+        // Vector
+        return `$$ ${wrapMatrix('bmatrix', flattenRow(this.matrix))} $$`
+      } else if (this.depth === 3) {
+        // 3D matrix
+        return `$$ ${wrapMatrix('matrix', stackRows(this.matrix.map((matrix2D) => {
+            return wrapMatrix('bmatrix', stackRows(matrix2D.map(flattenRow)))
+        })))} $$`
+      } else { // default treat as 2D
+        // 2D matrix
+        return `$$ ${wrapMatrix('bmatrix', stackRows(this.matrix.map(flattenRow)))} $$`
+      }
     }
   },
   methods: {

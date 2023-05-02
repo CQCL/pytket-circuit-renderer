@@ -49,3 +49,12 @@ export default {
       [[# formula #]]
   </span>
 </template>
+
+<style>
+/* Override default styles */
+.mathjax-content > mjx-container[jax="CHTML"][display="true"] {
+  text-align: inherit;
+  margin: 0;
+}
+
+</style>
