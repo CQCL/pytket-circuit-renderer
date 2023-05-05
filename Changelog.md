@@ -15,6 +15,9 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ### Added:
 - Gate info for DiagonalBox and ToffoliBox.
 
+### Fixed
+- Backgrounds no longer removed by default when printing to pdf.
+
 ## [0.6.2] 2023-04-24
 ### Added:
 - Gate info for StatePreparationBox optype.
