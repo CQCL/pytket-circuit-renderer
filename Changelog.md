@@ -13,9 +13,10 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## Unreleased
 
-## [0.6.3] 2023-05-15
+## [0.6.3] 2023-06-05
 ### Added:
 - Gate info for DiagonalBox and ToffoliBox.
+- System theme render option.
 
 ### Fixed
 - Backgrounds no longer removed by default when printing to pdf.
