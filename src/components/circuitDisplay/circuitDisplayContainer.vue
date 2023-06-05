@@ -40,9 +40,11 @@ export default {
         recursive: 'recursive' in this.initRenderOptions ? this.initRenderOptions.recursive : false,
         wrap: 'condensed' in this.initRenderOptions ? !this.initRenderOptions.condensed : false,
         darkTheme: 'darkTheme' in this.initRenderOptions ? this.initRenderOptions.darkTheme : false,
+        systemTheme: 'systemTheme' in this.initRenderOptions ? this.initRenderOptions.systemTheme : false,
         transparentBg: 'transparentBg' in this.initRenderOptions ? this.initRenderOptions.transparentBg : false,
         cropParams: 'cropParams' in this.initRenderOptions ? this.initRenderOptions.cropParams : true
       },
+      themeChanged: 0,
       circuitEl: null,
       circuitDimensions: {
         width: undefined,
@@ -92,6 +94,10 @@ export default {
           title: 'Dark Mode',
           icon: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-moon-fill" viewBox="0 0 16 16"><path d="M6 .278a.768.768 0 0 1 .08.858 7.208 7.208 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277.527 0 1.04-.055 1.533-.16a.787.787 0 0 1 .81.316.733.733 0 0 1-.031.893A8.349 8.349 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71 0 4.266 2.114 1.312 5.124.06A.752.752 0 0 1 6 .278z"/></svg>'
         },
+        systemTheme: {
+          title: 'Use system Theme',
+          icon: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-laptop" viewBox="0 0 16 16"><path d="M13.5 3a.5.5 0 0 1 .5.5V11H2V3.5a.5.5 0 0 1 .5-.5h11zm-11-1A1.5 1.5 0 0 0 1 3.5V12h14V3.5A1.5 1.5 0 0 0 13.5 2h-11zM0 12.5h16a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 12.5z"/></svg>'
+        },
         transparentBg: {
           title: 'Remove Background',
           icon: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-droplet-half" viewBox="0 0 16 16"> <path fill-rule="evenodd" d="M7.21.8C7.69.295 8 0 8 0c.109.363.234.708.371 1.038.812 1.946 2.073 3.35 3.197 4.6C12.878 7.096 14 8.345 14 10a6 6 0 0 1-12 0C2 6.668 5.58 2.517 7.21.8zm.413 1.021A31.25 31.25 0 0 0 5.794 3.99c-.726.95-1.436 2.008-1.96 3.07C3.304 8.133 3 9.138 3 10c0 0 2.5 1.5 5 .5s5-.5 5-.5c0-1.201-.796-2.157-2.181-3.7l-.03-.032C9.75 5.11 8.5 3.72 7.623 1.82z"/><path fill-rule="evenodd" d="M4.553 7.776c.82-1.641 1.717-2.753 2.093-3.13l.708.708c-.29.29-1.128 1.311-1.907 2.87l-.894-.448z"/></svg>'
@@ -128,7 +134,8 @@ export default {
         condenseCBits: false,
         recursive: this.renderOptions.wrap,
         condensed: this.renderOptions.recursive,
-        wrap: this.renderOptions.recursive
+        wrap: this.renderOptions.recursive,
+        darkTheme: this.renderOptions.systemTheme
       }
     },
     zoomStyling () {
@@ -143,6 +150,14 @@ export default {
         transform: `scale(${this.zoom}) translate(-${this.scrollX * 100}%, -${this.scrollY * 100}%)`,
         transformOrigin: 'top left'
       }
+    },
+    themeMode () {
+      const isDark = this.themeChanged > -1 && (
+        this.renderOptions.systemTheme
+          ? this.isSystemDarkMode()
+          : this.renderOptions.darkTheme
+      )
+      return isDark ? 'dark' : 'light'
     }
   },
   watch: {
@@ -161,8 +176,11 @@ export default {
 
     // Detect system theme if not overriden
     if (!('darkTheme' in this.initRenderOptions)) {
-      this.renderOptions.darkTheme = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+      this.darkTheme = this.isSystemDarkMode()
     }
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+      this.themeChanged = 1 - this.themeChanged
+    })
   },
   beforeUnmount () {
     this.embeddedCircuitObserver.disconnect()
@@ -224,6 +242,9 @@ export default {
         this.displayedCircuitDimensions.y = y
         this.$refs.navController.initDimensions()
       }
+    },
+    isSystemDarkMode () {
+      return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
     }
   }
 }
@@ -231,7 +252,7 @@ export default {
 
 <template>
   <navigator-controller class="circuit-display-container theme_variables"
-                        :class="[renderOptions.darkTheme ? 'dark': 'light', { 'transparent_bg': renderOptions.transparentBg }]"
+                        :class="[themeMode, { 'transparent_bg': renderOptions.transparentBg }]"
                         ref="navController" :navigator-previews="navPreviews"
                         :options="{ overrideStyle: true, externalZooming: true, externalScrolling: true, externalContent: true }"
                         v-model:ext-zoom-x="zoom" v-model:ext-zoom-y="zoom"
