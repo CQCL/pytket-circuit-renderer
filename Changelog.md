@@ -12,6 +12,8 @@ This is to allow user-facing information to be more easily extracted from this c
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
+### Fixed:
+- Scrolling events passed on to parent when the circuit container is fully scrolled.
 
 ## [0.6.3] 2023-06-05
 ### Added:

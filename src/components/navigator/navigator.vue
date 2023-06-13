@@ -253,17 +253,26 @@ export default {
       this.scrolling[this.scrolling.direction] = mouseOffsets[this.scrolling.direction]
     },
     wheelScroll (e) {
-      this.intervalScroll(e.deltaX * 0.001, e.deltaY * 0.001)
+      const noChange = this.intervalScroll(e.deltaX * 0.001, e.deltaY * 0.001)
+      if (!noChange) {
+        e.stopPropagation()
+        e.preventDefault()
+      }
     },
     intervalScroll (xDiff, yDiff) {
-      this.offsetX = this.adjustOffset(
+      const offsetX = this.adjustOffset(
         Math.max(0, Math.min(this.offsetX + xDiff, 1)),
         'x'
       )
-      this.offsetY = this.adjustOffset(
+      const offsetY = this.adjustOffset(
         Math.max(0, Math.min(this.offsetY + yDiff, 1)),
         'y'
       )
+      if (this.offsetX === offsetX && this.offsetY === offsetY) {
+        return true
+      }
+      this.offsetX = offsetX
+      this.offsetY = offsetY
     },
     jumpScroll (direction, e) {
       // Jump the scrollbar to the clicked point.
@@ -324,7 +333,7 @@ export default {
 
     <div class="navigator-content" ref="contentSize"
          @wheel.ctrl.prevent.stop="wheelZoom"
-         @wheel.exact.prevent.stop="wheelScroll"
+         @wheel.exact="wheelScroll"
     >
       <div ref="content" class="no-text-highlighting" :style="styles.content">
         <slot name="content">
