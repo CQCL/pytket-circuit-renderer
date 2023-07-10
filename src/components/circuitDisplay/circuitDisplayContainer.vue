@@ -35,12 +35,12 @@ export default {
       scrollY: 0,
       width: 0,
       renderOptions: {
-        zxStyle: 'zxStyle' in this.initRenderOptions ? this.initRenderOptions.zxStyle : true,
+        zxStyle: 'zxStyle' in this.initRenderOptions ? this.initRenderOptions.zxStyle : false,
         condenseCBits: 'condenseCBits' in this.initRenderOptions ? this.initRenderOptions.condenseCBits : true,
         recursive: 'recursive' in this.initRenderOptions ? this.initRenderOptions.recursive : false,
         wrap: 'condensed' in this.initRenderOptions ? !this.initRenderOptions.condensed : false,
         darkTheme: 'darkTheme' in this.initRenderOptions ? this.initRenderOptions.darkTheme : false,
-        systemTheme: 'systemTheme' in this.initRenderOptions ? this.initRenderOptions.systemTheme : false,
+        systemTheme: 'systemTheme' in this.initRenderOptions ? this.initRenderOptions.systemTheme : true,
         transparentBg: 'transparentBg' in this.initRenderOptions ? this.initRenderOptions.transparentBg : false,
         cropParams: 'cropParams' in this.initRenderOptions ? this.initRenderOptions.cropParams : true
       },
