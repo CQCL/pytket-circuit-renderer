@@ -112,7 +112,7 @@ export default {
              :class="[arg.pos !== -1 ? 'gate_box gate_special zx-spider zx-cx' : 'gate_connection', {z: arg.pos === 0, x: arg.pos === 1 }]">
         </div>
         <div v-if="opType === 'CX' && !zxStyle" class="gate"
-             :class="{'z gate_control': arg.pos === 0, 'x gate_box': arg.pos === 1, gate_connection: arg.pos === -1 }">
+             :class="{'z gate_control control_1': arg.pos === 0, 'x gate_box': arg.pos === 1, gate_connection: arg.pos === -1 }">
              <span class="gate_name">[[# arg.pos === 1 ? 'X' : '' #]]</span>
         </div>
 
@@ -121,7 +121,7 @@ export default {
           <div v-if="arg.flags.last" class="gate gate-box h zx-hadamard"></div>
         </div>
         <div v-if="opType === 'CZ' && !zxStyle" class="gate"
-              :class="[arg.pos !== -1 ? 'z gate_control' : 'gate_connection']">
+              :class="[arg.pos !== -1 ? 'z gate_control control_1' : 'gate_connection']">
         </div>
 
         <div v-if="opType === 'Measure'">
@@ -166,6 +166,7 @@ export default {
           <div v-else class="wire transparent-wire"></div>
         </div>
       </circuit-layer>
+      <div v-if="linkVertical" class="link link-top" :class="{'classical': renderIndexedArgs[0].flags.classical}" style="z-index: -1"></div>
     </div>
 
     <!-- Generic -->

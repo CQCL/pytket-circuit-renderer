@@ -45,7 +45,8 @@ export default {
         'MultiBit', 'RangePredicate', 'StatePreparationBox',
         'UnitaryTableauBox', 'WASM', 'ToffoliBox',
         'MultiplexorBox', 'MultiplexedRotationBox',
-        'MultiplexedU2Box', 'DiagonalBox'
+        'MultiplexedU2Box', 'MultiplexedTensoredU2Box',
+        'DiagonalBox', 'ConjugationBox',
       ],
       visible: false,
       teleportToId: this.teleportId
@@ -115,11 +116,20 @@ export default {
       }
       return formattedMatrix
     },
+    formatMultiplexedOpMap (op_map) {
+      return op_map.map(entry => {
+        const ops = (Array.isArray(entry[1]) ? entry[1] : [entry[1]]).map(this.getBoxName)
+        return [entry[0], ops]
+      })
+    },
     onCircuitDisplayUpdate () {
       // Make sure info modal resizes when the circuit is loaded
       this.$nextTick(() => {
         this.$refs.infoModal.onResize()
       })
+    },
+    getBoxName (box) {
+      return `${box.type}${box.params ? '(' + box.params.join(',') + ')' : ''}`
     }
   }
 }
@@ -250,6 +260,9 @@ export default {
             </div>
 
             <div v-if="displayOp.type === 'ToffoliBox'">
+              <chart-def title="Strategy">
+                [[# displayOp.box.strat ? displayOp.box.strat : (displayOp.box.cycles ? 'Cycle' : 'Matching') #]]
+              </chart-def>
               <!-- Backwards compatibility -->
               <chart-def v-if="displayOp.box.cycles" title="Cycles" vertical hover>
                 <chart-matrix :depth="3" :matrix="displayOp.box.cycles" :display-title="false" entry-type="boolStr">
@@ -261,25 +274,27 @@ export default {
                   [[# displayOp.box.rotation_axis #]]
                 </chart-def>
                 <chart-def title="Permutation" vertical hover>
-                  <chart-matrix :depth="3" :matrix="displayOp.box.permutation" :display-title="false" entry-type="boolStr">
-                  </chart-matrix>
+                  <chart-mapping coerce-from="state" coerce-to="state"
+                               :mapping="displayOp.box.permutation"
+                               :vertical="true"
+                  ></chart-mapping>
                 </chart-def>
               </div>
             </div>
 
             <div v-if="[
-                'MultiplexorBox', 'MultiplexedU2Box', 'MultiplexedRotationBox',
+                'MultiplexorBox', 'MultiplexedU2Box', 'MultiplexedRotationBox', 'MultiplexedTensoredU2Box'
             ].includes(displayOp.type)">
               <chart-def  v-if="displayOp.type === 'MultiplexedU2Box'" title="Implement diagonal" hover>
                 [[# displayOp.box.impl_diag #]]
               </chart-def>
               <div>
-                <chart-def v-for="(entry, i) in displayOp.box.op_map" :key="i" title="" hover>
+                <chart-def v-for="(entry, i) in formatMultiplexedOpMap(displayOp.box.op_map)" :key="i" title="" hover>
                   <template #title>
                     <chart-matrix :matrix="entry[0]" :depth="1" :display-title="false" entry-type="boolStr">
                     </chart-matrix>
                   </template>
-                  [[# entry[1].type #]][[# entry[1].params ? '(' + entry[1].params.join(',') + ')' : '' #]]
+                  <chart-list :chart="entry[1]" :display-title="false"></chart-list>
                 </chart-def>
               </div>
             </div>
@@ -301,6 +316,18 @@ export default {
               </chart-def>
               <chart-def title="Upper triangle" hover>
                 [[# displayOp.box.upper_triangle #]]
+              </chart-def>
+            </div>
+
+            <div v-if="displayOp.type === 'ConjugationBox'">
+              <chart-def title="Compute" hover>
+                [[# getBoxName(displayOp.box.compute) #]]
+              </chart-def>
+              <chart-def title="Action" hover>
+                [[# getBoxName(displayOp.box.action) #]]
+              </chart-def>
+              <chart-def v-if="displayOp.box.uncompute" title="Uncompute" hover>
+                [[# getBoxName(displayOp.box.uncompute) #]]
               </chart-def>
             </div>
 

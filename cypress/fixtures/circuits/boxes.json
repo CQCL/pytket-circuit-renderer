@@ -61,6 +61,20 @@
         [[false, false], {"params": ["0.3"], "type": "Rz"}],
         [[true, true], {"type": "H"}]
       ], "type": "MultiplexedU2Box"}, "type": "MultiplexedU2Box"}},
+    {"args": [["q", [0]], ["q", [1]], ["q", [2]]], "op": {"box": {"id": "5d47818c-08ce-4582-884e-05977e254c0f",
+      "op_map": [
+        [[false, false], [{"type": "S"}]],
+        [[false, true], [{"type": "X"}]],
+        [[true, false], [{"type": "Z"}]],
+        [[true, true], [{"type": "T"}]]
+      ], "type": "MultiplexedTensoredU2Box"}, "type": "MultiplexedTensoredU2Box"}},
+    {"args": [["q", [0]], ["q", [1]], ["q", [2]], ["q", [3]]], "op": {"box": {"id": "eb686e3f-0172-4cf1-80eb-002a9ab4311b",
+      "op_map": [
+        [[false, false], [{"type": "S"}, {"type": "T"}]],
+        [[false, true], [{"type": "X"}, {"type": "H"}]],
+        [[true, false], [{"type": "Z"}, {"type": "S"}]],
+        [[true, true], [{"type": "T"}, {"type": "V"}]]
+      ], "type": "MultiplexedTensoredU2Box"}, "type": "MultiplexedTensoredU2Box"}},
     {"args": [["q", [0]], ["q", [1]], ["q", [2]]], "op": {"box": {"id": "c274a6c7-a8c4-47c3-97aa-5f437ba78544",
       "op_map": [
         [[false, false], {"params": ["0.3"], "type": "Rz"}],
@@ -89,6 +103,12 @@
         [[true, true, false], [false, false, true]],
         [[true, true, true], [false, false, false]]
       ], "rotation_axis": "Ry", "type": "ToffoliBox"}, "type": "ToffoliBox"}},
+    {"args": [["q", [0]], ["q", [1]]], "op": {"box": {"id": "5aac0253-9b16-43d3-89b2-28bbebfe5297", "permutation": [
+      [[false, false], [true, true]], [[false, true], [false, true]], [[true, false], [true, false]], [[true, true], [false, false]]],
+      "rotation_axis": "Ry", "strat": "Matching", "type": "ToffoliBox"}, "type": "ToffoliBox"}},
+    {"args": [["q", [0]], ["q", [1]], ["q", [2]]], "op": {"box": {"id": "e8c36360-bf99-40b0-9a05-e9ec3e5d8119",
+      "permutation": [[[false, false, false], [true, false, false]], [[false, false, true], [true, true, true]], [[true, false, false], [false, false, false]], [[true, true, true], [false, false, true]]],
+      "rotation_axis": "Ry", "strat": "Cycle", "type": "ToffoliBox"}, "type": "ToffoliBox"}},
     {"args": [["q", [0]]], "op": {"box": {"id": "db927c8d-d074-40ab-81a1-d2151d2074bf", "is_inverse": false,
       "statevector": [[[1.0, 0.0]], [[0.0, 0.0]]], "type": "StatePreparationBox"}, "type": "StatePreparationBox"}},
     {"args": [["q", [1]], ["q", [2]]], "op": {"box": {"id": "1db089ab-de99-4c4a-8141-0e647a4ecaf1", "is_inverse": true,
@@ -106,7 +126,9 @@
       "n_qubits":2,"qubit_indices":[[["q",[2]],1],[["q",[1]],2]],
       "phase_polynomial":[[[false,false],0.4],[[false,true],0.3],[[true,false],0.2],[[true,true],0.1]],
       "linear_transformation":[[true,false,false,true],[false,true,true,false],[false,true,false,false],[false,true,true,true]]}},
-      "args":[["q",[0]],["q",[1]]]}
+      "args":[["q",[0]],["q",[1]]]},
+    {"args": [["q", [2]]], "op": {"box": {"id": "5eff6fe5-66a3-4b8c-954b-d5c48176e7d6",
+      "action": {"type": "Z"}, "compute": {"type": "S"}, "type": "ConjugationBox", "uncompute": {"type": "Sdg"}}, "type": "ConjugationBox"}}
   ],
   "implicit_permutation": [[["q", [0]], ["q", [0]]], [["q", [1]], ["q", [1]]], [["q", [2]], ["q", [2]]], [["q", [3]], ["q", [3]]]],
   "phase": "0.0"
