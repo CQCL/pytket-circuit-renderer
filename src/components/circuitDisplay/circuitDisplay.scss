@@ -175,6 +175,11 @@
       }
     }
 
+    .offset-link-for-0control .link-top {
+        height: calc(var(--block-height) - 0.25em);
+        top: calc(0.25em - var(--block-height) / 2);
+    }
+
     /* Generic base for our gates */
     .gate_container {
       display: flow-root;
@@ -325,8 +330,15 @@
         height: 0.5em;
         margin: calc(var(--block-height) / 2 - 0.25em) calc(50% - 0.25em);
         padding: 0;
-        border: var(--spider-border) solid var(--wire-col);
-        background: var(--wire-col);
+
+        &.control_0 {
+          border: var(--base-wire-height) solid var(--wire-col);
+          background: var(--background);
+        }
+        &.control_1 {
+          border: var(--spider-border) solid var(--wire-col);
+          background: var(--wire-col);
+        }
       }
 
       &.gate_control.classical {

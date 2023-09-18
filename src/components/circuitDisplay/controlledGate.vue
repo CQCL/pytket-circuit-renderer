@@ -17,13 +17,9 @@ export default {
     condensedRegisters: { type: Object, required: true }
   },
   inject: {
-    condenseCBits: { from: renderOptions.condenseCBits }
+    condenseCBits: { from: renderOptions.condenseCBits },
+    zxStyle: { from: renderOptions.zxStyle }
   },
-  // provide () {
-  //   return {
-  //     [renderOptions.recursive]: false
-  //   }
-  // },
   computed: {
     opType () {
       return this.command.op.type
@@ -132,7 +128,10 @@ export default {
       </div>
 
       <!--  In controlled op, or is a control wire  -->
-      <div v-else :class="{'self-controlled-gate': controlFlags[arg.name].selfControl}">
+      <div v-else :class="{
+        'self-controlled-gate': controlFlags[arg.name].selfControl,
+        'offset-link-for-0control': order > 0 && controlFlags[renderIndexedArgs[order - 1].name].value === 0
+      }">
 
         <!--  Add control point to the wire if its a control  -->
         <div v-if="controlFlags[arg.name].control">
@@ -142,7 +141,7 @@ export default {
                  class="control_index">
               [[# arg.pos #]]
             </div>
-            <div class="gate gate_control" :class="[arg.flags.classical ? 'classical' : 'z']"></div>
+            <div class="gate gate_control" :class="[arg.flags.classical ? 'classical' : 'z', controlFlags[arg.name].value === 0 ? 'control_0' : 'control_1']"></div>
             <!--  Add a control link if not the first wire and not in the controlled op  -->
             <div v-if="!arg.flags.first && !controlFlags[arg.name].inControlledOp"
                  class="link link-top" :class="{'classical': controlFlags[arg.name].classicalLink}"
@@ -169,7 +168,10 @@ export default {
       <generic-gate v-if="controlFlags[arg.name].inControlledOp && controlFlags[arg.name].flags.last"
               style="z-index: 1; position: relative"
               :style="{bottom: 'calc('+ controlledOpIndexedArgs.length +' * var(--block-height))'}"
-              :class="{'self-controlled-target': controlFlags[arg.name].selfControl}"
+              :class="{
+                'self-controlled-target': controlFlags[arg.name].selfControl,
+                'offset-link-for-0control': order > 0 && controlFlags[renderIndexedArgs[order - 1].name].value === 0
+              }"
               :command="controlledCommand.command"
               :indexed-args="controlledOpIndexedArgs"
               :pos-adjust="posAdjust"
