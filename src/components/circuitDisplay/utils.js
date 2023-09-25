@@ -160,7 +160,7 @@ const extractControlledCommand = function (controlCommand, argDetails) {
     }
     // Mark control args
     if (details) {
-      const bitstring = command.op.box?.control_state ? command.op.box.control_state.toString(2).padStart(args.length, '0') : false
+      const bitstring = typeof command.op.box?.control_state !== "undefined" ? command.op.box.control_state.toString(2).padStart(args.length, '0') : false
       args.forEach((arg, i) => {
         if (arg in details) details[arg].control = true
         else details[arg] = { control: true }
