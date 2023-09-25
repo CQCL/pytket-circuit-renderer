@@ -409,7 +409,7 @@
       &.link {
         border: var(--base-wire-height) dashed var(--c-wire-col);
         border-width: 0 var(--base-wire-height) 0 0;
-        background: transparent !important;
+        background: var(--circuit-background) !important;
         top: 0;
         width: 0;
         padding: 0;
@@ -422,10 +422,28 @@
 
       &.gate_bottom {
         margin-bottom: var(--box-margin);
+
+        &:before {
+            content: " ";
+            border-bottom: var(--base-wire-height) dashed var(--c-wire-col);
+            width: calc(var(--block-height) / 3);
+            position: absolute;
+            left: calc(0px - (var(--block-height) / 6));
+            bottom: 0;
+        }
       }
 
       &.gate_top {
         margin-top: var(--box-margin);
+
+        &:before {
+            content: " ";
+            border-top: var(--base-wire-height) dashed var(--c-wire-col);
+            width: calc(var(--block-height) / 3);
+            position: absolute;
+            left: calc(0px - (var(--block-height) / 6));
+            top: 0;
+        }
       }
 
       &.gate_box {
