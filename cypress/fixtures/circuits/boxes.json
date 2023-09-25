@@ -50,12 +50,12 @@
           [false, false, true]
         ]}
       }, "type": "UnitaryTableauBox"}, "type": "UnitaryTableauBox"}},
-    {"args": [["q", [0]], ["q", [1]], ["q", [2]]], "op": {"box": {"id": "0fe4a8be-9927-4948-9653-33d5b1ffdc95",
+    {"args": [["q", [2]], ["q", [1]], ["q", [0]]], "op": {"box": {"id": "0fe4a8be-9927-4948-9653-33d5b1ffdc95",
       "op_map": [
         [[false, false], {"params": ["0.3"], "type": "Rz"}],
         [[true, true], {"type": "H"}]
       ], "type": "MultiplexorBox"}, "type": "MultiplexorBox"}},
-    {"args": [["q", [0]], ["q", [1]], ["q", [2]]], "op": {"box": {"id": "fa501638-fadc-4562-a679-6586261b9f61",
+    {"args": [["q", [0]], ["q", [2]], ["q", [1]]], "op": {"box": {"id": "fa501638-fadc-4562-a679-6586261b9f61",
       "impl_diag": true,
       "op_map": [
         [[false, false], {"params": ["0.3"], "type": "Rz"}],
@@ -111,7 +111,7 @@
       "rotation_axis": "Ry", "strat": "Cycle", "type": "ToffoliBox"}, "type": "ToffoliBox"}},
     {"args": [["q", [0]]], "op": {"box": {"id": "db927c8d-d074-40ab-81a1-d2151d2074bf", "is_inverse": false,
       "statevector": [[[1.0, 0.0]], [[0.0, 0.0]]], "type": "StatePreparationBox"}, "type": "StatePreparationBox"}},
-    {"args": [["q", [1]], ["q", [2]]], "op": {"box": {"id": "1db089ab-de99-4c4a-8141-0e647a4ecaf1", "is_inverse": true,
+    {"args": [["q", [1]], ["q", [2]]], "op": {"box": {"id": "1db089ab-de99-4c4a-8141-0e647a4ecaf1", "is_inverse": true, "with_initial_reset": true,
       "statevector": [[[0.7071067811865475, 0.0]], [[0.0, 0.0]], [[0.0, 0.0]], [[0.7071067811865475, 0.0]]],
       "type": "StatePreparationBox"}, "type": "StatePreparationBox"}},
     {"args": [["q", [0]]], "op": {"box": {"diagonal": [[[1.0, 0.0]], [[0.0, 1.0]]], "id": "a248de55-8aa4-48e5-9cef-a0e169aa3715",

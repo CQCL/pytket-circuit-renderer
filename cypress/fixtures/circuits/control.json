@@ -14,6 +14,7 @@
        {"args": [["q", [2]]], "op": {"params": ["0.25"], "type": "Rz"}},
        {"args": [["q", [2]]], "op": {"type": "Z"}}], "implicit_permutation": [[["q", [0]], ["q", [0]]], [["q", [1]], ["q", [1]]], [["q", [2]], ["q", [2]]]], "phase": "0.0", "qubits": [["q", [0]], ["q", [1]], ["q", [2]]]}, "id": "dcc6b230-c144-4257-9eff-1ff7a7ced912", "type": "CircBox"}, "type": "CircBox"}, "type": "QControlBox"}, "type": "QControlBox"}},
      {"args": [["c", [0]], ["q", [1]], ["q", [2]]], "op": {"conditional": {"op": {"type": "CX"}, "value": 1, "width": 1}, "type": "Conditional"}},
+     {"args": [["c", [0]], ["c", [1]], ["q", [1]], ["q", [2]]], "op": {"conditional": {"op": {"type": "CX"}, "value": 1, "width": 2}, "type": "Conditional"}},
      {"args": [["c", [1]], ["q", [0]], ["q", [1]], ["q", [2]]], "op": {"conditional": {"op": {"type": "CCX"}, "value": 1, "width": 1}, "type": "Conditional"}},
      {"args": [["c", [1]], ["q", [1]], ["q", [2]], ["q", [0]]], "op": {"conditional": {"op": {"type": "CSWAP"}, "value": 1, "width": 1}, "type": "Conditional"}},
      {"args": [["c", [0]], ["q", [0]], ["q", [1]], ["q", [2]], ["q", [3]]], "op": {"conditional": {"op": {"box": {"id": "4e98b695-13b2-4430-ab59-0f1a374aead6", "n_controls": 2, "op": {"params": ["0.4"], "type": "ZZPhase"}, "type": "QControlBox"}, "type": "QControlBox"}, "value": 1, "width": 1}, "type": "Conditional"}},

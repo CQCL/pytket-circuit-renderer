@@ -22,7 +22,7 @@
     {"op":{"type":"ExpBox","box":{"id":"81d4a2f3-8a49-46f2-a945-a40bdb6a6933","type":"ExpBox","matrix":[[[0,0],[1,0]],[[0.707,0.707],[0,-1]]],"phase":3}},"args":[["p",[0]]]},
     {"op":{"type":"ProjectorAssertionBox","box":{"id":"b97cd427-d224-4acb-bf50-3a9ac5b4b9de","type":"ProjectorAssertionBox","matrix":[[[0,0],[1,0]],[[0.707,0.707],[0,-1]]]}},"args":[["q",[2]],["c",[0]]]},
     {"op":{"type":"StabiliserAssertionBox","box":{"id":"80607fe8-8718-43e7-ac7f-63c772441c1d","type":"StabiliserAssertionBox","stabilisers":[{"coeff":true,"string":["X"]},{"coeff":true,"string":["Y"]},{"coeff":false,"string":["Z"]}]}},"args":[["q",[0]],["q",[2]],["c",[0]],["c",[1]],["c",[2]]]},
-    {"op":{"type":"Condition","conditional":{"op":{"type":"YYPhase","params":["0.5*alpha_1"]},"width":3,"value":7}},"args":[["c",[0]],["c",[1]],["c",[2]],["q",[0]],["q",[2]]]},
+    {"op":{"type":"Condition","conditional":{"op":{"type":"YYPhase","params":["0.5*alpha_1"]},"width":3,"value":6}},"args":[["c",[0]],["c",[1]],["c",[2]],["q",[0]],["q",[2]]]},
     {"op":{"type":"PauliExpBox","box":{"id":"205eff17-1b1c-4cbe-97bd-6150b131a833","type":"PauliExpBox","paulis":["X","Z"],"phase":"0.634"}},"args":[["p",[0]],["q",[0]]]},
     {"op":{"type":"PhasePolyBox","box":{"id":"671434a7-e7f4-48de-b687-b660f687545f","type":"PhasePolyBox","n_qubits":2,"qubit_indices":[[["p",[0]],1],[["q",[1]],2]],"phase_polynomial":[[[false,false],0.4],[[false,true],0.3],[[true,false],0.2],[[true,true],0.1]],"linear_transformation":[[true,false,false,true],[false,true,true,false],[false,true,false,false],[false,true,true,true]]}},"args":[["p",[0]],["q",[1]]]},
     {"op":{"type":"Measure"},"args":[["q",[0]],["c",[0]]]},
@@ -44,6 +44,7 @@
     {"op":{"type":"CircBox","box":{"id":"e418b9ab-258c-4e88-9797-4fed60600839","type":"CircBox","circuit":{
       "phase":"0.0",
       "qubits":[],
+      "name": "MyCircuit",
       "bits":[["c",[0]],["c",[1]],["c",[2]]],
       "commands":[
         {"op":{"type":"ExplicitModifier","classical":{"n_i":1,"name":"XOR","values":[0,1,1,0]}},"args":[["c",[0]],["c",[1]]]},
