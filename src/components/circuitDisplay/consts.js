@@ -4,7 +4,9 @@ const CONTROLLED_OPS = [
   'CV', 'CVdg', 'CSx', 'CSXdg', 'CSWAP',
   'CnRy', 'CnX', 'CnY', 'CnZ', 'CCX',
   'Control', 'QControlBox',
-  'Condition', 'Conditional'
+  'Condition', 'Conditional',
+  'MultiplexorBox', 'MultiplexedRotationBox',
+  'MultiplexedU2Box', 'MultiplexedTensoredU2Box',
 ]
 
 const SPLIT_RENDERING = {

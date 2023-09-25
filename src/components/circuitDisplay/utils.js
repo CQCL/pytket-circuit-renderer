@@ -158,13 +158,26 @@ const extractControlledCommand = function (controlCommand, argDetails) {
         args: command.args ? command.args.slice(command.op.conditional.width) : false
       }
     }
+    const multi = ['MultiplexorBox', 'MultiplexedRotationBox', 'MultiplexedU2Box', 'MultiplexedTensoredU2Box'].includes(command.op.type)
+    if (multi) {
+      const width = command.op.box.op_map[0][0].length
+      args.push(...command.args.slice(0, width))
+      // Chop off 'Multiplexed/or' from the name.
+      const controlledName = command.op.type.slice(11)
+      cc = {
+        op: { type: controlledName },
+        args: command.args ? command.args.slice(width) : false
+      }
+    }
     // Mark control args
     if (details) {
-      const bitstring = typeof command.op.box?.control_state !== "undefined" ? command.op.box.control_state.toString(2).padStart(args.length, '0') : false
+      const control_state = command.op.box?.control_state || command.op.conditional?.value
+      const bitstring = typeof control_state !== "undefined" ? control_state.toString(2).padStart(args.length, '0') : false
       args.forEach((arg, i) => {
         if (arg in details) details[arg].control = true
         else details[arg] = { control: true }
-        details[arg].value = bitstring === false ? 1 : parseInt(bitstring[i]) // default is 1 for backwards compatibility.
+        // Mark the value of the control bit. Use -1 for multiplexed controls.
+        details[arg].value = multi ? -1 : bitstring === false ? 1 : parseInt(bitstring[i]) // default is 1 for backwards compatibility.
       })
     }
 
