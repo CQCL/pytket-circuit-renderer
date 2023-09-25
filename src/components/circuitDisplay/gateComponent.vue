@@ -191,7 +191,7 @@ export default {
 
     <!-- Generic single block gate -->
     <div v-else class="gate_container nested" style="height:var(--block-height)">
-      <wire v-if="arg.pos !== -1" class="wire_in" :class="{flex_wire: arg.flags.single}" :classical="arg.flags.classical" :condensed="arg.flags.condensed"></wire>
+      <wire v-if="arg.pos !== -1" class="wire_in" :class="{flex_wire: arg.flags.single, 'self-controlled-padding-generic': arg.selfControl}" :classical="arg.flags.classical" :condensed="arg.flags.condensed"></wire>
       <wire v-else class="wire_in transparent-wire" :class="{flex_wire: arg.flags.single}" :classical="arg.flags.classical" :condensed="arg.flags.condensed"></wire>
 
       <div class="gate_container" :class="[gateColor, {'generic': !arg.flags.single}]">

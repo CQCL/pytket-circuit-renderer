@@ -96,7 +96,9 @@ export default {
     <!-- Special: 2Q Gate -->
     <div v-if="special2qGate" data-gate="Special">
       <div v-for="(arg, i) in renderIndexedArgs" :key="i"
-          class="gate_container nested" style="height:var(--block-height)"
+           class="gate_container nested"
+           :class="{'self-controlled-padding': arg.selfControl}"
+           style="height:var(--block-height)"
       >
         <div v-if="!arg.flags.first" class="link link-top" :class="{classical: opType === 'Measure'}"></div>
         <div v-if="arg.flags.first && linkVertical" class="link link-top" :class="{'classical': arg.flags.classical}"></div>
@@ -151,7 +153,7 @@ export default {
     <div v-if="nestedCircuitGate" class="gate_container nested">
       <circuit-layer :nested="true">
         <div v-for="(arg, i) in renderIndexedArgs" :key="i" class="gate_container">
-          <wire v-if="arg.pos !== -1" :classical="arg.flags.classical" :condensed="arg.flags.condensed"></wire>
+          <wire v-if="arg.pos !== -1" :classical="arg.flags.classical" :condensed="arg.flags.condensed" :class="{'self-controlled-padding': arg.selfControl}"></wire>
           <div v-else class="wire transparent-wire"></div>
         </div>
       </circuit-layer>

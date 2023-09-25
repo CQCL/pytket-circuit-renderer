@@ -204,6 +204,10 @@ export default {
               [[# op.conditional.value #]]
             </chart-def>
 
+            <chart-def v-if="isCondition" title="Condition width" hover>
+              [[# op.conditional.width #]]
+            </chart-def>
+
             <div v-if="displayOp.type === 'StabiliserAssertionBox'">
               <chart-def title="Stabilisers"></chart-def>
               <chart-def v-for="(stab, i) in displayOp.box.stabilisers" :key="i" :title="stab.string[0]" hover>

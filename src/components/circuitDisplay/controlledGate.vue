@@ -61,6 +61,10 @@ export default {
               (acc, bit, i) => arg.pos[i] > -1 ? acc || flags[bit].controlled : acc,
               false
             ),
+            value: arg.bits.reduce(
+                (acc, bit, i) => acc >= 0 && arg.pos[i] > -1 && flags[bit].control ? acc + flags[bit].value : acc,
+                0
+            ) / arg.bits.reduce((acc, bit, i) => arg.pos[i] > -1 ? acc + 1 : acc, 0),
             inControlledOp,
             ...arg
           }
@@ -130,23 +134,29 @@ export default {
       <!--  In controlled op, or is a control wire  -->
       <div v-else :class="{
         'self-controlled-gate': controlFlags[arg.name].selfControl,
-        'offset-link-for-0control': order > 0 && controlFlags[renderIndexedArgs[order - 1].name].value === 0
+        'offset-link-for-0control': order > 0 && renderIndexedArgs[order - 1].pos > -1 && controlFlags[renderIndexedArgs[order - 1].name].value !== 1
       }">
 
         <!--  Add control point to the wire if its a control  -->
         <div v-if="controlFlags[arg.name].control">
           <div class="gate_container">
             <wire :classical="arg.flags.classical" :condensed="arg.flags.condensed"></wire>
-            <div v-if="['Condition', 'Conditional'].includes(opType) && arg.flags.classical && !arg.flags.condensed && command.op.conditional.width > 1"
-                 class="control_index">
-              [[# arg.pos #]]
-            </div>
-            <div class="gate gate_control" :class="[arg.flags.classical ? 'classical' : 'z', controlFlags[arg.name].value === 0 ? 'control_0' : 'control_1']"></div>
+            <div class="gate gate_control" :class="[
+                arg.flags.classical ? 'classical' : 'z',
+                controlFlags[arg.name].value < 0 ?
+                  'multiplexed' :
+                  controlFlags[arg.name].value === 0 ?
+                    'control_0' :
+                    controlFlags[arg.name].value === 1 ?
+                      'control_1' :
+                      'control_multi'
+              ]"></div>
             <!--  Add a control link if not the first wire and not in the controlled op  -->
             <div v-if="!arg.flags.first && !controlFlags[arg.name].inControlledOp"
                  class="link link-top" :class="{'classical': controlFlags[arg.name].classicalLink}"
             ></div>
-            <div v-if="['Condition', 'Conditional'].includes(opType) && controlFlags[arg.name].lastControl"
+            <!--  If the control value is not |00..0> or |11..1>, specify it  -->
+            <div v-if="['Condition', 'Conditional'].includes(opType) && controlFlags[arg.name].lastControl && controlFlags[arg.name].value > 0 &&  controlFlags[arg.name].value < 1"
                  class="conditional-value">
               == [[# command.op.conditional.value #]]
             </div>
@@ -170,7 +180,7 @@ export default {
               :style="{bottom: 'calc('+ controlledOpIndexedArgs.length +' * var(--block-height))'}"
               :class="{
                 'self-controlled-target': controlFlags[arg.name].selfControl,
-                'offset-link-for-0control': order > 0 && controlFlags[renderIndexedArgs[order - 1].name].value === 0
+                'offset-link-for-0control': controlledOpIndexedArgs[0].order > 0 && controlFlags[renderIndexedArgs[controlledOpIndexedArgs[0].order - 1]?.name]?.value < 1
               }"
               :command="controlledCommand.command"
               :indexed-args="controlledOpIndexedArgs"

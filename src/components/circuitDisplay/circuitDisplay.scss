@@ -121,6 +121,11 @@
         width: var(--box-margin);
         margin: calc((var(--block-height) - var(--wire-height)) / 2) 0;
         top: 0;
+
+        &.self-controlled-padding-generic {
+          margin-left: 0.25em;
+          width: calc(var(--box-margin) - 0.25em);
+        }
       }
 
       &.flex_wire {
@@ -218,6 +223,15 @@
       .gate_top > &,
       .gate_bottom > & {
         padding-top: 0;
+      }
+    }
+
+    // Special handling of self controls
+    .self-controlled-padding, {
+      padding-left: 0.25em;
+
+      &.wire {
+        margin-left: 0.25em;
       }
     }
 
@@ -331,19 +345,44 @@
         margin: calc(var(--block-height) / 2 - 0.25em) calc(50% - 0.25em);
         padding: 0;
 
-        &.control_0 {
+        &.control_0, &.control_multi, &.multiplexed {
           border: var(--base-wire-height) solid var(--wire-col);
           background: var(--background);
+
+          &.classical {
+            border-color: var(--c-wire-col);
+            border-width: calc(var(--base-wire-height) / 2);
+          }
         }
+
         &.control_1 {
           border: var(--spider-border) solid var(--wire-col);
           background: var(--wire-col);
-        }
-      }
 
-      &.gate_control.classical {
-        background: var(--c-wire-col);
-        border-color: var(--c-wire-col);
+          &.classical {
+            background: var(--c-wire-col);
+            border-color: var(--c-wire-col);
+          }
+        }
+
+        &.control_multi {
+          overflow: hidden;
+
+          &:after {
+            content: ' ';
+            position: absolute;
+            background: var(--box-col);
+            width: 50%;
+            height: 100%;
+            right: 0;
+            transform: rotate(45deg);
+            transform-origin: left;
+          }
+        }
+
+        &.multiplexed {
+          border-radius: 0;
+        }
       }
 
       &.gate_reset {
