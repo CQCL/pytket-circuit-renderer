@@ -311,6 +311,9 @@ export default {
               <chart-def title="Inverse" hover>
                 [[# op.box.is_inverse #]]
               </chart-def>
+              <chart-def title="Includes reset" hover>
+                [[# !!op.box.with_initial_reset #]]
+              </chart-def>
             </div>
 
             <div v-if="displayOp.type === 'DiagonalBox'">
