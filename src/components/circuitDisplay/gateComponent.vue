@@ -117,7 +117,15 @@ export default {
       if (phase && this.zxStyle) {
         return phase
       }
-      return name + this.paramStr
+
+      // If this box is daggered display it with a dag symbol
+      let daggered =  this.opType === 'StatePreparationBox' && op.box.is_inverse
+      if (["Sdg", "Tdg", "Vdg", "SXdg"].includes(this.opType)) {
+        daggered = true
+        name = this.opType.slice(0,-2)
+      }
+
+      return name + (daggered ? '†' : '') + this.paramStr
     },
     paramStr () {
       const op = this.command.op
@@ -193,6 +201,11 @@ export default {
     <div v-else class="gate_container nested" style="height:var(--block-height)">
       <wire v-if="arg.pos !== -1" class="wire_in" :class="{flex_wire: arg.flags.single, 'self-controlled-padding-generic': arg.selfControl}" :classical="arg.flags.classical" :condensed="arg.flags.condensed"></wire>
       <wire v-else class="wire_in transparent-wire" :class="{flex_wire: arg.flags.single}" :classical="arg.flags.classical" :condensed="arg.flags.condensed"></wire>
+
+      <!-- StatePreparation with reset requires special resets -->
+      <div v-if="opType === 'StatePreparationBox' && command.op.box.with_initial_reset && arg.pos > -1"
+           :class="specialGateClasses" class="gate gate_reset"
+      ></div>
 
       <div class="gate_container" :class="[gateColor, {'generic': !arg.flags.single}]">
         <div class="gate connected" :class="specialGateClasses">
