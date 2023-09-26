@@ -12,10 +12,20 @@ This is to allow user-facing information to be more easily extracted from this c
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
+### Added:
+- Handle ConjugationBox, MultiplexedTensoredU2Box info displays
+- Support for 0-valued control states
+
+### Changed:
+- Update ToffoliBox, StatePreparationBox info displays
+- Barrier styling
+- Multiplexor boxes displayed with explicit controls
+- Classical conditions use new control display
 
 ## [0.6.4] 2023-07-10
 ### Changed:
 - Default render options now disable zx-styles and enable the system theme.
+
 ### Fixed:
 - Scrolling events passed on to parent when the circuit container is fully scrolled.
 
