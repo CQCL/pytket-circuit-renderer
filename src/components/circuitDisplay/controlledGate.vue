@@ -62,8 +62,8 @@ export default {
               false
             ),
             value: arg.bits.reduce(
-                (acc, bit, i) => acc >= 0 && arg.pos[i] > -1 && flags[bit].control ? acc + flags[bit].value : acc,
-                0
+              (acc, bit, i) => acc >= 0 && arg.pos[i] > -1 && flags[bit].control ? acc + flags[bit].value : acc,
+              0
             ) / arg.bits.reduce((acc, bit, i) => arg.pos[i] > -1 ? acc + 1 : acc, 0),
             inControlledOp,
             ...arg

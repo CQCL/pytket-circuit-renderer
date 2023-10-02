@@ -6,7 +6,7 @@ const CONTROLLED_OPS = [
   'Control', 'QControlBox',
   'Condition', 'Conditional',
   'MultiplexorBox', 'MultiplexedRotationBox',
-  'MultiplexedU2Box', 'MultiplexedTensoredU2Box',
+  'MultiplexedU2Box', 'MultiplexedTensoredU2Box'
 ]
 
 const SPLIT_RENDERING = {
