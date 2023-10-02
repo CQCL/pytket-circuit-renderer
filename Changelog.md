@@ -12,6 +12,8 @@ This is to allow user-facing information to be more easily extracted from this c
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
+
+## [0.7.0] 2023-10-02
 ### Added:
 - Handle ConjugationBox, MultiplexedTensoredU2Box info displays
 - Support for 0-valued control states
