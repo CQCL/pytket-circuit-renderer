@@ -119,10 +119,10 @@ export default {
       }
 
       // If this box is daggered display it with a dag symbol
-      let daggered =  this.opType === 'StatePreparationBox' && op.box.is_inverse
-      if (["Sdg", "Tdg", "Vdg", "SXdg"].includes(this.opType)) {
+      let daggered = this.opType === 'StatePreparationBox' && op.box.is_inverse
+      if (['Sdg', 'Tdg', 'Vdg', 'SXdg'].includes(this.opType)) {
         daggered = true
-        name = this.opType.slice(0,-2)
+        name = this.opType.slice(0, -2)
       }
 
       return name + (daggered ? '†' : '') + this.paramStr

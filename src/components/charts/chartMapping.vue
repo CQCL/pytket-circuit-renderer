@@ -1,11 +1,11 @@
 <script>
-import ChartMatrix from "@/components/charts/chartMatrix";
+import ChartMatrix from '@/components/charts/chartMatrix'
 
 export default {
   name: 'chart-mapping',
   delimiters: ['[[#', '#]]'],
   components: {
-    ChartMatrix,
+    ChartMatrix
   },
   props: {
     mapping: { type: Array, required: true },

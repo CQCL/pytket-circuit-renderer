@@ -46,7 +46,7 @@ export default {
         'UnitaryTableauBox', 'WASM', 'ToffoliBox',
         'MultiplexorBox', 'MultiplexedRotationBox',
         'MultiplexedU2Box', 'MultiplexedTensoredU2Box',
-        'DiagonalBox', 'ConjugationBox',
+        'DiagonalBox', 'ConjugationBox'
       ],
       visible: false,
       teleportToId: this.teleportId
@@ -116,8 +116,8 @@ export default {
       }
       return formattedMatrix
     },
-    formatMultiplexedOpMap (op_map) {
-      return op_map.map(entry => {
+    formatMultiplexedOpMap (opMap) {
+      return opMap.map(entry => {
         const ops = (Array.isArray(entry[1]) ? entry[1] : [entry[1]]).map(this.getBoxName)
         return [entry[0], ops]
       })
