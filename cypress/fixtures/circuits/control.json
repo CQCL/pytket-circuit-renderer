@@ -2,6 +2,8 @@
    "bits": [["c", [0]], ["c", [1]]],
    "commands": [
      {"args": [["q", [0]], ["q", [1]]], "op": {"box": {"id": "b142ac60-66e3-4c92-bb18-eb4e61143b3b", "n_controls": 1, "op": {"type": "X"}, "type": "QControlBox"}, "type": "QControlBox"}},
+     {"args": [["q", [0]], ["q", [1]]], "op": {"box": {"id": "8e929858-0e61-459c-972b-ea7ffe127999", "n_controls": 1, "control_state": 0, "op": {"type": "X"}, "type": "QControlBox"}, "type": "QControlBox"}},
+     {"args": [["q", [0]], ["q", [1]]], "op": {"box": {"id": "02f69502-933f-4c4d-817f-bcada2e5c23e", "n_controls": 1, "control_state": 1, "op": {"type": "X"}, "type": "QControlBox"}, "type": "QControlBox"}},
      {"args": [["q", [0]], ["q", [1]], ["q", [2]]], "op": {"box": {"id": "bf40b1b3-0025-483c-a670-9112cce76c2d", "n_controls": 1, "op": {"type": "CX"}, "type": "QControlBox"}, "type": "QControlBox"}},
      {"args": [["q", [3]], ["q", [0]], ["q", [1]], ["q", [2]]], "op": {"box": {"id": "bf40b1b3-0025-483c-a670-9112cce76c2d", "n_controls": 3, "control_state": 2, "op": {"type": "X"}, "type": "QControlBox"}, "type": "QControlBox"}},
      {"args": [["q", [2]], ["q", [1]], ["q", [3]], ["q", [0]]], "op": {"box": {"id": "4e98b695-13b2-4430-ab59-0f1a374aead6", "n_controls": 2, "op": {"params": ["0.4"], "type": "ZZPhase"}, "type": "QControlBox"}, "type": "QControlBox"}},
