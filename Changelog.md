@@ -13,6 +13,10 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## Unreleased
 
+## [0.7.1] 2023-11-13
+### Fixed:
+- Quantum control state rendering for 0 states
+
 ## [0.7.0] 2023-10-02
 ### Added:
 - Handle ConjugationBox, MultiplexedTensoredU2Box info displays
