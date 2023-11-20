@@ -1,7 +1,7 @@
 const CONTROLLED_OPS = [
-  'CX', 'CY', 'CZ', 'CH',
+  'CX', 'CY', 'CZ', 'CH', 'CS', 'CSdg',
   'CRx', 'CRy', 'CRz', 'CU1', 'CU3',
-  'CV', 'CVdg', 'CSx', 'CSXdg', 'CSWAP',
+  'CV', 'CVdg', 'CSX', 'CSXdg', 'CSWAP',
   'CnRy', 'CnX', 'CnY', 'CnZ', 'CCX',
   'Control', 'QControlBox',
   'Condition', 'Conditional',
