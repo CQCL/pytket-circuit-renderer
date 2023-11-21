@@ -117,7 +117,7 @@ const extractControlledCommand = function (controlCommand, argDetails) {
     // Overload for when we only care about the op, and set args to false.
     if (['CX', 'CY', 'CZ', 'CH', 'CSWAP',
       'CRx', 'CRy', 'CRz', 'CU1', 'CU3',
-      'CV', 'CVdg', 'CSX', 'CSXdg', 'CS', 'CSdg',].includes(command.op.type)) {
+      'CV', 'CVdg', 'CSX', 'CSXdg', 'CS', 'CSdg'].includes(command.op.type)) {
       args.push(command.args[0])
       cc = {
         op: {
