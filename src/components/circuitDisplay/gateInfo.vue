@@ -24,7 +24,7 @@ export default {
     gateInfoClassical
   },
   props: {
-    op: { type: Object, required: true }
+    command: { type: Object, required: true }
   },
   inject: {
     recursive: { from: renderOptions.recursive },
@@ -56,6 +56,9 @@ export default {
   computed: {
     opType () {
       return this.op.type
+    },
+    op () {
+      return this.command.op
     },
     matrix () {
       if ('matrix' in this.displayOp) {
@@ -364,15 +367,12 @@ export default {
             </div>
 
             <div v-if="displayOp.type === 'ConjugationBox'">
-              <chart-def title="Compute" hover>
-                [[# getBoxName(displayOp.box.compute) #]]
-              </chart-def>
-              <chart-def title="Action" hover>
-                [[# getBoxName(displayOp.box.action) #]]
-              </chart-def>
-              <chart-def v-if="displayOp.box.uncompute" title="Uncompute" hover>
-                [[# getBoxName(displayOp.box.uncompute) #]]
-              </chart-def>
+              <gate-info-sub-circuit v-for="key in ['Compute', 'Action', 'Uncompute']" :key="key"
+                  @updated="onCircuitDisplayUpdate"
+                  :op="displayOp"
+                  :args="command.args"
+                  :circuit-type="key"
+              ></gate-info-sub-circuit>
             </div>
 
             <gate-info-sub-circuit @updated="onCircuitDisplayUpdate" :op="displayOp"></gate-info-sub-circuit>

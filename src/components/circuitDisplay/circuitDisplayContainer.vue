@@ -117,7 +117,7 @@ export default {
       [renderOptions.recursive]: computed(() => this.renderOptions.recursive),
       [renderOptions.condensed]: computed(() => !this.renderOptions.wrap),
       [renderOptions.cropParams]: computed(() => this.renderOptions.cropParams),
-      [renderOptions.nested]: false
+      [renderOptions.nested]: 0
     }
   },
   computed: {

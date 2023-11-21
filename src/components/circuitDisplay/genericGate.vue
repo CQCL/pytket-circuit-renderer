@@ -39,7 +39,7 @@ export default {
     // Overwrite child renderOptions if displaying a nested circuit.
     return {
       [renderOptions.condensed]: computed(() => { return this.nestedCircuitGate ? true : this.condensed }),
-      [renderOptions.nested]: computed(() => { return this.nestedCircuitGate ? true : this.nested })
+      [renderOptions.nested]: computed(() => { return this.nestedCircuitGate ? this.nested + 1 : this.nested })
     }
   },
   computed: {
@@ -73,7 +73,28 @@ export default {
       return this.recursive && this.nestedCircuit
     },
     nestedCircuit () {
-      return extractSubCircuit(this.command.op)
+      let circuit
+      if (this.opType === 'ConjugationBox') {
+        circuit = {
+          qubits: this.command.args,
+          bits: [],
+          commands: [
+              {op: this.command.op.box.compute, args: this.command.args},
+              {op: this.command.op.box.action, args: this.command.args},
+              {
+                op: (
+                  this.command.op.box.uncompute
+                    ? this.command.op.box.uncompute
+                    : { type: 'compute†' }
+                ),
+                args: this.command.args
+              }
+          ]
+        }
+      } else {
+        circuit = extractSubCircuit(this.command.op)
+      }
+      return circuit
     }
   },
   beforeCreate () {
@@ -159,7 +180,7 @@ export default {
       </circuit-layer>
       <nested-label-layer :args="renderIndexedArgs"></nested-label-layer>
 
-      <circuit-display v-if="nestedCircuit" :circuit="nestedCircuit"></circuit-display>
+      <circuit-display :circuit="nestedCircuit"></circuit-display>
 
       <nested-label-layer :args="renderIndexedArgs"></nested-label-layer>
       <circuit-layer :nested="true">
