@@ -38,10 +38,10 @@ export default {
   provide () {
     return {
       [teleportConfig.parent]: computed(() => {
-        return this.nested && this.globalTeleportParent ? this.globalTeleportParent : this.infoModal.teleport.parent
+        return this.nested > 0 && this.globalTeleportParent ? this.globalTeleportParent : this.infoModal.teleport.parent
       }),
       [teleportConfig.to]: computed(() => {
-        return this.nested && this.globalTeleportToId ? this.globalTeleportToId : this.infoModal.teleport.id
+        return this.nested > 0 && this.globalTeleportToId ? this.globalTeleportToId : this.infoModal.teleport.id
       })
     }
   },
@@ -194,9 +194,11 @@ export default {
 
 <template>
   <teleport-container :names="infoModal.teleport.names" ref="teleportParent"
-    :class="{condensed: condensed, 'circuit-preview circuit_variables': !nested}"
+    :class="{condensed: condensed, 'circuit-preview circuit_variables': nested === 0}"
   >
-    <div v-if="circuit" tabindex="0" :class="{'nested-circuit-container': condensed, 'parent': !nested}">
+    <div v-if="circuit" tabindex="0"
+         :class="{'nested-circuit-container': condensed, 'parent': nested === 0, 'odd_nesting': nested % 2 === 1}"
+    >
       <!--  Pre-processing for the commands we want to display  -->
       <div style="display:none">
         <circuit-command
@@ -217,7 +219,7 @@ export default {
         >
           <template #gate-info>
             <gate-info
-                :op="command.op"
+                :command="command"
                 :teleport-id="infoModal.teleport.id"
                 @register-teleport="registerTeleport">
             </gate-info>
@@ -228,7 +230,7 @@ export default {
       <div ref="navigatorContent" :class="{'circuit-inner-scroll': condensed}" :style="navigatorStyling">
         <div ref="renderedCircuit">
           <div ref="renderedCircuitDimensions" class="circuit-container"
-              :class="{nested: nested || condensed, zx: zxStyle}">
+              :class="{nested: nested > 0 || condensed, zx: zxStyle}">
             <circuit-layer
                 :qubits="true"
                 :style="{'text-align': 'right'}"
@@ -310,10 +312,11 @@ export default {
 .nested-circuit-container{
     display: flex;
     overflow: auto;
-    /*background: var(--box-col-overlay);*/
-    background: var(--paper);
-    /*z-index: 1;*/
+    background: var(--circuit-background);
     box-shadow: 0 0 0 var(--box-border-width) var(--box-col) inset;
+}
+.nested-circuit-container.odd_nesting{
+    background: var(--paper);
 }
 .theme_variables.dark .nested-circuit-container:not(.parent){
     box-shadow: 0 0 0 1px var(--paper) inset;

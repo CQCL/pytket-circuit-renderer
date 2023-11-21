@@ -137,9 +137,7 @@
       "n_qubits":2,"qubit_indices":[[["q",[2]],1],[["q",[1]],2]],
       "phase_polynomial":[[[false,false],0.4],[[false,true],0.3],[[true,false],0.2],[[true,true],0.1]],
       "linear_transformation":[[true,false,false,true],[false,true,true,false],[false,true,false,false],[false,true,true,true]]}},
-      "args":[["q",[0]],["q",[1]]]},
-    {"args": [["q", [2]]], "op": {"box": {"id": "5eff6fe5-66a3-4b8c-954b-d5c48176e7d6",
-      "action": {"type": "Z"}, "compute": {"type": "S"}, "type": "ConjugationBox", "uncompute": {"type": "Sdg"}}, "type": "ConjugationBox"}}
+      "args":[["q",[0]],["q",[1]]]}
   ],
   "implicit_permutation": [[["q", [0]], ["q", [0]]], [["q", [1]], ["q", [1]]], [["q", [2]], ["q", [2]]], [["q", [3]], ["q", [3]]]],
   "phase": "0.0"

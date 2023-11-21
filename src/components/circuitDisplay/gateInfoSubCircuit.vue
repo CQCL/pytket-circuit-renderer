@@ -7,7 +7,9 @@ export default {
   name: 'gate-info-sub-circuit',
   components: { chartDef },
   props: {
-    op: { type: Object, required: true }
+    op: { type: Object, required: true },
+    circuitType: { default: undefined },
+    args: { type: Object, required: false }
   },
   emits: ['updated'],
   provide () {
@@ -22,8 +24,25 @@ export default {
       return this.op.type
     },
     subCircuit () {
+      // If circuit type is specified, we must extract that particular circuit from a conjugation box.
+      const isConjBox = this.circuitType && this.opType === 'ConjugationBox'
+      let op = isConjBox ? this.op.box[this.circuitType.toLowerCase()] : this.op
+
+      if (isConjBox) {
+        if (!op) return false
+        // Upgrade the single command into a circuit. No bits are involved.
+        return {
+          circuit: {
+            qubits: this.args ?? [],
+            bits: [],
+            commands: [{op, args: this.args}]
+          },
+          type: this.circuitType
+        }
+      }
+
       // Default is that this box contains a circuit directly
-      let circuit = extractSubCircuit(this.op)
+      let circuit = extractSubCircuit(op)
       if (circuit) {
         return {
           circuit,
@@ -34,7 +53,7 @@ export default {
       // Otherwise, this could be a circuit controlled by another box
       circuit = extractSubCircuit(
         extractControlledCommand({
-          op: this.op,
+          op,
           args: []
         }, false).command
       )
