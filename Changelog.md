@@ -13,6 +13,11 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## Unreleased
 
+## [0.7.2] 2023-11-21
+### Added:
+- CS, CSdg gates ready for pytket 1.22
+- GateInfo support for PauliPair, PauliCommutingSet boxes
+
 ## [0.7.1] 2023-11-13
 ### Fixed:
 - Quantum control state rendering for 0 states
