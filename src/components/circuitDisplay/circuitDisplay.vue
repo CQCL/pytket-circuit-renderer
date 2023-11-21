@@ -244,6 +244,7 @@ export default {
                 :command-refs="commandRefs"
                 :id-command-ref="idCommandRef"
                 :condensed-registers="condensedRegisters.toggles"
+                :classicalThreshold="circuitDetails.qubits.length"
                 @updated="onDisplayUpdate">
             </split-circuit-layers>
 
