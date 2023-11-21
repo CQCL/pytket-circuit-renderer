@@ -92,3 +92,8 @@ export const Phase = Template.bind({})
 Phase.args = {
   circuit: circuitFixtures.Phase
 }
+
+export const Wide = Template.bind({})
+Wide.args = {
+  circuit: circuitFixtures.Wide
+}

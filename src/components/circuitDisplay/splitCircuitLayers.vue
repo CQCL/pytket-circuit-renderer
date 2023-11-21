@@ -4,8 +4,9 @@ import { RefValidator } from '@/components/propValidators'
 import CircuitLayer from './circuitLayer'
 import RenderCircuitLayers from './renderCircuitLayers'
 import { SPLIT_RENDERING } from './consts'
+import { renderOptions } from '@/components/circuitDisplay/provideKeys'
 
-const BLOCK_LENGTH = 10
+const BLOCK_LENGTH = 20
 
 export default {
   name: 'split-circuit-layers',
@@ -20,7 +21,11 @@ export default {
       required: true
     },
     idCommandRef: { type: Object, validator: RefValidator, required: true },
-    condensedRegisters: { type: Object, required: true }
+    condensedRegisters: { type: Object, required: true },
+    classicalThreshold: { type: Number, required: true }
+  },
+  inject: {
+    condenseCBits: { from: renderOptions.condenseCBits }
   },
   emits: ['updated'],
   data () {
@@ -30,14 +35,29 @@ export default {
   },
   computed: {
     nBlocks () {
-      return Math.ceil(this.commandRefs.length / BLOCK_LENGTH)
+      return this.blocks.length
     },
     blocks () {
+      // Truncate each block at the end of a layer to avoid weird offsets.
       const blocks = []
-      let i = 0
-      while (i < this.nBlocks) {
-        blocks[i] = this.commandRefs.slice(i * BLOCK_LENGTH, (i + 1) * BLOCK_LENGTH)
-        i++
+      let lower = 0
+      const maxClassical = this.condenseCBits ? this.classicalThreshold : this.registerOrder.length - 1
+      while (lower < this.commandRefs.length) {
+        let upper = lower + BLOCK_LENGTH
+        if (upper < this.commandRefs.length) {
+          // finish the layer
+          let maxLayer = -1
+          let next = this.commandRefs[upper].commandArgs
+          while (maxLayer < Math.min(maxClassical, next.first.order)) {
+            maxLayer = next.last.order
+            upper++
+            if (upper >= this.commandRefs.length) break
+            next = this.commandRefs[upper].commandArgs
+          }
+        }
+
+        blocks.push(this.commandRefs.slice(lower, upper))
+        lower = upper
       }
       return blocks
     }
