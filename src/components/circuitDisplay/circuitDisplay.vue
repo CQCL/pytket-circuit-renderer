@@ -310,16 +310,17 @@ export default {
     flex-wrap: nowrap;
 }
 .nested-circuit-container{
+    --current-circuit-background: var(--circuit-background);
     display: flex;
     overflow: auto;
-    background: var(--circuit-background);
+    background: var(--current-circuit-background);
     box-shadow: 0 0 0 var(--box-border-width) var(--box-col) inset;
 }
 .nested-circuit-container.odd_nesting{
-    background: var(--paper);
+    --current-circuit-background: var(--paper);
 }
 .theme_variables.dark .nested-circuit-container:not(.parent){
-    box-shadow: 0 0 0 1px var(--paper) inset;
+    box-shadow: 0 0 0 1px var(--paper-dark) inset;
 }
 .navigator-content .nested-circuit-container.parent{
   overflow: hidden;
