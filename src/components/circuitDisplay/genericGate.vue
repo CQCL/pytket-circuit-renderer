@@ -80,7 +80,9 @@ export default {
           bits: [],
           commands: [
               {op: this.command.op.box.compute, args: this.command.args},
+              {op: { type: 'Barrier' }, args: this.command.args},
               {op: this.command.op.box.action, args: this.command.args},
+              {op: { type: 'Barrier' }, args: this.command.args},
               {
                 op: (
                   this.command.op.box.uncompute

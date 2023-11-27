@@ -448,9 +448,10 @@
       &.link {
         border: var(--base-wire-height) dashed var(--c-wire-col);
         border-width: 0 var(--base-wire-height) 0 0;
-        background: var(--circuit-background) !important;
+        background: var(--current-circuit-background) !important;
         top: 0;
         width: 0;
+        min-width: 0;
         padding: 0;
         margin: 0 auto;
       }
