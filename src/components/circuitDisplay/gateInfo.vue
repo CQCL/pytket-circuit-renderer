@@ -55,7 +55,7 @@ export default {
   },
   computed: {
     opType () {
-      return this.op.type
+      return this.command.op.type
     },
     op () {
       return this.command.op
@@ -241,11 +241,11 @@ export default {
             </div>
 
             <chart-def v-if="isCondition" title="Condition value" hover>
-              [[# op.conditional.value #]]
+              [[# command.op.conditional.value #]]
             </chart-def>
 
             <chart-def v-if="isCondition" title="Condition width" hover>
-              [[# op.conditional.width #]]
+              [[# command.op.conditional.width #]]
             </chart-def>
 
             <div v-if="displayOp.type === 'StabiliserAssertionBox'">
@@ -345,14 +345,14 @@ export default {
 
             <div v-if="displayOp.type === 'StatePreparationBox'">
               <chart-def title="State vector" hover>
-                <chart-matrix :matrix="op.box.statevector" :display-title="false" entry-type="complex">
+                <chart-matrix :matrix="displayOp.box.statevector" :display-title="false" entry-type="complex">
                 </chart-matrix>
               </chart-def>
               <chart-def title="Inverse" hover>
-                [[# op.box.is_inverse #]]
+                [[# displayOp.box.is_inverse #]]
               </chart-def>
               <chart-def title="Includes reset" hover>
-                [[# !!op.box.with_initial_reset #]]
+                [[# !!displayOp.box.with_initial_reset #]]
               </chart-def>
             </div>
 

@@ -16,7 +16,7 @@ export default {
     condenseCBits: true,
     recursive: false,
     condensed: true,
-    nested: false,
+    nested: 0,
     cropParams: true,
     circuit: { qubits: [['Q', [0]]], commands: [], bits: [], phase: 0, implicit_permutation: ['Q', [0]] } // Empty circuit with 1 qubit.
   }
