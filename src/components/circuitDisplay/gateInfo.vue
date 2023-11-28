@@ -387,8 +387,8 @@ export default {
 
 <style scoped>
 .tool-tip-container{
-    margin: calc(0px - var(--block-height)) auto 0;
-    padding-top: var(--block-height);
+    margin: calc(0px - var(--block-height) / 2) auto 0;
+    padding-top: calc(var(--block-height) / 2);
     position: relative;
     bottom: 0;
     left: 0;
