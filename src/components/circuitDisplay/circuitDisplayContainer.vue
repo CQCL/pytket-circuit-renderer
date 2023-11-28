@@ -366,7 +366,7 @@ export default {
   box-shadow: 0px 5px 10px 0px rgba($grey900, 0.1);
   border: 1px solid var(--paper);
   overflow: auto;
-  z-index: 1;
+  z-index: 10;
 }
 .display-options-menu-entry {
   display: flex;

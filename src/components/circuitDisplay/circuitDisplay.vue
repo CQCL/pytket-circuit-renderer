@@ -227,6 +227,8 @@ export default {
         </circuit-command>
       </div>
 
+      <div v-if="circuit && circuit.name" class="circuit-name-tag">[[# circuit.name #]]</div>
+
       <div ref="navigatorContent" :class="{'circuit-inner-scroll': condensed}" :style="navigatorStyling">
         <div ref="renderedCircuit">
           <div ref="renderedCircuitDimensions" class="circuit-container"
@@ -293,6 +295,20 @@ export default {
     width: -moz-fit-content;
     width: fit-content;
 }
+.nested-circuit-container:hover > .circuit-name-tag {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 0.25em;
+  z-index: 2;
+  background: var(--box-col);
+  color: var(--box-index-col);
+}
+.circuit-name-tag{
+  display: none;
+}
+
 .circuit-preview.condensed > .circuit-container{
     flex-wrap: nowrap;
     min-width: fit-content;

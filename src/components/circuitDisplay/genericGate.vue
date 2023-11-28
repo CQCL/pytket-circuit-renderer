@@ -76,6 +76,7 @@ export default {
       let circuit
       if (this.opType === 'ConjugationBox') {
         circuit = {
+          name: 'ConjugationBox',
           qubits: this.command.args,
           bits: [],
           commands: [
@@ -95,6 +96,9 @@ export default {
         }
       } else {
         circuit = extractSubCircuit(this.command.op)
+        if (circuit && !circuit.name) {
+          circuit.name = this.opType
+        }
       }
       return circuit
     }
