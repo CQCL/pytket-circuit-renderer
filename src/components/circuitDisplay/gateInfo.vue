@@ -357,7 +357,7 @@ export default {
             </div>
 
             <div v-if="displayOp.type === 'DiagonalBox'">
-              <chart-def title="State vector" hover>
+              <chart-def title="Diagonal" hover>
                 <chart-matrix :matrix="displayOp.box.diagonal" :display-title="false" entry-type="complex">
                 </chart-matrix>
               </chart-def>
