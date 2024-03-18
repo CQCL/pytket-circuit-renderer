@@ -97,3 +97,8 @@ export const Wide = Template.bind({})
 Wide.args = {
   circuit: circuitFixtures.Wide
 }
+
+export const WASM = Template.bind({})
+WASM.args = {
+  circuit: circuitFixtures.WASM
+}

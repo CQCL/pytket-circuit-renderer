@@ -285,21 +285,25 @@ export default {
             </div>
 
             <div v-if="displayOp.type === 'WASM'">
-              <chart-def title="WASM"></chart-def>
               <chart-def title="Function" hover>
                 [[# op.wasm.func_name #]]
               </chart-def>
-              <chart-def title="N" hover>
+              <chart-def title="Classical bits" hover>
                 [[# op.wasm.n #]]
               </chart-def>
-              <chart-def title="Input vector" hover>
-                [[# op.wasm.ni_vec #]]
+              <chart-def title="WASM bits" hover>
+                [[# op.wasm.ww_n #]]
               </chart-def>
-              <chart-def title="Output vector" hover>
-                [[# op.wasm.no_vec #]]
+              <chart-def title="Input vector bits" hover>
+                [[# op.wasm.width_i_parameter #]]
+              </chart-def>
+              <chart-def title="Output vector bits" hover>
+                [[# op.wasm.width_o_parameter #]]
               </chart-def>
               <chart-def title="WASM uid" hover>
-                [[# op.wasm.wasm_uid #]]
+                <div :style="{wordWrap: 'break-word', textWrap: 'wrap', maxWidth: '300px'}">
+                  [[# op.wasm.wasm_file_uid #]]
+                </div>
               </chart-def>
             </div>
 

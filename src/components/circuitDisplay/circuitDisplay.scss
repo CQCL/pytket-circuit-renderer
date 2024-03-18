@@ -151,6 +151,10 @@
           --wire-height: calc(var(--base-wire-height) * 2);
         }
       }
+
+      &.wasm {
+        --wire-height: calc(var(--base-wire-height) / 2);
+      }
     }
 
     .wire,

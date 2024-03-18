@@ -22,7 +22,8 @@ export default {
     },
     idCommandRef: { type: Object, validator: RefValidator, required: true },
     condensedRegisters: { type: Object, required: true },
-    classicalThreshold: { type: Number, required: true }
+    classicalThreshold: { type: Number, required: true },
+    wasmThreshold: { type: Number, required: true }
   },
   inject: {
     condenseCBits: { from: renderOptions.condenseCBits }
@@ -41,14 +42,14 @@ export default {
       // Truncate each block at the end of a layer to avoid weird offsets.
       const blocks = []
       let lower = 0
-      const maxClassical = this.condenseCBits ? this.classicalThreshold : this.registerOrder.length - 1
+      const layerEnd = this.registerOrder.length - 1
       while (lower < this.commandRefs.length) {
         let upper = lower + BLOCK_LENGTH
         if (upper < this.commandRefs.length) {
           // finish the layer
           let maxLayer = -1
           let next = this.commandRefs[upper].commandArgs
-          while (maxLayer < Math.min(maxClassical, next.first.order)) {
+          while (maxLayer < Math.min(layerEnd, next.first.order)) {
             maxLayer = next.last.order
             upper++
             if (upper >= this.commandRefs.length) break
