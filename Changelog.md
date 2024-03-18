@@ -15,7 +15,11 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ### Changed:
 - ConjugationBox display: render as a nested circuit.
-- Add nested circuit names
+- Add nested circuit names.
+
+### Fixed:
+- DiagonalBox gateinfo label corrected.
+- Little-endian classical controls
 
 ## [0.7.3] 2023-11-28
 ### Changed:
