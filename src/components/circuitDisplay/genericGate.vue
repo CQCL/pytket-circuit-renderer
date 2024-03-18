@@ -115,7 +115,7 @@ export default {
     <!-- ID -->
     <div v-if="opType === 'ID'">
       <div v-for="(arg, i) in renderIndexedArgs" :key="i" class="gate_container">
-        <wire :classical="arg.flags.classical" :condensed="arg.flags.condensed"></wire>
+        <wire :classical="arg.flags.classical" :condensed="arg.flags.condensed" :wasm="arg.flags.wasm"></wire>
         <div v-if="linkVertical" class="link link-top" :class="{'classical': arg.flags.classical}"></div>
       </div>
     </div>
@@ -130,7 +130,7 @@ export default {
         <div v-if="!arg.flags.first" class="link link-top" :class="{classical: opType === 'Measure'}"></div>
         <div v-if="arg.flags.first && linkVertical" class="link link-top" :class="{'classical': arg.flags.classical}"></div>
 
-        <wire class="wire_in flex_wire" :classical="arg.flags.classical" :condensed="arg.flags.condensed"></wire>
+        <wire class="wire_in flex_wire" :classical="arg.flags.classical" :condensed="arg.flags.condensed" :wasm="arg.flags.wasm"></wire>
 
         <div v-if="opType === 'SWAP'">
           <gate-swap v-if="arg.pos !== -1" class="gate gate_connection gate_special"></gate-swap>
@@ -158,7 +158,7 @@ export default {
           <div v-else class="gate gate_connection"></div>
         </div>
 
-        <wire class="wire_in flex_wire" :classical="arg.flags.classical" :condensed="arg.flags.condensed"></wire>
+        <wire class="wire_in flex_wire" :classical="arg.flags.classical" :condensed="arg.flags.condensed" :wasm="arg.flags.wasm"></wire>
       </div>
     </div>
 
@@ -172,7 +172,7 @@ export default {
             :command="{ op: command.op, args: special0qGate.fakeCommandArgs }"
             :link-vertical="linkVertical">
         </gate-component>
-        <wire v-else :classical="arg.flags.classical" :condensed="arg.flags.condensed"></wire>
+        <wire v-else :classical="arg.flags.classical" :condensed="arg.flags.condensed" :wasm="arg.flags.wasm"></wire>
       </div>
     </div>
 
@@ -180,7 +180,7 @@ export default {
     <div v-if="nestedCircuitGate" class="gate_container nested">
       <circuit-layer :nested="true">
         <div v-for="(arg, i) in renderIndexedArgs" :key="i" class="gate_container">
-          <wire v-if="arg.pos !== -1" :classical="arg.flags.classical" :condensed="arg.flags.condensed" :class="{'self-controlled-padding': arg.selfControl}"></wire>
+          <wire v-if="arg.pos !== -1" :classical="arg.flags.classical" :condensed="arg.flags.condensed" :wasm="arg.flags.wasm" :class="{'self-controlled-padding': arg.selfControl}"></wire>
           <div v-else class="wire transparent-wire"></div>
         </div>
       </circuit-layer>
@@ -191,7 +191,7 @@ export default {
       <nested-label-layer :args="renderIndexedArgs"></nested-label-layer>
       <circuit-layer :nested="true">
         <div v-for="(arg, i) in renderIndexedArgs" :key="i" class="gate_container">
-          <wire v-if="arg.pos !== -1" :classical="arg.flags.classical" :condensed="arg.flags.condensed"></wire>
+          <wire v-if="arg.pos !== -1" :classical="arg.flags.classical" :condensed="arg.flags.condensed" :wasm="arg.flags.wasm"></wire>
           <div v-else class="wire transparent-wire"></div>
         </div>
       </circuit-layer>

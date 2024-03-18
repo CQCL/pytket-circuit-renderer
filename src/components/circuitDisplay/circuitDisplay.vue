@@ -70,6 +70,7 @@ export default {
   computed: {
     circuitDetails () {
       if (this.circuit) {
+        const wasms = [...Array(this.circuit.number_of_ws ?? 0).keys()].map(i => ['_w', [i]])
         return {
           condensedBits: {
             global: this.circuit.bits.length > 0 ? [['C', ['..' + this.circuit.bits.length]]] : [],
@@ -77,7 +78,8 @@ export default {
           },
           bits: this.circuit.bits,
           qubits: this.circuit.qubits,
-          registerOrder: this.circuit.qubits.concat(this.circuit.bits)
+          wasms: wasms.map(arg => ['WASM', arg[1]]), // Rename to something more user-friendly
+          registerOrder: this.circuit.qubits.concat(this.circuit.bits).concat(wasms)
         }
       }
       return {
@@ -107,7 +109,7 @@ export default {
           this.condenseCBits && this.circuitDetails.condensedBits
             ? this.circuitDetails.condensedBits.global
             : classicalBits
-        )]
+        ), ...this.circuitDetails.wasms]
       }
       return []
     },
@@ -206,6 +208,7 @@ export default {
             :command="{op: {type: 'ID'}, args: circuitDetails.registerOrder}"
             :register-order="circuitDetails.registerOrder"
             :classicalThreshold="circuitDetails.qubits.length"
+            :wasmThreshold="circuitDetails.qubits.length + circuitDetails.bits.length"
             :condensed-registers="condensedRegisters"
             @mounted="idCommandRef = $refs['command-id']"
         ></circuit-command>
@@ -214,6 +217,7 @@ export default {
             :command="command"
             :register-order="circuitDetails.registerOrder"
             :classicalThreshold="circuitDetails.qubits.length"
+            :wasmThreshold="circuitDetails.qubits.length + circuitDetails.bits.length"
             :condensed-registers="condensedRegisters"
             @mounted="nRenderedCommands++"
         >
@@ -249,6 +253,7 @@ export default {
                 :id-command-ref="idCommandRef"
                 :condensed-registers="condensedRegisters.toggles"
                 :classicalThreshold="circuitDetails.qubits.length"
+                :wasmThreshold="circuitDetails.qubits.length + circuitDetails.bits.length"
                 @updated="onDisplayUpdate">
             </split-circuit-layers>
 

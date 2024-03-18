@@ -126,7 +126,7 @@ export default {
       <!--  Not in the controlled operation and not a control wire.  -->
       <!--  Add a link in unless this is the topmost wire.  -->
       <div v-if="arg.pos === -1 && !controlFlags[arg.name].inControlledOp" class="gate_container">
-          <wire :classical="arg.flags.classical" :condensed="arg.flags.condensed"></wire>
+          <wire :classical="arg.flags.classical" :condensed="arg.flags.condensed" :wasm="arg.flags.wasm"></wire>
           <div class="gate gate_connection" :class="{classical: arg.flags.classical}"></div>
           <div v-if="!arg.flags.first" class="link link-top" :class="{'classical': controlFlags[arg.name].classicalLink}"></div>
       </div>
@@ -140,7 +140,7 @@ export default {
         <!--  Add control point to the wire if its a control  -->
         <div v-if="controlFlags[arg.name].control">
           <div class="gate_container">
-            <wire :classical="arg.flags.classical" :condensed="arg.flags.condensed"></wire>
+            <wire :classical="arg.flags.classical" :condensed="arg.flags.condensed" :wasm="arg.flags.wasm"></wire>
             <div class="gate gate_control" :class="[
                 arg.flags.classical ? 'classical' : 'z',
                 controlFlags[arg.name].value < 0 ?

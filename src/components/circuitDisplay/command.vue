@@ -14,6 +14,7 @@ export default {
     command: { type: Object, required: true },
     registerOrder: { type: Object, required: true },
     classicalThreshold: { type: Number, required: true },
+    wasmThreshold: { type: Number, required: true },
     condensedRegisters: { type: Object, required: true }
   },
   inject: {
@@ -45,18 +46,26 @@ export default {
       } else {
         this.command.args.forEach((arg, pos) => {
           const order = this.registerOrder.findIndex(reg => registerEquality(reg, arg))
-          if (!('order' in firstArg) || order < firstArg.order) {
-            firstArg.order = order
-            firstArg.name = arg
-          }
-          if (!('order' in lastArg) || order > lastArg.order) {
-            lastArg.order = order
-            lastArg.name = arg
-          }
-          argDetails[arg] = {
-            name: arg,
-            pos, // index of arg in the command
-            order // index of arg in the display order
+          if (order > -1) {
+            if (!('order' in firstArg) || order < firstArg.order) {
+              firstArg.order = order
+              firstArg.name = arg
+            }
+            if (!('order' in lastArg) || order > lastArg.order) {
+              lastArg.order = order
+              lastArg.name = arg
+            }
+            if (argDetails[arg] && argDetails[arg].multiPos) {
+              // Arg occurring multiple times in same command. record this separately
+              argDetails[arg].multiPos.push(pos)
+            } else {
+              argDetails[arg] = {
+                name: arg,
+                pos, // index of arg in the command.
+                multiPos: [pos],
+                order // index of arg in the display order
+              }
+            }
           }
         })
       }
@@ -78,7 +87,7 @@ export default {
       let adjustedLastArg = lastArg
       if (this.condenseCBits) {
         adjustedFirstArg = Math.min(firstArg, this.classicalThreshold)
-        adjustedLastArg = lastArg >= this.classicalThreshold ? this.registerOrder.length - 1 : lastArg
+        adjustedLastArg = lastArg >= this.classicalThreshold ? Math.max(lastArg , this.wasmThreshold - 1) : lastArg
       } else {
         for (const regName of this.overlappingCondensedRegisters.names) {
           adjustedFirstArg = Math.min(adjustedFirstArg, this.condensedRegisters.order[regName[0]].first)
@@ -106,7 +115,6 @@ export default {
       // Compute necessary info for each arg that could be displayed as part of this command.
       const argDetails = {}
       const condensedArgs = []
-      const classicalBitsPos = { global: [], names: {} }
       const classicalBitsOrder = { global: undefined, names: {} }
       const classicalBits = { global: [], names: {} }
       let nClassicalBits = 0
@@ -114,29 +122,29 @@ export default {
       this.registerOrder.forEach((arg, order) => {
         const argName = arg[0]
         const pos = arg in this.commandArgs.details ? this.commandArgs.details[arg].pos : -1
-        const classical = order >= this.classicalThreshold
+        const multiPos = arg in this.commandArgs.details ? this.commandArgs.details[arg].multiPos : -1
+        const classical = order >= this.classicalThreshold && order < this.wasmThreshold
         if (classical) {
           if (!classicalBits.names[argName]) {
             classicalBits.names[argName] = []
-            classicalBitsPos.names[argName] = []
             classicalBitsOrder.names[argName] = order
           }
           if (typeof classicalBitsOrder.global === 'undefined') classicalBitsOrder.global = order
           if (pos > -1) nClassicalBits++ // Count number of classical bits that actually feature in the command.
           classicalBits.global.push(arg)
-          classicalBitsPos.global.push(pos)
           classicalBits.names[argName].push(arg)
-          classicalBitsPos.names[argName].push(pos)
         }
         argDetails[arg] = {
           name: arg,
           pos, // index of this arg in the command
+          multiPos,
           order, // index of this arg in the display order
           flags: {
             first: order === this.commandArgs.first.order,
             last: order === this.commandArgs.last.order,
             single: this.command.args && this.command.args.length === 1,
             classical,
+            wasm: order >= this.wasmThreshold,
             condensed: false,
             globalClassical: false
           }
@@ -149,12 +157,15 @@ export default {
           const nBits = classicalBits.names[registerName].length
           const name = [registerName, [nBits], 'condensed']
           const [first, last] = [
-            classicalBitsOrder.names[registerName] <= this.commandArgs.first.order && this.commandArgs.first.order < classicalBitsOrder.names[registerName] + nBits,
-            classicalBitsOrder.names[registerName] <= this.commandArgs.last.order && this.commandArgs.last.order < classicalBitsOrder.names[registerName] + nBits
+            classicalBitsOrder.names[registerName] <= this.commandArgs.first.order
+            && this.commandArgs.first.order < classicalBitsOrder.names[registerName] + nBits,
+            classicalBitsOrder.names[registerName] <= this.commandArgs.last.order
+            && this.commandArgs.last.order < classicalBitsOrder.names[registerName] + nBits
           ]
           argDetails[name] = {
             name,
-            pos: classicalBitsPos.names[registerName].filter(pos => pos > -1).length > 0 ? classicalBitsPos.names[registerName] : -1,
+            pos: classicalBits.names[registerName].map(arg => argDetails[arg].pos),
+            multiPos: classicalBits.names[registerName].map(arg => argDetails[arg].multiPos),
             order: classicalBitsOrder.names[registerName],
             bits: classicalBits.names[registerName],
             indexedBits: classicalBits.names[registerName].map(arg => argDetails[arg]),
@@ -172,14 +183,15 @@ export default {
         // Global register
         argDetails[GLOBAL_CONDENSED_NAME] = {
           name: GLOBAL_CONDENSED_NAME,
-          pos: classicalBitsPos.global,
+          pos: classicalBits.global.map(arg => argDetails[arg].pos),
+          multiPos: classicalBits.global.map(arg => argDetails[arg].multiPos),
           order: classicalBitsOrder.global,
           bits: classicalBits.global,
           indexedBits: classicalBits.global.map(arg => argDetails[arg]),
           flags: {
             first: this.commandArgs.first.order >= this.classicalThreshold,
-            last: true, // bits displayed after qubits.
-            single: this.commandArgs.first.order >= this.classicalThreshold,
+            last: this.commandArgs.last.order < this.wasmThreshold, // bits displayed after qubits.
+            single: this.commandArgs.first.order >= this.classicalThreshold && this.commandArgs.last.order < this.wasmThreshold,
             classical: true,
             condensed: true,
             globalClassical: true
@@ -212,8 +224,11 @@ export default {
       ]
     },
     getOverlappingCondensedRegisters (firstArg, lastArg) {
+      const globalOrder = {first: this.classicalThreshold, last: this.wasmThreshold }
       return {
-        global: lastArg >= this.classicalThreshold ? [GLOBAL_CONDENSED_NAME] : [],
+        global: (firstArg <= globalOrder.first && globalOrder.first <= lastArg)
+            || (firstArg <= globalOrder.last && globalOrder.last <= lastArg)
+            ? [GLOBAL_CONDENSED_NAME] : [],
         names: this.indexedArgDetails.condensedArgList.filter(regName => {
           if (regName[0] in this.condensedRegisters.order) {
             const { first, last } = this.condensedRegisters.order[regName[0]]

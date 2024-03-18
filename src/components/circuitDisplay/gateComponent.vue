@@ -155,8 +155,49 @@ export default {
         : ''
     },
     posStr () {
-      return this.formatPosStr(this.arg.pos, this.posAdjust)
-    }
+      if (this.opType === "WASM" && !this.arg.flags.wasm) {
+        // Handle classical wires with wasm boxes specially.
+        const inputArgEnd = this.command.op.wasm.width_i_parameter.reduce((acc, i) => i + acc, 0)
+        const outputArgEnd = inputArgEnd + this.command.op.wasm.width_o_parameter.reduce((acc, i) => i + acc, 0)
+
+        const getMultiPos = (filterFn) => {
+          if (this.arg.flags.condensed) {
+            let filtered = this.arg.multiPos.map(multiPos => {
+              if (Array.isArray(multiPos)) {
+                let mp = multiPos.filter(filterFn)
+                return mp.length > 0 ? mp : -1
+              }
+              return multiPos
+            })
+            const repeats = filtered.reduce(
+                (acc, multiPos) => Array.isArray(multiPos) ? Math.max(acc, multiPos.length) : acc,
+                1
+            )
+            const transposed = Array(repeats)
+            for (let i = 0; i < repeats; i++) {
+              transposed[i] = filtered.map(
+                  multiPos => Array.isArray(multiPos) ? (multiPos.length >= i ? multiPos[i] : multiPos[-1]) : multiPos
+              )
+            }
+            return transposed
+          }
+          // Not condensed so we can filter directly
+          return this.arg.multiPos.filter(filterFn)
+        }
+
+        const inputs = getMultiPos(pos => pos < inputArgEnd)
+        const outputs = getMultiPos(pos => pos >= inputArgEnd && pos < outputArgEnd)
+        return {
+          in: inputs.length > 0 ? inputs.map(pos => this.formatPosStr(pos, this.posAdjust)).join(" | ") : "",
+          out: outputs.length > 0 ? outputs.map(pos => this.formatPosStr(pos, this.posAdjust)).join(" | ") : "",
+        }
+      }
+      // Not wasm => inputs = outputs
+      return {
+        in: this.formatPosStr(this.arg.pos, this.posAdjust),
+        out: ""
+      }
+    },
   },
   methods: {
     spiderPhase (opType, paramStr) {
@@ -191,7 +232,7 @@ export default {
   <div :data-gate-component="opType">
     <!-- Barrier requires special rendering -->
     <div v-if="opType === 'Barrier'" style="height:var(--block-height)">
-      <wire :classical="arg.flags.classical" :condensed="arg.flags.condensed"></wire>
+      <wire :classical="arg.flags.classical" :condensed="arg.flags.condensed" :wasm="arg.flags.wasm"></wire>
       <div class="gate_container" :class="[gateColor]">
         <div v-if="arg.pos !== -1" class="link gate" :class="specialGateClasses"></div>
       </div>
@@ -199,8 +240,8 @@ export default {
 
     <!-- Generic single block gate -->
     <div v-else class="gate_container nested" style="height:var(--block-height)">
-      <wire v-if="arg.pos !== -1" class="wire_in" :class="{flex_wire: arg.flags.single, 'self-controlled-padding-generic': arg.selfControl}" :classical="arg.flags.classical" :condensed="arg.flags.condensed"></wire>
-      <wire v-else class="wire_in transparent-wire" :class="{flex_wire: arg.flags.single}" :classical="arg.flags.classical" :condensed="arg.flags.condensed"></wire>
+      <wire v-if="arg.pos !== -1" class="wire_in" :class="{flex_wire: arg.flags.single, 'self-controlled-padding-generic': arg.selfControl}" :classical="arg.flags.classical" :condensed="arg.flags.condensed" :wasm="arg.flags.wasm"></wire>
+      <wire v-else class="wire_in transparent-wire" :class="{flex_wire: arg.flags.single}" :classical="arg.flags.classical" :condensed="arg.flags.condensed" :wasm="arg.flags.wasm"></wire>
 
       <!-- StatePreparation with reset requires special resets -->
       <div v-if="opType === 'StatePreparationBox' && command.op.box.with_initial_reset && arg.pos > -1"
@@ -210,17 +251,20 @@ export default {
       <div class="gate_container" :class="[gateColor, {'generic': !arg.flags.single}]">
         <div class="gate connected" :class="specialGateClasses">
           <span v-if="arg.pos !== -1 && !arg.flags.single" class="wire-label">
-            [[# posStr #]]
+            [[# posStr.in #]]
           </span>
           <span :class="specialGateContentClasses" :style="[opType === 'Reset'? {margin: 0} : {}]">
             [[# arg.flags.last || split ? name : '' #]]
+          </span>
+          <span v-if="arg.pos !== -1 && !arg.flags.single" class="wire-label">
+            [[# posStr.out #]]
           </span>
         </div>
         <div v-if="linkVertical" class="link link-top" :class="{'classical': arg.flags.classical}"></div>
       </div>
 
-      <wire v-if="arg.pos !== -1" class="wire_in" :class="{flex_wire: arg.flags.single}" :classical="arg.flags.classical" :condensed="arg.flags.condensed"></wire>
-      <wire v-else class="wire_in transparent-wire" :class="{flex_wire: arg.flags.single}" :classical="arg.flags.classical" :condensed="arg.flags.condensed"></wire>
+      <wire v-if="arg.pos !== -1" class="wire_in" :class="{flex_wire: arg.flags.single}" :classical="arg.flags.classical" :condensed="arg.flags.condensed" :wasm="arg.flags.wasm"></wire>
+      <wire v-else class="wire_in transparent-wire" :class="{flex_wire: arg.flags.single}" :classical="arg.flags.classical" :condensed="arg.flags.condensed" :wasm="arg.flags.wasm"></wire>
     </div>
 
   </div>
