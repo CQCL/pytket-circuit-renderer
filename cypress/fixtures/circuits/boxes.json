@@ -137,7 +137,16 @@
       "n_qubits":2,"qubit_indices":[[["q",[2]],1],[["q",[1]],2]],
       "phase_polynomial":[[[false,false],0.4],[[false,true],0.3],[[true,false],0.2],[[true,true],0.1]],
       "linear_transformation":[[true,false,false,true],[false,true,true,false],[false,true,false,false],[false,true,true,true]]}},
-      "args":[["q",[0]],["q",[1]]]}
+      "args":[["q",[0]],["q",[1]]]},
+    {"args": [["q", [0]], ["q", [1]], ["q", [2]], ["c", [1]], ["c", [2]]], "op": {"box": {"id": "4e2ab9d3-8287-4b22-bb24-6cba1c930ba4",
+      "n_bits": 2, "n_qubits": 3, "resource_data": {
+        "gate_depth": {"max": 29, "min": 24},
+        "op_type_count": [["X", {"max": 5, "min": 4}], ["T", {"max": 6, "min": 0}], ["H", {"max": 15, "min": 10}], ["CX", {"max": 23, "min": 20}]],
+        "op_type_depth": [["X", {"max": 3, "min": 1}], ["T", {"max": 2, "min": 0}], ["H", {"max": 9, "min": 3}], ["CX", {"max": 23, "min": 11}]],
+        "two_qubit_gate_depth": {"max": 23, "min": 11}}, "type": "DummyBox"}, "type": "DummyBox"}},
+    {"args": [["q", [0]], ["q", [1]]], "op": {"box": {"cx_config": "Tree", "graph_colouring": 0, "id": "4a6f625e-59de-4795-8b5d-72d0a3fe24e2",
+      "partition_strategy": 1, "pauli_gadgets": [[["X", "Z"], "0.3"], [["Z", "Z"], "0.1337"], [["X", "X"], "0.3244"]],
+      "synth_strategy": "Pairwise", "type": "TermSequenceBox"}, "type": "TermSequenceBox"}}
   ],
   "implicit_permutation": [[["q", [0]], ["q", [0]]], [["q", [1]], ["q", [1]]], [["q", [2]], ["q", [2]]], [["q", [3]], ["q", [3]]]],
   "phase": "0.0"

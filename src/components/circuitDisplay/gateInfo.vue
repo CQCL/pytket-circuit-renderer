@@ -47,10 +47,21 @@ export default {
         'UnitaryTableauBox', 'WASM', 'ToffoliBox',
         'MultiplexorBox', 'MultiplexedRotationBox',
         'MultiplexedU2Box', 'MultiplexedTensoredU2Box',
-        'DiagonalBox', 'ConjugationBox'
+        'DiagonalBox', 'ConjugationBox', 'TermSequenceBox',
+        'DummyBox'
       ],
       visible: false,
-      teleportToId: this.teleportId
+      teleportToId: this.teleportId,
+      // Pytket gives these as numbers
+      GraphColouring: {
+        2: 'Exhaustive',
+        1: 'LargestFirst',
+        0: 'Lazy',
+      },
+      PauliPartitionStrat: {
+        1: 'CommutingSets',
+        0: 'NonConflictingSets',
+      }
     }
   },
   computed: {
@@ -308,7 +319,7 @@ export default {
             </div>
 
             <div v-if="displayOp.type === 'ToffoliBox'">
-              <chart-def title="Strategy">
+              <chart-def title="Strategy" hover>
                 [[# displayOp.box.strat ? displayOp.box.strat : (displayOp.box.cycles ? 'Cycle' : 'Matching') #]]
               </chart-def>
               <!-- Backwards compatibility -->
@@ -377,6 +388,62 @@ export default {
                   :args="command.args"
                   :circuit-type="key"
               ></gate-info-sub-circuit>
+            </div>
+
+            <div v-if="displayOp.type === 'TermSequenceBox'">
+              <chart-def title="Pauli Gadgets">
+                Phase
+              </chart-def>
+              <chart-def v-for="(gadget, i) in displayOp.box.pauli_gadgets" :key="i" hover>
+                <template #title>
+                  <chart-list :chart="gadget[0]"></chart-list>
+                </template>
+                <mathjax-content :formula="'\`' + gadget[1] + '\`'"></mathjax-content>
+              </chart-def>
+              <chart-def title="Synthesis Strategy" hover>
+                [[# displayOp.box.synth_strategy #]]
+              </chart-def>
+              <chart-def title="Partition Strategy" hover>
+                [[# PauliPartitionStrat[displayOp.box.partition_strategy] #]]
+              </chart-def>
+              <chart-def title="Graph Colouring" hover>
+                [[# GraphColouring[displayOp.box.graph_colouring] #]]
+              </chart-def>
+              <chart-def title="Config" hover>
+                [[# displayOp.box.cx_config #]]
+              </chart-def>
+            </div>
+
+            <div v-if="displayOp.type === 'DummyBox'">
+              <chart-def title="Bits" hover>
+                [[# displayOp.box.n_bits #]]
+              </chart-def>
+              <chart-def title="Qubits" hover>
+                [[# displayOp.box.n_qubits #]]
+              </chart-def>
+
+              <chart-def title="Gate Depth" hover>
+                [[# displayOp.box.resource_data.gate_depth.min #]] - [[# displayOp.box.resource_data.gate_depth.max #]]
+              </chart-def>
+              <chart-def title="2q Gate Depth" hover>
+                [[# displayOp.box.resource_data.two_qubit_gate_depth.min #]] - [[# displayOp.box.resource_data.two_qubit_gate_depth.max #]]
+              </chart-def>
+
+              <chart-def title="Gate Counts"></chart-def>
+              <chart-def v-for="([optype, val], i) in displayOp.box.resource_data.op_type_count" :key="i" hover>
+                <template #title>
+                  <chart-list :chart="[optype]" :display-title="false" />
+                </template>
+                [[# val.min #]] - [[# val.max #]]
+              </chart-def>
+
+              <chart-def title="Gate Depths"></chart-def>
+              <chart-def v-for="([optype, val], i) in displayOp.box.resource_data.op_type_depth" :key="i" hover>
+                <template #title>
+                  <chart-list :chart="[optype]" :display-title="false" />
+                </template>
+                  [[# val.min #]] - [[# val.max #]]
+              </chart-def>
             </div>
 
             <gate-info-sub-circuit @updated="onCircuitDisplayUpdate" :op="displayOp"></gate-info-sub-circuit>

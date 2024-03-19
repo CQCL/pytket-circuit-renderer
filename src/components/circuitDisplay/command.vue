@@ -224,16 +224,19 @@ export default {
       ]
     },
     getOverlappingCondensedRegisters (firstArg, lastArg) {
-      const globalOrder = {first: this.classicalThreshold, last: this.wasmThreshold }
+      const globalOrder = {first: this.classicalThreshold, last: this.wasmThreshold - 1}
       return {
-        global: (firstArg <= globalOrder.first && globalOrder.first <= lastArg)
-            || (firstArg <= globalOrder.last && globalOrder.last <= lastArg)
+        global: (globalOrder.first <= firstArg && firstArg <= globalOrder.last) // firstArg overlaps
+            || (globalOrder.first <= lastArg && lastArg <= globalOrder.last)    // lastArg overlaps
+            || (firstArg <= globalOrder.first && globalOrder.last <= lastArg)   // condensed reg contained between args
             ? [GLOBAL_CONDENSED_NAME] : [],
         names: this.indexedArgDetails.condensedArgList.filter(regName => {
           if (regName[0] in this.condensedRegisters.order) {
             const { first, last } = this.condensedRegisters.order[regName[0]]
             return this.condensedRegisters.toggles[regName[0]] && (
-              (firstArg <= first && first <= lastArg) || (firstArg <= last && last <= lastArg)
+                (first <= firstArg && firstArg <= last)   // firstArg overlaps
+                || (first <= lastArg && lastArg <= last)  // lastArg overlaps
+                || (firstArg <= first && last <= lastArg) // condensed reg contained between args
             )
           }
           return false
