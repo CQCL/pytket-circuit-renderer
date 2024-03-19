@@ -3,7 +3,7 @@ export default {
   name: 'chart-def',
   delimiters: ['[[#', '#]]'],
   props: {
-    title: { type: String, required: true },
+    title: { type: String, default: '' },
     vertical: Boolean,
     hover: Boolean
   }

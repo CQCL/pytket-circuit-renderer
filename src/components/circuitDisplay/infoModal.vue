@@ -57,10 +57,10 @@ export default {
     <div v-show="modelValue" class="info-modal">
       <div class="info-modal-backdrop" @click="closeModal"></div>
       <div class="info-modal-container" :style="{...modalStyle}" ref="modal" @wheel.stop>
-        <div class="row row-heading"><slot name="title"></slot></div>
+        <div class="row row-heading" style="margin: 0; padding: 1em"><slot name="title"></slot></div>
         <div class="modal-content" style="overflow:auto"><slot name="content"></slot></div>
         <slot name="buttons">
-          <div style="border: none; display: flex">
+          <div style="border: none; display: flex; padding: 1em">
             <button class="row-item button" role="button" @click="closeModal">Close</button>
           </div>
         </slot>
@@ -98,9 +98,9 @@ export default {
     width: fit-content;
     height: fit-content;
     overflow: auto;
-    padding: 0 1em 1em 1em;
+    padding:0;
     border-radius: 5px;
-    border: 1px solid var(--paper);
+    border: 1px solid var(--divider);
     box-shadow: 0px 5px 20px -10px #000000;
     background: var(--background);
     color: var(--text-secondary);
@@ -122,10 +122,9 @@ export default {
     color: var(--text-primary);
 }
 .modal-content{
-  padding: 0.5em 0;
+  padding: 0.5em 1em;
   display: flex;
   flex-direction: column;
   border-bottom: 1px solid var(--divider);
-  margin-bottom: 0.5em;
 }
 </style>
