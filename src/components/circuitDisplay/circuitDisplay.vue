@@ -207,8 +207,8 @@ export default {
             :ref="'command-id'"
             :command="{op: {type: 'ID'}, args: circuitDetails.registerOrder}"
             :register-order="circuitDetails.registerOrder"
-            :classicalThreshold="circuitDetails.qubits.length"
-            :wasmThreshold="circuitDetails.qubits.length + circuitDetails.bits.length"
+            :classical-threshold="circuitDetails.qubits.length"
+            :wasm-threshold="circuitDetails.qubits.length + circuitDetails.bits.length"
             :condensed-registers="condensedRegisters"
             @mounted="idCommandRef = $refs['command-id']"
         ></circuit-command>
@@ -216,8 +216,8 @@ export default {
             :ref="'commands'"
             :command="command"
             :register-order="circuitDetails.registerOrder"
-            :classicalThreshold="circuitDetails.qubits.length"
-            :wasmThreshold="circuitDetails.qubits.length + circuitDetails.bits.length"
+            :classical-threshold="circuitDetails.qubits.length"
+            :wasm-threshold="circuitDetails.qubits.length + circuitDetails.bits.length"
             :condensed-registers="condensedRegisters"
             @mounted="nRenderedCommands++"
         >
@@ -252,8 +252,8 @@ export default {
                 :command-refs="commandRefs"
                 :id-command-ref="idCommandRef"
                 :condensed-registers="condensedRegisters.toggles"
-                :classicalThreshold="circuitDetails.qubits.length"
-                :wasmThreshold="circuitDetails.qubits.length + circuitDetails.bits.length"
+                :classical-threshold="circuitDetails.qubits.length"
+                :wasm-threshold="circuitDetails.qubits.length + circuitDetails.bits.length"
                 @updated="onDisplayUpdate">
             </split-circuit-layers>
 
