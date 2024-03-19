@@ -224,6 +224,11 @@
       width: fit-content;
       padding-right: 0.4em;
 
+      &.end {
+        padding-right: 0;
+        padding-left: 0.4em;
+      }
+
       .gate_top > &,
       .gate_bottom > & {
         padding-top: 0;
