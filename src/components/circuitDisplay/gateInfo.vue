@@ -175,6 +175,11 @@ export default {
               <chart-matrix :matrix="matrix" entry-type="complex" :display-title="false"></chart-matrix>
             </chart-def>
 
+            <div v-if="displayOp.type === 'ExpBox'">
+              <chart-def title="Phase" hover>
+                <mathjax-content :formula="'\`' + displayOp.box.phase + '\`'"></mathjax-content>
+              </chart-def>
+            </div>
             <div v-if="displayOp.type === 'PauliExpBox'">
               <chart-def title="Paulis">
                 Phase
