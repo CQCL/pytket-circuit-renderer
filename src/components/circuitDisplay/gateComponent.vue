@@ -155,12 +155,7 @@ export default {
         : ''
     },
     posStr () {
-      if (this.opType === "WASM" && !this.arg.flags.wasm) {
-        // Handle classical wires with wasm boxes specially.
-        const inputArgEnd = this.command.op.wasm.width_i_parameter.reduce((acc, i) => i + acc, 0)
-        const outputArgEnd = inputArgEnd + this.command.op.wasm.width_o_parameter.reduce((acc, i) => i + acc, 0)
-
-        const getMultiPos = (filterFn) => {
+      const getMultiPos = (filterFn) => {
           if (this.arg.flags.condensed) {
             let filtered = this.arg.multiPos.map(multiPos => {
               if (Array.isArray(multiPos)) {
@@ -185,19 +180,36 @@ export default {
           return this.arg.multiPos.filter(filterFn)
         }
 
-        const inputs = getMultiPos(pos => pos < inputArgEnd)
-        const outputs = getMultiPos(pos => pos >= inputArgEnd && pos < outputArgEnd)
-        return {
-          in: inputs.length > 0 ? inputs.map(pos => this.formatPosStr(pos, this.posAdjust)).join(" | ") : "",
-          out: outputs.length > 0 ? outputs.map(pos => this.formatPosStr(pos, this.posAdjust)).join(" | ") : "",
+      let inputs = []
+      let outputs = []
+      if (this.opType === "WASM" && !this.arg.flags.wasm) {
+        // Handle classical wires with wasm boxes specially.
+        const inputArgEnd = this.command.op.wasm.width_i_parameter.reduce((acc, i) => i + acc, 0)
+        const outputArgEnd = inputArgEnd + this.command.op.wasm.width_o_parameter.reduce((acc, i) => i + acc, 0)
+
+        inputs = getMultiPos(pos => pos < inputArgEnd)
+        outputs = getMultiPos(pos => pos >= inputArgEnd && pos < outputArgEnd)
+      } else {
+        const classical = ('classical' in this.command.op) ? this.command.op.classical :
+            'box' in this.command.op ? this.command.op.box : {}
+
+        let outputArgStart = 'n_i' in classical ? classical.n_i : 0
+        let inputArgEnd = 'n_io' in classical ? outputArgStart + classical.n_io : outputArgStart
+        const outputArgEnd = 'n_o' in classical ? inputArgEnd + classical.n_o : this.command.args.length
+
+        // Want inputs to be defined when not classical
+        if (!('n_i' in classical) && !('n_io' in classical) && !('n_o' in classical)) {
+          inputArgEnd = this.command.args.length
+          outputArgStart = this.command.args.length
         }
+        inputs = getMultiPos(pos => pos + this.posAdjust >=0 && pos + this.posAdjust < inputArgEnd)
+        outputs = getMultiPos(pos => pos + this.posAdjust >= outputArgStart && pos + this.posAdjust < outputArgEnd)
       }
-      // Not wasm => inputs = outputs
       return {
-        in: this.formatPosStr(this.arg.pos, this.posAdjust),
-        out: ""
+        in: inputs.length > 0 ? inputs.map(pos => this.formatPosStr(pos, this.posAdjust)).join(" | ") : "",
+        out: outputs.length > 0 ? outputs.map(pos => this.formatPosStr(pos, this.posAdjust)).join(" | ") : "",
       }
-    },
+    }
   },
   methods: {
     spiderPhase (opType, paramStr) {
@@ -256,7 +268,7 @@ export default {
           <span :class="specialGateContentClasses" :style="[opType === 'Reset'? {margin: 0} : {}]">
             [[# arg.flags.last || split ? name : '' #]]
           </span>
-          <span v-if="arg.pos !== -1 && !arg.flags.single" class="wire-label">
+          <span v-if="arg.pos !== -1 && !arg.flags.single" class="wire-label end">
             [[# posStr.out #]]
           </span>
         </div>
