@@ -174,8 +174,8 @@ const extractControlledCommand = function (controlCommand, argDetails) {
       const controlState = command.op.box?.control_state ?? command.op.conditional?.value
       let bitstring = typeof controlState !== 'undefined' ? controlState.toString(2).padStart(args.length, '0') : false
       // Reverse if value was little-endian.
-      if (command.op.type == 'Conditional' && bitstring) {
-        bitstring = bitstring.split("").reverse().join("")
+      if (command.op.type === 'Conditional' && bitstring) {
+        bitstring = bitstring.split('').reverse().join('')
       }
       args.forEach((arg, i) => {
         if (arg in details) details[arg].control = true

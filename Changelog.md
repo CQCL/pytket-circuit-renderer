@@ -13,6 +13,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## Unreleased
 
+## [0.7.4] 2024-04-19
 ### Changed:
 - ConjugationBox display: render as a nested circuit.
 - Add nested circuit names.
