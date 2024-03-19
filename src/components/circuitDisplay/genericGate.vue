@@ -80,18 +80,18 @@ export default {
           qubits: this.command.args,
           bits: [],
           commands: [
-              {op: this.command.op.box.compute, args: this.command.args},
-              {op: { type: 'Barrier' }, args: this.command.args},
-              {op: this.command.op.box.action, args: this.command.args},
-              {op: { type: 'Barrier' }, args: this.command.args},
-              {
-                op: (
-                  this.command.op.box.uncompute
-                    ? this.command.op.box.uncompute
-                    : { type: 'compute†' }
-                ),
-                args: this.command.args
-              }
+            { op: this.command.op.box.compute, args: this.command.args },
+            { op: { type: 'Barrier' }, args: this.command.args },
+            { op: this.command.op.box.action, args: this.command.args },
+            { op: { type: 'Barrier' }, args: this.command.args },
+            {
+              op: (
+                this.command.op.box.uncompute
+                  ? this.command.op.box.uncompute
+                  : { type: 'compute†' }
+              ),
+              args: this.command.args
+            }
           ]
         }
       } else {

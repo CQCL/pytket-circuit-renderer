@@ -26,7 +26,7 @@ export default {
     subCircuit () {
       // If circuit type is specified, we must extract that particular circuit from a conjugation box.
       const isConjBox = this.circuitType && this.opType === 'ConjugationBox'
-      let op = isConjBox ? this.op.box[this.circuitType.toLowerCase()] : this.op
+      const op = isConjBox ? this.op.box[this.circuitType.toLowerCase()] : this.op
 
       if (isConjBox) {
         if (!op) return false
@@ -35,7 +35,7 @@ export default {
           circuit: {
             qubits: this.args ?? [],
             bits: [],
-            commands: [{op, args: this.args}]
+            commands: [{ op, args: this.args }]
           },
           type: this.circuitType
         }
