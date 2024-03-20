@@ -339,6 +339,7 @@ export default {
 .nested-circuit-container{
     --current-circuit-background: var(--circuit-background);
     display: flex;
+    position: relative;
     overflow: auto;
     background: var(--current-circuit-background);
     box-shadow: 0 0 0 var(--box-border-width) var(--box-col) inset;

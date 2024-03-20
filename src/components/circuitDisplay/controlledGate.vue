@@ -4,6 +4,7 @@ import { registerEquality, renderIndexedArgs, extractControlledCommand } from '.
 import wire from './wire'
 import genericGate from './genericGate'
 import { renderOptions } from './provideKeys'
+import { regToStr } from './utils'
 
 export default {
   name: 'controlled-gate',
@@ -31,10 +32,11 @@ export default {
       let inControlledOp = false // Track which control wires are between controlled wires.
       let lastControl = false // Track which control wire is displayed last.
       let nControlled = 0 // re compute the bounds for the controlled op.
+      const nControlledCommandArgs = (new Set(this.controlledCommand.command.args.map(regToStr))).size // WASM gates allow duplicated registers!!
       for (const argRef of this.renderIndexedArgs.slice().reverse()) {
         const arg = JSON.parse(JSON.stringify(argRef)) // deep copy so that we can have an updated copy of the flags fo the controlled op.
         // Iterate over backwards so we can easily identify the first quantum bit involved.
-        inQuantumOp = inQuantumOp || (!arg.flags.classical && arg.pos > -1)
+        inQuantumOp = inQuantumOp || (!(arg.flags.classical || arg.flags.wasm) && arg.pos > -1)
         // if this is a condensed wire, need to check if any of its bits are being controlled:
         inControlledOp = inControlledOp || (arg.flags.condensed ? arg.bits : [arg.name]).reduce(
           (acc, bit) => acc || (bit in flags && !!flags[bit].controlled),
@@ -79,8 +81,8 @@ export default {
         if (flags[arg.name].inControlledOp) { // reassign controlled op bound flags
           const nArgs = arg.flags.condensed ? arg.indexedBits.filter(bit => bit.name in flags && flags[bit.name].controlled).length : 1
           flags[arg.name].flags.last = nControlled === 0 && flags[arg.name].controlled
-          flags[arg.name].flags.first = nControlled === this.controlledCommand.command.args.length - 1 && flags[arg.name].controlled
-          flags[arg.name].flags.single = this.controlledCommand.command.args.length === nArgs && flags[arg.name].controlled
+          flags[arg.name].flags.first = nControlled === nControlledCommandArgs - 1 && flags[arg.name].controlled
+          flags[arg.name].flags.single = nControlledCommandArgs === nArgs && flags[arg.name].controlled
           if (flags[arg.name].controlled) {
             nControlled += nArgs
           } else {
@@ -125,7 +127,7 @@ export default {
     <div v-for="(arg, order) in renderIndexedArgs" :key="arg.name[0] + '-' + order" :style="{ height: 'var(--block-height)'}">
       <!--  Not in the controlled operation and not a control wire.  -->
       <!--  Add a link in unless this is the topmost wire.  -->
-      <div v-if="arg.pos === -1 && !controlFlags[arg.name].inControlledOp" class="gate_container">
+      <div v-if="(arg.flags.condensed ? arg.pos.reduce((acc, p) => acc && p === -1, true) : arg.pos === -1) && !controlFlags[arg.name].inControlledOp" class="gate_container">
           <wire :classical="arg.flags.classical" :condensed="arg.flags.condensed" :wasm="arg.flags.wasm"></wire>
           <div class="gate gate_connection" :class="{classical: arg.flags.classical}"></div>
           <div v-if="!arg.flags.first" class="link link-top" :class="{'classical': controlFlags[arg.name].classicalLink}"></div>

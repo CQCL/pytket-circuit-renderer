@@ -260,6 +260,10 @@ const formatPosStr = function (argPos, posAdjust) {
   return argPos + posAdjust
 }
 
+function regToStr (reg) {
+  return `${reg[0]}[${reg[1].join(',')}]`
+}
+
 export {
   registerEquality,
   getIndexedArgs,
@@ -267,5 +271,6 @@ export {
   extractSubCircuit,
   extractControlledCommand,
   formatClassicalExp,
-  formatPosStr
+  formatPosStr,
+  regToStr,
 }
