@@ -23,6 +23,9 @@ export default {
       if (this.entryType === 'boolStr') {
         numToStr = (boolStr) => boolStr ? '1' : '0'
       }
+      if (this.entryType === 'text') {
+        numToStr = (text) => `\\texttt{${text}}`
+      }
 
       const flattenRow = (row) => {
         return row.reduce((prev, next, i) => {

@@ -9,6 +9,7 @@ import infoModal from './infoModal'
 import gateInfoSubCircuit from './gateInfoSubCircuit'
 import gateInfoClassical from './gateInfoClassical'
 import { renderOptions, teleportConfig } from './provideKeys'
+import { extractControlledCommand, regToStr } from './utils'
 
 export default {
   name: 'gate-info',
@@ -87,6 +88,9 @@ export default {
           )
         : this.op
     },
+    controlledCommand () {
+      return extractControlledCommand(this.command, {}).command
+    },
     isCondition () {
       return ['Condition', 'Conditional'].includes(this.opType)
     },
@@ -113,6 +117,30 @@ export default {
         'box' in this.op && this.op.box.params ? this.op.box.params : [],
         this.isCondition && this.op.conditional.op.params ? this.op.conditional.op.params : []
       )
+    },
+    wasmVectorInfo () {
+      if (this.displayOp.type === 'WASM') {
+        const inArgs = []
+        const outArgs = []
+        const nIn = this.displayOp.wasm.width_i_parameter.reduce(
+          (acc, i) => {
+            inArgs.push([this.controlledCommand.args.slice(acc, acc + i).map(reg => [regToStr(reg)]).join(", ")])
+            return acc + i
+          },
+          0
+        )
+        const nOut = this.displayOp.wasm.width_o_parameter.reduce(
+          (acc, i) => {
+            outArgs.push([this.controlledCommand.args.slice(acc, acc + i).map(reg => [regToStr(reg)]).join(", ")])
+            return acc + i
+          },
+          nIn
+        )
+        return {
+          in: nIn > 0 ? inArgs : [[" "]],
+          out: nOut - nIn > 0 ? outArgs : [[" "]],
+        }
+      }
     }
   },
   methods: {
@@ -302,23 +330,23 @@ export default {
 
             <div v-if="displayOp.type === 'WASM'">
               <chart-def title="Function" hover>
-                [[# op.wasm.func_name #]]
+                [[# displayOp.wasm.func_name #]]
               </chart-def>
               <chart-def title="Classical bits" hover>
-                [[# op.wasm.n #]]
+                [[# displayOp.wasm.n #]]
               </chart-def>
               <chart-def title="WASM bits" hover>
-                [[# op.wasm.ww_n #]]
+                [[# displayOp.wasm.ww_n #]]
               </chart-def>
               <chart-def title="Input vector bits" hover>
-                [[# op.wasm.width_i_parameter #]]
+                <chart-matrix entry-type="text" :matrix="wasmVectorInfo.in" :displayTitle="false"></chart-matrix>
               </chart-def>
               <chart-def title="Output vector bits" hover>
-                [[# op.wasm.width_o_parameter #]]
+                <chart-matrix entry-type="text" :matrix="wasmVectorInfo.out" :displayTitle="false"></chart-matrix>
               </chart-def>
               <chart-def title="WASM uid" hover>
                 <div :style="{wordWrap: 'break-word', textWrap: 'wrap', maxWidth: '300px'}">
-                  [[# op.wasm.wasm_file_uid #]]
+                  [[# displayOp.wasm.wasm_file_uid #]]
                 </div>
               </chart-def>
             </div>
@@ -355,7 +383,7 @@ export default {
               <div>
                 <chart-def v-for="(entry, i) in formatMultiplexedOpMap(displayOp.box.op_map)" :key="i" title="" hover>
                   <template #title>
-                    <chart-matrix :matrix="entry[0]" :depth="1" :display-title="false" entry-type="boolStr">
+                    <chart-matrix :matrix="entry[0]" :display-title="false" entry-type="boolStr">
                     </chart-matrix>
                   </template>
                   <chart-list :chart="entry[1]" :display-title="false"></chart-list>
