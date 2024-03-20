@@ -187,8 +187,8 @@ export default {
         const inputArgEnd = this.command.op.wasm.width_i_parameter.reduce((acc, i) => i + acc, 0)
         const outputArgEnd = inputArgEnd + this.command.op.wasm.width_o_parameter.reduce((acc, i) => i + acc, 0)
 
-        inputs = getMultiPos(pos => pos < inputArgEnd)
-        outputs = getMultiPos(pos => pos >= inputArgEnd && pos < outputArgEnd)
+        inputs = getMultiPos(pos => pos + this.posAdjust < inputArgEnd)
+        outputs = getMultiPos(pos => pos + this.posAdjust >= inputArgEnd && pos + this.posAdjust < outputArgEnd)
       } else {
         const classical = ('classical' in this.command.op) ? this.command.op.classical :
             'box' in this.command.op ? this.command.op.box : {}
@@ -197,7 +197,7 @@ export default {
         let inputArgEnd = 'n_io' in classical ? outputArgStart + classical.n_io : outputArgStart
         const outputArgEnd = 'n_o' in classical ? inputArgEnd + classical.n_o : this.command.args.length
 
-        // Want inputs to be defined when not classical
+        // Want only inputs to be defined when not classical
         if (!('n_i' in classical) && !('n_io' in classical) && !('n_o' in classical)) {
           inputArgEnd = this.command.args.length
           outputArgStart = this.command.args.length

@@ -1,5 +1,5 @@
 {
-  "bits": [["cond_one", [0]], ["cond_two", [0]], ["cond_two", [1]]],
+  "bits": [["c", [0]], ["cond_one", [0]], ["cond_two", [0]], ["cond_two", [1]]],
   "commands": [
     {"args": [["cond_two", [0]], ["cond_two", [1]], ["_w", [0]]], "op": {"type": "WASM", "wasm": {
       "func_name": "write_random", "n": 2, "wasm_file_uid": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
@@ -10,7 +10,11 @@
       "func_name": "some_wasm_func", "n": 4, "wasm_file_uid": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "width_i_parameter": [1], "width_o_parameter": [2, 1], "ww_n": 2}}},
     {"args": [["q", [0]]], "op": {"type": "H"}},
-    {"args": [["q", [1]]], "op": {"type": "H"}}
+    {"args": [["q", [1]]], "op": {"type": "H"}},
+    {"args": [["c", [0]], ["cond_two", [0]], ["cond_two", [0]], ["cond_two", [1]], ["_w", [1]]], "op": {"conditional": {"op": {"type": "WASM", "wasm": {
+      "func_name": "conditional_wasm", "n": 3, "wasm_file_uid": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "width_i_parameter": [1], "width_o_parameter": [2], "ww_n": 1}
+    }, "value": 1, "width": 1}, "type": "Conditional"}}
   ],
   "created_qubits": [],
   "discarded_qubits": [],

@@ -1,4 +1,6 @@
 <script>
+import { regToStr } from './utils'
+
 export default {
   name: 'circuit-layer',
   emits: ['toggle'],
@@ -12,7 +14,8 @@ export default {
       if (name in this.condensedRegisters) {
         this.$emit('toggle', name)
       }
-    }
+    },
+    regToStr,
   }
 }
 </script>
@@ -26,7 +29,7 @@ export default {
           :key="i"
           :class="{'qubit': qubits, 'toggle' : wire[0] in condensedRegisters}"
           @click="toggleRegister(wire[0])">
-        [[# wire[0] #]][[[# wire[1].join(',') #]]]
+        [[# regToStr(wire) #]]
       </div>
     </slot>
   </div>
