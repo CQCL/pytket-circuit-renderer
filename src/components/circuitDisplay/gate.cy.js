@@ -1,5 +1,5 @@
 /* global cy, it, describe */
-import { composeStories } from '@storybook/testing-vue3'
+import { composeStories } from '@storybook/vue3'
 import * as storiesGeneric from './genericGate.stories.js'
 import * as storiesControlled from './controlledGate.stories.js'
 

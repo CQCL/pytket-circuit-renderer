@@ -1,5 +1,5 @@
 /* global cy, it, describe */
-import { composeStories, composeStory } from '@storybook/testing-vue3'
+import { composeStories, composeStory } from '@storybook/vue3'
 import * as storiesRaw from './circuitDisplay.stories.js'
 import * as circuits from '@/../cypress/fixtures/circuits.js'
 
@@ -34,7 +34,7 @@ describe('Circuit display component', () => {
 
       bools.forEach(condenseCBits => {
         const nBits = condenseCBits ? Math.min(1, circuits[name].bits.length) : circuits[name].bits.length
-        const nWires = nBits + circuits[name].qubits.length
+        const nWires = nBits + circuits[name].qubits.length + (circuits[name].number_of_ws || 0)
         const story = Template.bind({})
         story.args = {
           condenseCBits,

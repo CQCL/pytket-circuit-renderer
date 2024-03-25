@@ -1,5 +1,5 @@
 /* global cy, it, describe */
-import { composeStories } from '@storybook/testing-vue3'
+import { composeStories } from '@storybook/vue3'
 import BaseStory, { SubstituteCommand } from './command.stories.js'
 import commands from '@/../cypress/fixtures/commands.json'
 
