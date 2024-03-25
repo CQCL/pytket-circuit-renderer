@@ -38,6 +38,7 @@ Generic.args = {
     {
       order: 0,
       pos: 1,
+      multiPos: [1],
       name: ['q', [0]],
       flags: {
         classical: false,
@@ -51,6 +52,7 @@ Generic.args = {
     {
       order: 1,
       pos: -1,
+      multiPos: [-1],
       name: ['q', [1]],
       flags: {
         classical: false,
@@ -64,6 +66,7 @@ Generic.args = {
     {
       order: 2,
       pos: 0,
+      multiPos: [0],
       name: ['q', [2]],
       flags: {
         classical: false,
@@ -88,6 +91,7 @@ Classical.args = {
     {
       order: 0,
       pos: 1,
+      multiPos: [1],
       name: ['c', [0]],
       flags: {
         classical: true,
@@ -101,6 +105,7 @@ Classical.args = {
     {
       order: 1,
       pos: -1,
+      multiPos: [-1],
       name: ['c', [1]],
       flags: {
         classical: true,
@@ -114,6 +119,7 @@ Classical.args = {
     {
       order: 2,
       pos: 0,
+      multiPos: [0],
       name: ['c', [2]],
       flags: {
         classical: true,
@@ -127,6 +133,7 @@ Classical.args = {
     {
       order: 0,
       pos: [1, -1, 0],
+      multiPos: [[1, -1, 0]],
       name: ['C', [2], 'condensed'],
       bits: [['c', [0]], ['c', [1]], ['c', [2]]],
       flags: {
@@ -141,6 +148,7 @@ Classical.args = {
     {
       order: 0,
       pos: [1, -1, 0, -1],
+      multiPos: [[1, -1, 0, -1]],
       name: ['Global Classical', [2], 'condensed'],
       bits: [['c', [0]], ['c', [1]], ['c', [2]], ['d', [0]]],
       flags: {
@@ -168,6 +176,7 @@ Hybrid.args = {
     {
       order: 0,
       pos: 0,
+      multiPos: [0],
       name: ['q', [0]],
       flags: {
         classical: false,
@@ -181,6 +190,7 @@ Hybrid.args = {
     {
       order: 1,
       pos: -1,
+      multiPos: [-1],
       name: ['q', [1]],
       flags: {
         classical: false,
@@ -194,6 +204,7 @@ Hybrid.args = {
     {
       order: 2,
       pos: -1,
+      multiPos: [-1],
       name: ['c', [0]],
       flags: {
         classical: true,
@@ -207,6 +218,7 @@ Hybrid.args = {
     {
       order: 2,
       pos: 1,
+      multiPos: [1],
       name: ['c', [1]],
       flags: {
         classical: true,
@@ -220,6 +232,7 @@ Hybrid.args = {
     {
       order: 2,
       pos: [1, -1, -1],
+      multiPos: [[1, -1, -1]],
       name: ['C', [3], 'condensed'],
       bits: [['c', [0]], ['c', [1]], ['c', [2]]],
       flags: {
@@ -234,6 +247,7 @@ Hybrid.args = {
     {
       order: 2,
       pos: [1, -1, -1, -1],
+      multiPos: [[1, -1, -1, -1]],
       name: ['Global Classical', ['n'], 'condensed'],
       bits: [['c', [0]], ['c', [1]], ['c', [2]], ['d', [0]]],
       flags: {
@@ -264,6 +278,7 @@ const Template2Q = (args) => ({
       {
         order: 0,
         pos: 0,
+        multiPos: [0],
         name: ['q', [0]],
         flags: {
           classical: false,
@@ -277,6 +292,7 @@ const Template2Q = (args) => ({
       {
         order: 1,
         pos: 1,
+        multiPos: [1],
         name: ['q', [1]],
         flags: {
           classical: false,
@@ -318,6 +334,7 @@ const Template2Q = (args) => ({
           {
             order: 0,
             pos: 0,
+            multiPos: [0],
             name: ['q', [0]],
             flags: {
               classical: false,
@@ -331,6 +348,7 @@ const Template2Q = (args) => ({
           {
             order: 1,
             pos: 1,
+            multiPos: [1],
             name: ['c', [0]],
             flags: {
               classical: true,
@@ -344,6 +362,7 @@ const Template2Q = (args) => ({
           {
             order: 1,
             pos: 1,
+            multiPos: [1],
             name: ['C', ['..1']],
             flags: {
               classical: true,
@@ -357,6 +376,7 @@ const Template2Q = (args) => ({
           {
             order: 1,
             pos: 1,
+            multiPos: [1],
             name: ['c', ['..1']],
             flags: {
               classical: true,
