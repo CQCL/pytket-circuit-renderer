@@ -23,7 +23,8 @@ export default {
   },
   props: {
     circuit: { validator: PendingDataValidator(Object) },
-    navigatorStyling: { type: Object, required: false, default: () => { return {} } }
+    navigatorStyling: { type: Object, required: false, default: () => { return {} } },
+    isInlineCircuit: {type: Boolean, default: false }
   },
   emits: ['updated'],
   inject: {
@@ -198,9 +199,12 @@ export default {
   <teleport-container :names="infoModal.teleport.names" ref="teleportParent"
     :class="{condensed: condensed, 'circuit-preview circuit_variables': nested === 0}"
   >
-    <div v-if="circuit" tabindex="0"
-         :class="{'nested-circuit-container': condensed, 'parent': nested === 0, 'odd_nesting': nested % 2 === 1}"
-    >
+    <div v-if="circuit" tabindex="0" :class="{
+      'nested-circuit-container': condensed,
+      'parent': nested === 0,
+      'odd_nesting': nested % 2 === 1,
+      'inline-circuit': isInlineCircuit
+    }" >
       <!--  Pre-processing for the commands we want to display  -->
       <div style="display:none">
         <circuit-command
@@ -343,6 +347,9 @@ export default {
     overflow: auto;
     background: var(--current-circuit-background);
     box-shadow: 0 0 0 var(--box-border-width) var(--box-col) inset;
+}
+.nested-circuit-container.inline-circuit{
+  overflow: hidden
 }
 .nested-circuit-container.odd_nesting{
     --current-circuit-background: var(--paper);

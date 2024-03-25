@@ -186,7 +186,7 @@ export default {
       </circuit-layer>
       <nested-label-layer :args="renderIndexedArgs"></nested-label-layer>
 
-      <circuit-display :circuit="nestedCircuit"></circuit-display>
+      <circuit-display :circuit="nestedCircuit" :is-inline-circuit="false"></circuit-display>
 
       <nested-label-layer :args="renderIndexedArgs"></nested-label-layer>
       <circuit-layer :nested="true">
