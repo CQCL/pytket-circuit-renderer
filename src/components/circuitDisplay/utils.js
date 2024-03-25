@@ -272,5 +272,5 @@ export {
   extractControlledCommand,
   formatClassicalExp,
   formatPosStr,
-  regToStr,
+  regToStr
 }

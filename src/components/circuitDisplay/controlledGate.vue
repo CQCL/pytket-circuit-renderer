@@ -1,10 +1,9 @@
 <script>
-import { registerEquality, renderIndexedArgs, extractControlledCommand } from './utils'
+import { registerEquality, renderIndexedArgs, extractControlledCommand, regToStr } from './utils'
 
 import wire from './wire'
 import genericGate from './genericGate'
 import { renderOptions } from './provideKeys'
-import { regToStr } from './utils'
 
 export default {
   name: 'controlled-gate',

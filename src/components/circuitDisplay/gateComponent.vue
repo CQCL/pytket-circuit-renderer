@@ -156,33 +156,33 @@ export default {
     },
     posStr () {
       const getMultiPos = (filterFn) => {
-          if (this.arg.flags.condensed) {
-            let filtered = this.arg.multiPos.map(multiPos => {
-              if (Array.isArray(multiPos)) {
-                let mp = multiPos.filter(filterFn)
-                return mp.length > 0 ? mp : -1
-              }
-              return multiPos
-            })
-            const repeats = filtered.reduce(
-                (acc, multiPos) => Array.isArray(multiPos) ? Math.max(acc, multiPos.length) : acc,
-                1
-            )
-            const transposed = Array(repeats)
-            for (let i = 0; i < repeats; i++) {
-              transposed[i] = filtered.map(
-                  multiPos => Array.isArray(multiPos) ? (multiPos.length >= i ? multiPos[i] : multiPos[-1]) : multiPos
-              )
+        if (this.arg.flags.condensed) {
+          const filtered = this.arg.multiPos.map(multiPos => {
+            if (Array.isArray(multiPos)) {
+              const mp = multiPos.filter(filterFn)
+              return mp.length > 0 ? mp : -1
             }
-            return transposed
+            return multiPos
+          })
+          const repeats = filtered.reduce(
+            (acc, multiPos) => Array.isArray(multiPos) ? Math.max(acc, multiPos.length) : acc,
+            1
+          )
+          const transposed = Array(repeats)
+          for (let i = 0; i < repeats; i++) {
+            transposed[i] = filtered.map(
+              multiPos => Array.isArray(multiPos) ? (multiPos.length >= i ? multiPos[i] : multiPos[-1]) : multiPos
+            )
           }
-          // Not condensed so we can filter directly
-          return this.arg.multiPos.filter(filterFn)
+          return transposed
         }
+        // Not condensed so we can filter directly
+        return this.arg.multiPos.filter(filterFn)
+      }
 
       let inputs = []
       let outputs = []
-      if (this.opType === "WASM" && !this.arg.flags.wasm) {
+      if (this.opType === 'WASM' && !this.arg.flags.wasm) {
         // Handle classical wires with wasm boxes specially.
         const inputArgEnd = this.command.op.wasm.width_i_parameter.reduce((acc, i) => i + acc, 0)
         const outputArgEnd = inputArgEnd + this.command.op.wasm.width_o_parameter.reduce((acc, i) => i + acc, 0)
@@ -190,8 +190,9 @@ export default {
         inputs = getMultiPos(pos => pos + this.posAdjust < inputArgEnd)
         outputs = getMultiPos(pos => pos + this.posAdjust >= inputArgEnd && pos + this.posAdjust < outputArgEnd)
       } else {
-        const classical = ('classical' in this.command.op) ? this.command.op.classical :
-            'box' in this.command.op ? this.command.op.box : {}
+        const classical = ('classical' in this.command.op)
+          ? this.command.op.classical
+          : 'box' in this.command.op ? this.command.op.box : {}
 
         let outputArgStart = 'n_i' in classical ? classical.n_i : 0
         let inputArgEnd = 'n_io' in classical ? outputArgStart + classical.n_io : outputArgStart
@@ -202,12 +203,12 @@ export default {
           inputArgEnd = this.command.args.length
           outputArgStart = this.command.args.length
         }
-        inputs = getMultiPos(pos => pos + this.posAdjust >=0 && pos + this.posAdjust < inputArgEnd)
+        inputs = getMultiPos(pos => pos + this.posAdjust >= 0 && pos + this.posAdjust < inputArgEnd)
         outputs = getMultiPos(pos => pos + this.posAdjust >= outputArgStart && pos + this.posAdjust < outputArgEnd)
       }
       return {
-        in: inputs.length > 0 ? inputs.map(pos => this.formatPosStr(pos, this.posAdjust)).join(" | ") : "",
-        out: outputs.length > 0 ? outputs.map(pos => this.formatPosStr(pos, this.posAdjust)).join(" | ") : "",
+        in: inputs.length > 0 ? inputs.map(pos => this.formatPosStr(pos, this.posAdjust)).join(' | ') : '',
+        out: outputs.length > 0 ? outputs.map(pos => this.formatPosStr(pos, this.posAdjust)).join(' | ') : ''
       }
     }
   },

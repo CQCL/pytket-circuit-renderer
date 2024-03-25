@@ -23,5 +23,5 @@ export {
   Deep,
   Phase,
   Wide,
-  WASM,
+  WASM
 }

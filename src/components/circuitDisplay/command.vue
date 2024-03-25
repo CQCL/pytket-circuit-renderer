@@ -87,7 +87,7 @@ export default {
       let adjustedLastArg = lastArg
       if (this.condenseCBits) {
         adjustedFirstArg = Math.min(firstArg, this.classicalThreshold)
-        adjustedLastArg = lastArg >= this.classicalThreshold ? Math.max(lastArg , this.wasmThreshold - 1) : lastArg
+        adjustedLastArg = lastArg >= this.classicalThreshold ? Math.max(lastArg, this.wasmThreshold - 1) : lastArg
       } else {
         for (const regName of this.overlappingCondensedRegisters.names) {
           adjustedFirstArg = Math.min(adjustedFirstArg, this.condensedRegisters.order[regName[0]].first)
@@ -157,10 +157,10 @@ export default {
           const nBits = classicalBits.names[registerName].length
           const name = [registerName, [nBits], 'condensed']
           const [first, last] = [
-            classicalBitsOrder.names[registerName] <= this.commandArgs.first.order
-            && this.commandArgs.first.order < classicalBitsOrder.names[registerName] + nBits,
-            classicalBitsOrder.names[registerName] <= this.commandArgs.last.order
-            && this.commandArgs.last.order < classicalBitsOrder.names[registerName] + nBits
+            classicalBitsOrder.names[registerName] <= this.commandArgs.first.order &&
+            this.commandArgs.first.order < classicalBitsOrder.names[registerName] + nBits,
+            classicalBitsOrder.names[registerName] <= this.commandArgs.last.order &&
+            this.commandArgs.last.order < classicalBitsOrder.names[registerName] + nBits
           ]
           argDetails[name] = {
             name,
@@ -226,17 +226,18 @@ export default {
     getOverlappingCondensedRegisters (firstArg, lastArg) {
       const globalOrder = { first: this.classicalThreshold, last: this.wasmThreshold }
       return {
-        global: (globalOrder.first <= firstArg && firstArg < globalOrder.last) // firstArg overlaps
-            || (globalOrder.first <= lastArg && lastArg < globalOrder.last)    // lastArg overlaps
-            || (firstArg <= globalOrder.first && globalOrder.last <= lastArg)  // condensed reg contained between args
-            ? [GLOBAL_CONDENSED_NAME] : [],
+        global: (globalOrder.first <= firstArg && firstArg < globalOrder.last) || // firstArg overlaps
+            (globalOrder.first <= lastArg && lastArg < globalOrder.last) || // lastArg overlaps
+            (firstArg <= globalOrder.first && globalOrder.last <= lastArg) // condensed reg contained between args
+          ? [GLOBAL_CONDENSED_NAME]
+          : [],
         names: this.indexedArgDetails.condensedArgList.filter(regName => {
           if (regName[0] in this.condensedRegisters.order) {
             const { first, last } = this.condensedRegisters.order[regName[0]]
             return this.condensedRegisters.toggles[regName[0]] && (
-                (first <= firstArg && firstArg <= last)   // firstArg overlaps
-                || (first <= lastArg && lastArg <= last)  // lastArg overlaps
-                || (firstArg <= first && last <= lastArg) // condensed reg contained between args
+              (first <= firstArg && firstArg <= last) || // firstArg overlaps
+                (first <= lastArg && lastArg <= last) || // lastArg overlaps
+                (firstArg <= first && last <= lastArg) // condensed reg contained between args
             )
           }
           return false

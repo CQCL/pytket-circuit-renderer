@@ -12,6 +12,15 @@ This is to allow user-facing information to be more easily extracted from this c
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
+### Changed:
+- Improved WASM gateInfo.
+
+### Added:
+- explicit WASM wires.
+- GateInfo for Dummybox and TermSequenceBox
+
+### Fixed:
+- Expbox gateInfo now displays phase info
 
 ## [0.7.4] 2024-04-19
 ### Changed:
