@@ -61,7 +61,7 @@ export default {
         <div class="modal-content" style="overflow:auto"><slot name="content"></slot></div>
         <slot name="buttons">
           <div style="border: none; display: flex; padding: 1em">
-            <button class="row-item button" role="button" @click="closeModal">Close</button>
+            <button class="row-item button" role="button" data-cy-tooltip="close" @click="closeModal">Close</button>
           </div>
         </slot>
       </div>

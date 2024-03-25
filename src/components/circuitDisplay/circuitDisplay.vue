@@ -274,7 +274,12 @@ export default {
     </div>
 
     <!-- Gates in circuit will send extra info modals here. -->
-    <teleport-to :name="infoModal.teleport.id" ref="infoModals" style="z-index:10" data-cy="teleport-to"></teleport-to>
+    <teleport-to
+        :name="infoModal.teleport.id"
+        ref="infoModals" style="z-index:10"
+        data-cy="teleport-to"
+        :data-cy-depth="nested"
+    ></teleport-to>
   </teleport-container>
 </template>
 
