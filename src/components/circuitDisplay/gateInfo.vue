@@ -384,7 +384,7 @@ export default {
               <div>
                 <chart-def v-for="(entry, i) in formatMultiplexedOpMap(displayOp.box.op_map)" :key="i" title="" hover>
                   <template #title>
-                    <chart-matrix :matrix="entry[0]" :display-title="false" entry-type="boolStr">
+                    <chart-matrix :matrix="entry[0]" :display-title="false" :depth="1" entry-type="boolStr">
                     </chart-matrix>
                   </template>
                   <chart-list :chart="entry[1]" :display-title="false"></chart-list>
