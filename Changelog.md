@@ -12,6 +12,8 @@ This is to allow user-facing information to be more easily extracted from this c
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
+
+## [0.8.0] 2024-04-02
 ### Changed:
 - Improved WASM gateInfo.
 
@@ -21,6 +23,8 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ### Fixed:
 - Expbox gateInfo now displays phase info
+- Firefox scrollbars in nested circuits
+- Multiplexed gateInfo display
 
 ## [0.7.4] 2024-04-19
 ### Changed:
