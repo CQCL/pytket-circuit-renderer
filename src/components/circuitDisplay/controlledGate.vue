@@ -80,7 +80,7 @@ export default {
         if (flags[arg.name].inControlledOp) { // reassign controlled op bound flags
           const nArgs = arg.flags.condensed ? arg.indexedBits.filter(bit => bit.name in flags && flags[bit.name].controlled).length : 1
           flags[arg.name].flags.last = nControlled === 0 && flags[arg.name].controlled
-          flags[arg.name].flags.first = nControlled === nControlledCommandArgs - 1 && flags[arg.name].controlled
+          flags[arg.name].flags.first = nControlled === nControlledCommandArgs - nArgs && flags[arg.name].controlled
           flags[arg.name].flags.single = nControlledCommandArgs === nArgs && flags[arg.name].controlled
           if (flags[arg.name].controlled) {
             nControlled += nArgs
