@@ -15,7 +15,7 @@ export default {
         this.$emit('toggle', name)
       }
     },
-    regToStr,
+    regToStr
   }
 }
 </script>

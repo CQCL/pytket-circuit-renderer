@@ -57,11 +57,11 @@ export default {
       GraphColouring: {
         2: 'Exhaustive',
         1: 'LargestFirst',
-        0: 'Lazy',
+        0: 'Lazy'
       },
       PauliPartitionStrat: {
         1: 'CommutingSets',
-        0: 'NonConflictingSets',
+        0: 'NonConflictingSets'
       }
     }
   },
@@ -124,23 +124,24 @@ export default {
         const outArgs = []
         const nIn = this.displayOp.wasm.width_i_parameter.reduce(
           (acc, i) => {
-            inArgs.push([this.controlledCommand.args.slice(acc, acc + i).map(reg => [regToStr(reg)]).join(", ")])
+            inArgs.push([this.controlledCommand.args.slice(acc, acc + i).map(reg => [regToStr(reg)]).join(', ')])
             return acc + i
           },
           0
         )
         const nOut = this.displayOp.wasm.width_o_parameter.reduce(
           (acc, i) => {
-            outArgs.push([this.controlledCommand.args.slice(acc, acc + i).map(reg => [regToStr(reg)]).join(", ")])
+            outArgs.push([this.controlledCommand.args.slice(acc, acc + i).map(reg => [regToStr(reg)]).join(', ')])
             return acc + i
           },
           nIn
         )
         return {
-          in: nIn > 0 ? inArgs : [[" "]],
-          out: nOut - nIn > 0 ? outArgs : [[" "]],
+          in: nIn > 0 ? inArgs : [[' ']],
+          out: nOut - nIn > 0 ? outArgs : [[' ']]
         }
       }
+      return false
     }
   },
   methods: {
@@ -463,7 +464,7 @@ export default {
               </chart-def>
 
               <chart-def title="Gate Counts"></chart-def>
-              <chart-def v-for="([optype, val], i) in displayOp.box.resource_data.op_type_count" :key="i" hover>
+              <chart-def v-for="([optype, val], i) in displayOp.box.resource_data.op_type_count" :key="i + ' - ' + val.toString()" hover>
                 <template #title>
                   <chart-list :chart="[optype]" :display-title="false" />
                 </template>
@@ -471,7 +472,7 @@ export default {
               </chart-def>
 
               <chart-def title="Gate Depths"></chart-def>
-              <chart-def v-for="([optype, val], i) in displayOp.box.resource_data.op_type_depth" :key="i" hover>
+              <chart-def v-for="([optype, val], i) in displayOp.box.resource_data.op_type_depth" :key="i + ' - ' + val.toString()" hover>
                 <template #title>
                   <chart-list :chart="[optype]" :display-title="false" />
                 </template>

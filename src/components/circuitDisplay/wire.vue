@@ -6,7 +6,7 @@ export default {
   props: {
     classical: { type: Boolean, default: true },
     condensed: { type: Boolean, default: false },
-    wasm: { type: Boolean, default: false },
+    wasm: { type: Boolean, default: false }
   }
 }
 </script>
