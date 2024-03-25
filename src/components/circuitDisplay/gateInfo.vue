@@ -187,7 +187,13 @@ export default {
 
 <template>
   <div v-if="hasContent || hasNestedContent">
-    <div @click="visible = true" class="tool-tip-container" :data-cy="'open-tool-tip-' + this.opType"></div>
+    <div
+        @click="visible = true"
+        class="tool-tip-container"
+        role="button"
+        :data-cy="'open-tool-tip-' + this.opType"
+        data-cy-tooltip="open"
+    ></div>
 
     <!-- content to be rendered in the info modal -->
     <div style="display: none">

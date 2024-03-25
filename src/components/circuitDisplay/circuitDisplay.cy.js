@@ -19,6 +19,25 @@ describe('Circuit display component', () => {
         waitForRender()
       })
 
+      // Only try this for circuits with gate infos
+      if (!['Basic', 'Wide', 'Deep'].includes(name)) {
+        it('can open and close gateInfo modals', () => {
+          cy.mount({ name, ...components[name]() })
+          waitForRender()
+
+          cy.get('[data-cy-tooltip=open]').each($gateInfoButton => {
+            cy.wrap($gateInfoButton).scrollIntoView().click()
+            // identify the open modal
+            cy.get('[data-cy=teleport-to][data-cy-depth=0]')
+              .find('[data-cy-tooltip=close]')
+            // Nested gate-infos might have multiple defined within...
+              .last()
+              .scrollIntoView().should('be.visible')
+              .click()
+          })
+        })
+      }
+
       it('renders the right number of commands', {
         defaultCommandTimeout: 30000 // Give more time to load all gates in the circuit.
       }, () => {
