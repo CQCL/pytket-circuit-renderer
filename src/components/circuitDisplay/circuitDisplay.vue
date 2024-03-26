@@ -24,7 +24,7 @@ export default {
   props: {
     circuit: { validator: PendingDataValidator(Object) },
     navigatorStyling: { type: Object, required: false, default: () => { return {} } },
-    isInlineCircuit: {type: Boolean, default: false }
+    isInlineCircuit: { type: Boolean, default: false }
   },
   emits: ['updated'],
   inject: {
