@@ -81,6 +81,12 @@ export default {
       }
       return false
     },
+    matrixTitle () {
+      // Special naming schemes:
+      if (this.displayOp.type === 'ExpBox') return 'Exponentiated Matrix'
+      if (this.displayOp.type === 'ProjectorAssertionBox') return 'Projector Matrix'
+      return 'Matrix'
+    },
     displayOp () {
       return this.hasNestedContent
         ? (
@@ -200,7 +206,7 @@ export default {
               </div>
             </chart-def>
 
-            <chart-def v-if="matrix" title="Matrix" hover vertical>
+            <chart-def v-if="matrix" :title="matrixTitle" hover vertical>
               <chart-matrix :matrix="matrix" entry-type="complex" :display-title="false"></chart-matrix>
             </chart-def>
 
