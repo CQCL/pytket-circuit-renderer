@@ -2,7 +2,7 @@ const CONTROLLED_OPS = [
   'CX', 'CY', 'CZ', 'CH', 'CS', 'CSdg',
   'CRx', 'CRy', 'CRz', 'CU1', 'CU3',
   'CV', 'CVdg', 'CSX', 'CSXdg', 'CSWAP',
-  'CnRy', 'CnX', 'CnY', 'CnZ', 'CCX',
+  'CnRx', 'CnRy', 'CnRz', 'CnX', 'CnY', 'CnZ', 'CCX',
   'Control', 'QControlBox',
   'Condition', 'Conditional',
   'MultiplexorBox', 'MultiplexedRotationBox',
