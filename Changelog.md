@@ -13,6 +13,10 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## Unreleased
 
+## [0.8.1] 2024-06-18
+### Added:
+- CnRx, CnRy optype controlled visualisations.
+
 ## [0.8.0] 2024-04-02
 ### Changed:
 - Improved WASM gateInfo.
