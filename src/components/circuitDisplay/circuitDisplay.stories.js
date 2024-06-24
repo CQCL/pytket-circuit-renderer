@@ -18,7 +18,13 @@ export default {
     condensed: true,
     nested: 0,
     cropParams: true,
-    circuit: { qubits: [['Q', [0]]], commands: [], bits: [], phase: 0, implicit_permutation: ['Q', [0]] } // Empty circuit with 1 qubit.
+    circuit: {
+      qubits: [['Q', [0]]],
+      commands: [],
+      bits: [],
+      phase: 0,
+      implicit_permutation: [[['Q', [0]], ['Q', [0]]]],
+    } // Empty circuit with 1 qubit.
   }
 }
 

@@ -115,11 +115,12 @@ export default {
 </script>
 
 <template>
-    <div class="download-image-container" :class="{rendering: rendering}">
+    <div :class="{rendering: rendering}">
       <p>Note: when exporting as an SVG, the image is intended for browser display only, and is not displayed by image editors.</p>
       <p>To get a high quality image for inclusion in slides, you can use a PNG format at higher resolution.</p>
-      <div class="divider"></div>
-      <form>
+    </div>
+    <div :class="{rendering: rendering}">
+      <form :style="{paddingTop: '0.5rem'}">
         <div class="flex" v-for="(option, name) in options" :key="name">
           <span class="tab-option-label">[[# option.title #]]</span>
           <div class="flex tab-options">
@@ -134,12 +135,14 @@ export default {
         <div class="extra-info">
           Image size: [[# resolution.width #]]*[[# resolution.height #]]
         </div>
-        <div class="row">
+        <div class="row" :style="{borderBottom: 0}">
           <button class="row-item button" :class="{disabled: typeof elementToRender === 'undefined'}" @click.prevent.stop="renderImage">
             Generate
           </button>
         </div>
       </form>
+    </div>
+    <div :class="{rendering: rendering}">
       <div>
         <h4>Image</h4>
         <div class="image-preview" v-if="!!imageUrl">

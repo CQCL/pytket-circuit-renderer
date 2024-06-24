@@ -55,6 +55,7 @@ export default {
 .mathjax-content > mjx-container[jax="CHTML"][display="true"] {
   text-align: inherit;
   margin: 0;
+  overflow: auto;
 }
 
 </style>
