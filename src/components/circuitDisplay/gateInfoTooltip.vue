@@ -30,11 +30,16 @@ export default {
   <div v-if="shouldDisplay">
     <div
         @click="visible = true"
-        class="tool-tip-container"
         role="button"
         :data-cy="'open-tool-tip-' + refString"
         data-cy-tooltip="open"
-    ></div>
+    >
+      <slot name="trigger">
+        <div
+            class="tool-tip-container"
+        ></div>
+      </slot>
+    </div>
 
     <!-- content to be rendered in the info modal -->
     <div style="display: none">

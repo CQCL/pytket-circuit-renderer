@@ -208,7 +208,7 @@ export default {
       'parent': nested === 0,
       'odd_nesting': nested % 2 === 1,
       'inline-circuit': isInlineCircuit
-    }" >
+    }" style="position: relative">
       <!--  Pre-processing for the commands we want to display  -->
       <div style="display:none">
         <circuit-command
@@ -243,8 +243,15 @@ export default {
           v-if="nested === 0 || isInlineCircuit"
           ref-string="base-circuit"
           :should-display="true"
-          :style="{paddingTop: '20px', position:'absolute', height: '40px', width: '100%'}"
+          :style="{position: 'absolute', left: nested === 0 ? 0: '0.5em', top: '0.5em', zIndex: 1}"
       >
+        <template #trigger>
+          <div class="circuit-info-button">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info" viewBox="0 0 16 16">
+              <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0"/>
+            </svg>
+          </div>
+        </template>
         <template #title>Circuit Information</template>
         <template #content>
           <gate-info-circuit :circuit="circuit"></gate-info-circuit>
@@ -331,16 +338,21 @@ export default {
   position: absolute;
   padding: 0.25em 0.5em;
   z-index: 2;
-  font-size: x-small;
+  font-size: 0.7em;
   color: var(--box-index-col);
 }
 .circuit-name-tag.circuit-tag-above{
-    top: -1.5em;
+  top: -1.5em;
 }
 .circuit-name-tag.circuit-tag-below{
   top: 1px;
   background: var(--current-circuit-background);
-  border-left: 1px solid var(--box-col);
+}
+.nested-circuit-container.inline-circuit > .circuit-inner-scroll > div > .circuit-name-tag {
+  left: 3.5em;
+}
+.nested-circuit-container:not(.inline-circuit) > .circuit-inner-scroll > div > .circuit-name-tag {
+  left: 1px;
 }
 .circuit-name-tag {
   display: none;
@@ -394,6 +406,11 @@ export default {
     margin: auto 0;
 }
 
+.inline-circuit > .circuit-inner-scroll,
+.parent > .circuit-inner-scroll{
+  padding-left: 2.5em;
+}
+
 .circuit-container:not(.nested) > .circuit-layer:nth-child(2),
 .circuit-container:not(.nested) > .circuit-layer:nth-last-child(2),
 .circuit-container.nested > .circuit-layer:nth-child(2),
@@ -402,6 +419,22 @@ export default {
 .gate_container.nested > .circuit-layer:nth-last-child(2),
 .gate_container.nested > .circuit-layer:last-child{
     min-width: 10px;
+}
+
+.circuit-info-button{
+  padding: 0.2em;
+  border-radius: 0.5em;
+  background: var(--paper-dark);
+  color: var(--box-text-col);
+  display: flex;
+  justify-content: stretch;
+}
+.circuit-info-button > svg{
+  height: 1.5em;
+  width: 1.5em;
+}
+.circuit-info-button:hover{
+  cursor: pointer
 }
 </style>
 
