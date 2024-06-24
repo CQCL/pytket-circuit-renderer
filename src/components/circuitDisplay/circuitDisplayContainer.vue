@@ -364,14 +364,14 @@ export default {
   background: var(--background);
   border-radius: 0.4em;
   box-shadow: 0px 5px 10px 0px rgba($grey900, 0.1);
-  border: 1px solid var(--paper);
+  border: 1px solid var(--divider);
   overflow: auto;
   z-index: 10;
 }
 .display-options-menu-entry {
   display: flex;
   padding: 0.4em;
-  border-bottom: 1px solid var(--paper);
+  border-bottom: 1px solid var(--divider);
 }
 :last-child > .display-options-menu-entry {
   border-bottom: none;

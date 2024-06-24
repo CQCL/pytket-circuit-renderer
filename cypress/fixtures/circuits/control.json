@@ -49,7 +49,7 @@
      {"args": [["c", [0]], ["c", [1]], ["c", [2]]], "op": {"conditional": {"op": {"classical": {"values": [true]}, "type": "SetBits"}, "value": 1, "width": 2}, "type": "Conditional"}},
      {"args": [["c", [0]], ["c", [1]], ["c", [2]]], "op": {"conditional": {"op": {"classical": {"values": [true, false]}, "type": "SetBits"}, "value": 1, "width": 1}, "type": "Conditional"}}
    ],
-   "implicit_permutation": [[["q", [0]], ["q", [0]]], [["q", [1]], ["q", [1]]], [["q", [2]], ["q", [2]]], [["q", [3]], ["q", [3]]]],
-   "phase": "0.0",
+   "implicit_permutation": [[["q", [0]], ["q", [1]]], [["q", [1]], ["q", [0]]], [["q", [2]], ["q", [2]]], [["q", [3]], ["q", [3]]]],
+   "phase": "1.0",
    "qubits": [["q", [0]], ["q", [1]], ["q", [2]], ["q", [3]]]
  }

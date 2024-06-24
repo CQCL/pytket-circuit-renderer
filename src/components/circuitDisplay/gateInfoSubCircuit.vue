@@ -2,10 +2,11 @@
 import { extractSubCircuit, extractControlledCommand } from './utils'
 import { renderOptions } from './provideKeys'
 import { chartDef } from '@/components/charts/init'
+import GateInfoCircuit from "@/components/circuitDisplay/gateInfoCircuit.vue";
 
 export default {
   name: 'gate-info-sub-circuit',
-  components: { chartDef },
+  components: {GateInfoCircuit, chartDef },
   props: {
     op: { type: Object, required: true },
     circuitType: { default: undefined },
@@ -74,10 +75,12 @@ export default {
 
 <template>
   <div v-if="subCircuit" style="overflow: auto;width: 100%">
-    <chart-def :title="subCircuit.type + ' Circuit'"></chart-def>
+    <chart-def :title="subCircuit.type + ' Circuit'" heading></chart-def>
     <div class="gate_container nested">
       <circuit-display @updated="$emit('updated')" :circuit="subCircuit.circuit"></circuit-display>
     </div>
+
+    <gate-info-circuit :circuit="subCircuit.circuit"></gate-info-circuit>
   </div>
 </template>
 

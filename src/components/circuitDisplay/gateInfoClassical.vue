@@ -25,13 +25,20 @@ export default {
           ...('n_io' in classical && { 'Input/Output bits': classical.n_io }),
           ...('n_o' in classical && { 'Output bits': classical.n_o }),
           ...('upper' in classical && { Upper: classical.upper }),
-          ...('lower' in classical && { Lower: classical.lower })
+          ...('lower' in classical && { Lower: classical.lower }),
+          ...('n' in classical && { Multi: classical.n }),
+          ...('op' in classical && { Operation: classical.op.classical.name }),
         }
       }
       return {}
     },
     hasClassicalTable () {
       return Object.values(this.classicalTable).reduce((prev, next) => prev || (typeof next !== 'undefined'), false)
+    },
+    hasContent () {
+      return this.opType === 'ClassicalExpBox'
+          || this.hasClassicalTable
+          || ('classical' in this.op && 'values' in this.op.classical)
     }
   },
   methods: {
@@ -41,7 +48,7 @@ export default {
 </script>
 
 <template>
-<div v-if="op">
+  <div v-if="hasContent">
     <chart-def v-if="opType === 'ClassicalExpBox'" title="Expression" vertical hover>
       [[# formatClassicalExp(op.box.exp) #]]
     </chart-def>
@@ -51,17 +58,9 @@ export default {
         [[# classicalTable[key] #]]
       </chart-def>
     </div>
-    <div v-if="'classical' in op">
-      <chart-def v-if="'values' in op.classical" title="Values" hover>
-        <chart-list :chart="op.classical.values"></chart-list>
-      </chart-def>
-      <chart-def v-if="'n' in op.classical" title="Multi" hover>
-        [[# op.classical.n #]]
-      </chart-def>
-      <chart-def v-if="'op' in op.classical" title="Operation" hover>
-        [[# op.classical.op.classical.name #]]
-      </chart-def>
-    </div>
+    <chart-def v-if="'classical' in op && 'values' in op.classical" title="Values" hover>
+      <chart-list :chart="op.classical.values"></chart-list>
+    </chart-def>
   </div>
 </template>
 

@@ -8,12 +8,16 @@ import splitCircuitLayers from './splitCircuitLayers'
 import circuitCommand from './command'
 import gateInfo from './gateInfo'
 import { renderOptions, teleportConfig } from './provideKeys'
+import GateInfoTooltip from "@/components/circuitDisplay/gateInfoTooltip.vue";
+import GateInfoCircuit from "@/components/circuitDisplay/gateInfoCircuit.vue";
 
 let nCircuits = 0 // circuits needs unique ids.
 
 export default {
   name: 'circuit-display',
   components: {
+    GateInfoCircuit,
+    GateInfoTooltip,
     teleportContainer,
     teleportTo,
     circuitLayer,
@@ -235,6 +239,18 @@ export default {
         </circuit-command>
       </div>
 
+      <gate-info-tooltip
+          v-if="nested === 0 || isInlineCircuit"
+          ref-string="base-circuit"
+          :should-display="true"
+          :style="{paddingTop: '20px', position:'absolute', height: '40px', width: '100%'}"
+      >
+        <template #title>Circuit Information</template>
+        <template #content>
+          <gate-info-circuit :circuit="circuit"></gate-info-circuit>
+        </template>
+      </gate-info-tooltip>
+
       <div ref="navigatorContent" :class="{'circuit-inner-scroll': condensed}" :style="navigatorStyling">
         <div ref="renderedCircuit">
           <div v-if="circuit && circuit.name" class="circuit-name-tag circuit-tag-below">[[# circuit.name #]]</div>
@@ -265,6 +281,7 @@ export default {
                 :qubits="true"
                 :style="{'text-align': 'left'}"
                 :argList="activeArgs"
+                :permutation="circuit.implicit_permutation"
                 :condensed-registers="recursive ? {} : condensedRegisters.toggles"
                 @toggle="updateCondensedRegisterToggles">
             </circuit-layer>

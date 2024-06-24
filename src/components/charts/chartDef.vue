@@ -5,13 +5,14 @@ export default {
   props: {
     title: { type: String, default: '' },
     vertical: Boolean,
-    hover: Boolean
+    hover: Boolean,
+    heading: Boolean,
   }
 }
 </script>
 
 <template>
-  <div :class="['chart-def-container', {'vertical': vertical, 'hover': hover}]">
+  <div :class="['chart-def-container', {'vertical': vertical, 'hover': hover, 'heading': heading}]">
     <div class="row-item row-item-l text-2">
       [[# title #]]
       <slot name="title"></slot>
@@ -30,6 +31,7 @@ export default {
     justify-content: space-between;
     padding: 0.5em;
     flex-direction: row;
+    font-size: 0.9rem;
 
     > .row-item-l {
       text-align: left;
@@ -55,6 +57,12 @@ export default {
     }
     &.hover:hover {
       background: var(--paper);
+    }
+    &.heading {
+      font-size: 1rem;
+      &.vertical > .row-item-r {
+        font-size: 0.9rem;
+      }
     }
   }
 </style>
