@@ -22,6 +22,10 @@ export default {
 
 <template>
   <div v-if="circuit">
+    <chart-def v-if="circuit.name" title="Name" hover>
+      [[# circuit.name #]]
+    </chart-def>
+
     <chart-def v-if="circuit.phase" title="Global Phase" hover>
       <mathjax-content :formula="'\`' + circuit.phase + '\`'"></mathjax-content>
     </chart-def>

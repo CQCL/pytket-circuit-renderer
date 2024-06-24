@@ -489,14 +489,12 @@ export default {
         <gate-info-classical :op="displayOp"></gate-info-classical>
       </div>
 
-      <div v-if="displayOp.type === 'ConjugationBox'" v-for="key in ['Compute', 'Action', 'Uncompute']">
-        <gate-info-sub-circuit :key="key"
-            @updated="onCircuitDisplayUpdate"
-            :op="displayOp"
-            :args="command.args"
-            :circuit-type="key"
-        ></gate-info-sub-circuit>
-      </div>
+      <gate-info-sub-circuit v-if="displayOp.type === 'ConjugationBox'" v-for="key in ['Compute', 'Action', 'Uncompute']" :key="key"
+          @updated="onCircuitDisplayUpdate"
+          :op="displayOp"
+          :args="command.args"
+          :circuit-type="key"
+      ></gate-info-sub-circuit>
 
       <gate-info-sub-circuit @updated="onCircuitDisplayUpdate" :op="displayOp"></gate-info-sub-circuit>
     </template>
