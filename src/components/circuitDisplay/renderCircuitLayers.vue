@@ -2,7 +2,7 @@
 import { h } from 'vue'
 import CircuitLayer from './circuitLayer'
 import GenericGate from './genericGate'
-import GateInfo from '@/components/gateInfo/init'
+import { gateInfo } from '@/components/gateInfo/init'
 import { renderOptions } from './provideKeys'
 import { SPLIT_RENDERING } from './consts'
 
@@ -11,7 +11,7 @@ export default {
   components: {
     CircuitLayer,
     GenericGate,
-    GateInfo
+    gateInfo
   },
   props: {
     registerOrder: { type: Array, required: true },

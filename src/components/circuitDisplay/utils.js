@@ -100,7 +100,9 @@ const renderIndexedArgs = function () {
 // Deal with nested circuits.
 const extractSubCircuit = function (operation) {
   if (['Custom', 'CustomGate', 'Composite', 'CompositeGate'].includes(operation.type)) {
-    return operation.box.gate.definition
+    const circuit =  operation.box.gate.definition
+    if (!circuit.name) circuit.name = operation.box.gate.name
+    return circuit
   }
   if (operation.type === 'CircBox') {
     return operation.box.circuit
@@ -260,7 +262,7 @@ const formatPosStr = function (argPos, posAdjust) {
   return argPos + posAdjust
 }
 
-function regToStr (reg) {
+const regToStr = function (reg) {
   return `${reg[0]}[${reg[1].join(',')}]`
 }
 

@@ -1,23 +1,15 @@
 <script>
-import { chartList, chartMatrix, chartDef, chartMapping } from '@/components/charts/init'
-import mathjaxContent from '@/components/mathjaxContent/mathjaxContent.vue'
-import {NESTED_CIRCUIT_OPS, POSSIBLE_TOOLTIP_OPS} from '../circuitDisplay/consts'
-import gateInfoSubCircuit from './gateInfoSubCircuit.vue'
-import gateInfoBasic from "@/components/gateInfo/gateInfoBasic.vue";
+import { NESTED_CIRCUIT_OPS, POSSIBLE_TOOLTIP_OPS } from '@/components/circuitDisplay/consts'
 import { renderOptions } from '@/components/circuitDisplay/provideKeys'
-import gateInfoTooltip from "@/components/gateInfo/gateInfoTooltip.vue";
-import {infoComputedBase} from "@/components/gateInfo/utils";
-import {extractControlledCommand} from "@/components/circuitDisplay/utils";
+import gateInfoSubCircuit from './gateInfoSubCircuit'
+import gateInfoBasic from "./gateInfoBasic";
+import gateInfoTooltip from "./gateInfoTooltip";
+import { infoComputedBase } from "./utils";
 
 export default {
   name: 'gate-info',
   components: {
     gateInfoTooltip,
-    chartMapping,
-    chartList,
-    chartMatrix,
-    chartDef,
-    mathjaxContent,
     gateInfoSubCircuit,
     gateInfoBasic,
   },
@@ -44,18 +36,7 @@ export default {
     }
   },
   computed: {
-    opType () {
-      return this.command.op.type
-    },
-    displayOp () {
-      return POSSIBLE_TOOLTIP_OPS.includes(this.controlledCommand.op.type)
-          ? this.controlledCommand.op
-          : this.command.op
-    },
-    controlledCommand () {
-      return extractControlledCommand(this.command, {}).command
-    },
-    // ...infoComputedBase,
+    ...infoComputedBase,
     hasContent () {
       return this.flags.hasBaseContent
           || Object.values(this.flags.hasSubCircuit).reduce((acc, next) => acc || next)
@@ -67,8 +48,8 @@ export default {
       // Skip gates for gates that certainly don't have extra info to display:
       // - part of a recursively displayed circuit
       // - simple gate with no params
-      return !(this.recursive && this.hasSubCircuit)
-          || (POSSIBLE_TOOLTIP_OPS.includes(this.displayOp.type))
+      if (this.recursive && this.hasSubCircuit) return false
+      return POSSIBLE_TOOLTIP_OPS.includes(this.displayOp.type)
     }
   },
   methods: {
