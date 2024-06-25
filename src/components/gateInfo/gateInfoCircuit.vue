@@ -1,6 +1,6 @@
 <script>
-import {chartList, chartDef, chartMapping} from '@/components/charts/init'
-import {regToStr} from './utils'
+import { chartList, chartDef, chartMapping } from '@/components/charts/init'
+import { regToStr } from '@/components/circuitDisplay/utils'
 import MathjaxContent from "@/components/mathjaxContent/mathjaxContent";
 
 export default {
@@ -33,10 +33,16 @@ export default {
     <chart-def title="Qubits" hover>
       [[# circuit.qubits.length #]]
     </chart-def>
-    <chart-def v-if="circuit.created_qubits" title="Created qubits" hover>
+    <chart-def
+        v-if="circuit.created_qubits && circuit.created_qubits.length > 0"
+        title="Created qubits" hover
+    >
       <chart-list :chart="circuit.created_qubits.map(regToStr)" :display-title="false"></chart-list>
     </chart-def>
-    <chart-def v-if="circuit.discarded_qubits" title="Discarded qubits" hover>
+    <chart-def
+        v-if="circuit.discarded_qubits && circuit.discarded_qubits.length > 0"
+        title="Discarded qubits" hover
+    >
       <chart-list :chart="circuit.discarded_qubits.map(regToStr)" :display-title="false"></chart-list>
     </chart-def>
 
@@ -47,7 +53,10 @@ export default {
       [[# circuit.number_of_ws #]]
     </chart-def>
 
-    <chart-def v-if="circuit.implicit_permutation" title="Implicit Permutation" vertical hover>
+    <chart-def vertical hover
+        v-if="circuit.implicit_permutation && circuit.implicit_permutation.length > 0"
+        title="Implicit Permutation"
+    >
       <chart-mapping coerce-from="register" coerce-to="register"
                    :mapping="circuit.implicit_permutation"
                    :vertical="true"
