@@ -1,9 +1,9 @@
 <script>
 import { chartList, chartDef } from '@/components/charts/init'
-import { formatClassicalExp } from './utils'
+import { formatClassicalExp } from '@/components/circuitDisplay/utils'
 
 export default {
-  name: 'gate-info-classical',
+  name: 'classical-box-info',
   components: {
     chartList,
     chartDef
@@ -35,11 +35,6 @@ export default {
     hasClassicalTable () {
       return Object.values(this.classicalTable).reduce((prev, next) => prev || (typeof next !== 'undefined'), false)
     },
-    hasContent () {
-      return this.opType === 'ClassicalExpBox'
-          || this.hasClassicalTable
-          || ('classical' in this.op && 'values' in this.op.classical)
-    }
   },
   methods: {
     formatClassicalExp
@@ -48,20 +43,19 @@ export default {
 </script>
 
 <template>
-  <div v-if="hasContent">
-    <chart-def v-if="opType === 'ClassicalExpBox'" title="Expression" vertical hover>
-      [[# formatClassicalExp(op.box.exp) #]]
-    </chart-def>
+  <chart-def v-if="opType === 'ClassicalExpBox'" title="Expression" vertical hover>
+    [[# formatClassicalExp(op.box.exp) #]]
+  </chart-def>
 
-    <div v-if="hasClassicalTable">
-      <chart-def v-for="key in Object.keys(classicalTable)" :key="key" :title="key" hover>
-        [[# classicalTable[key] #]]
-      </chart-def>
-    </div>
-    <chart-def v-if="'classical' in op && 'values' in op.classical" title="Values" hover>
-      <chart-list :chart="op.classical.values"></chart-list>
+  <div v-if="hasClassicalTable">
+    <chart-def v-for="key in Object.keys(classicalTable)" :key="key" :title="key" hover>
+      [[# classicalTable[key] #]]
     </chart-def>
   </div>
+
+  <chart-def v-if="'classical' in op && 'values' in op.classical" title="Values" hover>
+    <chart-list :chart="op.classical.values"></chart-list>
+  </chart-def>
 </template>
 
 <style>
