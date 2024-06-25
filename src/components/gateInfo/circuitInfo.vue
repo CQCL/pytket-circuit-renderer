@@ -1,26 +1,17 @@
 <script>
-import { chartList, chartMatrix, chartDef, chartMapping } from '@/components/charts/init'
-import mathjaxContent from '@/components/mathjaxContent/mathjaxContent.vue'
-import {POSSIBLE_TOOLTIP_OPS} from '../circuitDisplay/consts'
-import gateInfoSubCircuit from './gateInfoSubCircuit.vue'
-import gateInfoBasic from "@/components/gateInfo/gateInfoBasic.vue";
+import { POSSIBLE_TOOLTIP_OPS } from '@/components/circuitDisplay/consts'
+import { extractControlledCommand } from '@/components/circuitDisplay/utils'
 import { renderOptions } from '@/components/circuitDisplay/provideKeys'
-import gateInfoTooltip from "@/components/gateInfo/gateInfoTooltip.vue";
-import {gateInfoCircuit} from "@/components/gateInfo/init";
+import gateInfoBasic from './gateInfoBasic'
+import gateInfoTooltip from './gateInfoTooltip'
+import gateInfoCircuit from './gateInfoCircuit'
 import {infoComputedBase} from "@/components/gateInfo/utils";
-import {extractControlledCommand} from "@/components/circuitDisplay/utils";
 
 export default {
   name: 'circuit-info',
   components: {
     gateInfoCircuit,
     gateInfoTooltip,
-    chartMapping,
-    chartList,
-    chartMatrix,
-    chartDef,
-    mathjaxContent,
-    gateInfoSubCircuit,
     gateInfoBasic,
   },
   props: {
@@ -44,18 +35,7 @@ export default {
     maybeHasContent () {
       return POSSIBLE_TOOLTIP_OPS.includes(this.displayOp.type)
     },
-    opType () {
-      return this.command.op.type
-    },
-    displayOp () {
-      return POSSIBLE_TOOLTIP_OPS.includes(this.controlledCommand.op.type)
-          ? this.controlledCommand.op
-          : this.command.op
-    },
-    controlledCommand () {
-      return extractControlledCommand(this.command, {}).command
-    },
-    // ...infoComputedBase
+    ...infoComputedBase
   },
 }
 </script>

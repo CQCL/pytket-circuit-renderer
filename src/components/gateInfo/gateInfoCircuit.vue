@@ -1,7 +1,7 @@
 <script>
 import { chartList, chartDef, chartMapping } from '@/components/charts/init'
 import { regToStr } from '@/components/circuitDisplay/utils'
-import MathjaxContent from "@/components/mathjaxContent/mathjaxContent";
+import MathjaxContent from '@/components/mathjaxContent/mathjaxContent'
 
 export default {
   name: 'gate-info-circuit',
