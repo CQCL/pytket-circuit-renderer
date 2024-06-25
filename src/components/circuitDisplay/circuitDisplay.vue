@@ -6,27 +6,25 @@ import { PendingDataValidator } from '@/components/propValidators'
 import circuitLayer from './circuitLayer'
 import splitCircuitLayers from './splitCircuitLayers'
 import circuitCommand from './command'
-import gateInfo from './gateInfo'
+import { gateInfo, circuitInfo } from '../gateInfo/init'
 import { renderOptions, teleportConfig } from './provideKeys'
-import GateInfoTooltip from "@/components/circuitDisplay/gateInfoTooltip.vue";
-import GateInfoCircuit from "@/components/circuitDisplay/gateInfoCircuit.vue";
 
 let nCircuits = 0 // circuits needs unique ids.
 
 export default {
   name: 'circuit-display',
   components: {
-    GateInfoCircuit,
-    GateInfoTooltip,
     teleportContainer,
     teleportTo,
     circuitLayer,
     splitCircuitLayers,
     circuitCommand,
-    gateInfo
+    gateInfo,
+    circuitInfo,
   },
   props: {
     circuit: { validator: PendingDataValidator(Object) },
+    parentCommand: {type: Object, default: false},
     navigatorStyling: { type: Object, required: false, default: () => { return {} } },
     isInlineCircuit: { type: Boolean, default: false }
   },
@@ -232,31 +230,20 @@ export default {
           <template #gate-info>
             <gate-info
                 :command="command"
-                :teleport-id="infoModal.teleport.id"
-                @register-teleport="registerTeleport">
+                :n-blocks="$refs.commands[j].nWires"
+                @register-teleport="registerTeleport"
+            >
             </gate-info>
           </template>
         </circuit-command>
       </div>
 
-      <gate-info-tooltip
+      <circuit-info
           v-if="nested === 0 || isInlineCircuit"
-          ref-string="base-circuit"
-          :should-display="true"
           :style="{position: 'absolute', left: nested === 0 ? 0: '0.5em', top: '0.5em', zIndex: 1}"
-      >
-        <template #trigger>
-          <div class="circuit-info-button">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info" viewBox="0 0 16 16">
-              <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0"/>
-            </svg>
-          </div>
-        </template>
-        <template #title>Circuit Information</template>
-        <template #content>
-          <gate-info-circuit :circuit="circuit"></gate-info-circuit>
-        </template>
-      </gate-info-tooltip>
+          :command="parentCommand"
+          :circuit="circuit"
+      ></circuit-info>
 
       <div ref="navigatorContent" :class="{'circuit-inner-scroll': condensed}" :style="navigatorStyling">
         <div ref="renderedCircuit">

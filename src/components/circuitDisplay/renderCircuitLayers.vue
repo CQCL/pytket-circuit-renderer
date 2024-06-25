@@ -2,7 +2,7 @@
 import { h } from 'vue'
 import CircuitLayer from './circuitLayer'
 import GenericGate from './genericGate'
-import GateInfo from './gateInfo'
+import GateInfo from '@/components/gateInfo/init'
 import { renderOptions } from './provideKeys'
 import { SPLIT_RENDERING } from './consts'
 

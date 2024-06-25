@@ -102,6 +102,17 @@ export default {
     argList () {
       return this.registerOrder.slice(this.commandArgs.first.order, this.commandArgs.last.order + 1)
     },
+    nWires () {
+      return this.indexedArgs.filter(arg => {
+        if (!arg.flags.classical) return true
+        if (arg.flags.condensed) {
+          if (arg.flags.globalClassical) return this.condenseCBits
+          return !this.condenseCBits && this.condensedRegisters.toggles[arg[0]]
+        } else {
+          return !this.condenseCBits && !this.condensedRegisters.toggles[arg[0]]
+        }
+      }).length
+    },
     indexedArgs () {
       // Need to sort the args according to order to ensure condensed registers are in the right place:
       return [

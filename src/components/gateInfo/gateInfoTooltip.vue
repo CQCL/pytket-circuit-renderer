@@ -1,13 +1,15 @@
 <script>
-import { teleportConfig } from './provideKeys'
-import infoModal from "@/components/circuitDisplay/infoModal";
-import {teleportFrom} from "@/components/teleport/init";
+import { teleportConfig } from '@/components/circuitDisplay/provideKeys'
+import { teleportFrom } from '@/components/teleport/init'
+import infoModal from './infoModal'
 
 export default {
   name: 'gate-info-tooltip',
   props: {
-    shouldDisplay: {type: Boolean, default: false},
-    refString: {type: String, required: true}
+    ifDisplay: {type: Boolean, default: false},
+    showDisplay: {type: Boolean, default: false},
+    refString: {type: String, required: true},
+    nBlocks: {type: Number, default: 1},
   },
   components: {
     infoModal,
@@ -27,7 +29,7 @@ export default {
 </script>
 
 <template>
-  <div v-if="shouldDisplay">
+  <div v-if="ifDisplay" v-show="showDisplay">
     <div
         @click="visible = true"
         role="button"
@@ -35,9 +37,10 @@ export default {
         data-cy-tooltip="open"
     >
       <slot name="trigger">
-        <div
-            class="tool-tip-container"
-        ></div>
+        <div :style="{
+          paddingTop: `calc(var(--block-height) * ${nBlocks})`,
+          margin: `calc(0px - var(--block-height) * ${nBlocks}) auto 0`,
+        }" class="tool-tip-container"></div>
       </slot>
     </div>
 
@@ -47,7 +50,7 @@ export default {
         <info-modal ref="infoModal" v-model="visible" class="tool-tip-content" :data-cy="'teleported-'+refString">
           <template #title><slot name="title"></slot></template>
           <!-- Defer rendering contents until modal is opened -->
-          <template #content v-if="visible"><slot name="content"></slot></template>
+          <template #content v-show="visible"><slot name="content"></slot></template>
           <template #buttons><slot name="buttons"></slot></template>
         </info-modal>
       </teleport-from>

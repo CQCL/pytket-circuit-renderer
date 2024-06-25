@@ -1,18 +1,18 @@
 <script>
-import { extractSubCircuit, extractControlledCommand } from './utils'
-import { renderOptions } from './provideKeys'
+import { extractSubCircuit, extractControlledCommand } from '@/components/circuitDisplay/utils'
+import { renderOptions } from '@/components/circuitDisplay/provideKeys'
 import { chartDef } from '@/components/charts/init'
-import GateInfoCircuit from "@/components/circuitDisplay/gateInfoCircuit.vue";
+import gateInfoCircuit from "./gateInfoCircuit";
 
 export default {
   name: 'gate-info-sub-circuit',
-  components: {GateInfoCircuit, chartDef },
+  components: {gateInfoCircuit, chartDef },
   props: {
     op: { type: Object, required: true },
     circuitType: { default: undefined },
     args: { type: Object, required: false }
   },
-  emits: ['updated'],
+  emits: ['updated', 'update:hasSubCircuit'],
   provide () {
     return {
       [renderOptions.recursive]: false,
@@ -65,10 +65,21 @@ export default {
         }
       }
       return false
+    },
+    hasSubCircuit () {
+      return !!this.subCircuit
+    }
+  },
+  watch: {
+    hasSubCircuit: {
+      handler(next) {
+        this.$emit('update:hasSubCircuit', next)
+      },
+      immediate: true,
     }
   },
   beforeCreate () {
-    this.$options.components['circuit-display'] = require('./circuitDisplay.vue').default
+    this.$options.components['circuit-display'] = require('@/components/circuitDisplay/circuitDisplay').default
   }
 }
 </script>

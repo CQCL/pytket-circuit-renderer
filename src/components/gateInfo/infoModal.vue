@@ -70,7 +70,7 @@ export default {
 </template>
 
 <style scoped lang="scss">
-@import "@/themeVariables.scss";
+@import "@/themeVariables";
 
 .info-modal {
     position: fixed;

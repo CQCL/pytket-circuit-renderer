@@ -1,7 +1,7 @@
 <script>
 import { computed } from 'vue'
 import circuitDisplay from './circuitDisplay'
-import infoModal from './infoModal'
+import { infoModal } from '@/components/gateInfo/init'
 import exportImage from '@/components/exportImage/exportImage'
 import { navigatorController, navigatorPreview } from '@/components/navigator/init'
 import { renderOptions } from './provideKeys'
