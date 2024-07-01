@@ -25,7 +25,7 @@ describe('Circuit display component', () => {
           cy.mount({ name, ...components[name]() })
           waitForRender()
 
-          cy.get('[data-cy-tooltip=open]').each($gateInfoButton => {
+          cy.get('[data-cy-tooltip=active][data-cy-nesting=0]').each($gateInfoButton => {
             cy.wrap($gateInfoButton).scrollIntoView().click()
             // identify the open modal
             cy.get('[data-cy=teleport-to][data-cy-depth=0]')

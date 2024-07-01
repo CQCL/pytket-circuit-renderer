@@ -1,5 +1,5 @@
 <script>
-import { teleportConfig } from '@/components/circuitDisplay/provideKeys'
+import {renderOptions, teleportConfig} from '@/components/circuitDisplay/provideKeys'
 import { teleportFrom } from '@/components/teleport/init'
 import infoModal from './infoModal'
 
@@ -16,7 +16,9 @@ export default {
     teleportFrom,
   },
   inject: {
-    teleportId: { from: teleportConfig.to }
+    teleportId: { from: teleportConfig.to },
+    nested: { from: renderOptions.nested },
+
   },
   emits: ['register-teleport', 'updated'],
   data () {
@@ -34,7 +36,8 @@ export default {
         @click="visible = true"
         role="button"
         :data-cy="'open-tool-tip-' + refString"
-        data-cy-tooltip="open"
+        :data-cy-nesting="nested"
+        :data-cy-tooltip="ifDisplay && showDisplay ? 'active' : 'hidden'"
     >
       <slot name="trigger">
         <div :style="{

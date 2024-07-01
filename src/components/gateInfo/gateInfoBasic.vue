@@ -133,7 +133,7 @@ export default {
     <custom-box-info :display-op="displayOp"></custom-box-info>
     <assertion-box-info :display-op="displayOp"></assertion-box-info>
     <unitary-tab-box-info :display-op="displayOp"></unitary-tab-box-info>
-    <wasm-box-info :controlled-command="controlledCommand" :display-op="displayOp"></wasm-box-info>
+    <wasm-box-info :display-command="controlledCommand ?? command" :display-op="displayOp"></wasm-box-info>
     <toffoli-box-info :display-op="displayOp"></toffoli-box-info>
     <multiplex-boxes-info :display-op="displayOp"></multiplex-boxes-info>
     <state-prep-box-info :display-op="displayOp"></state-prep-box-info>

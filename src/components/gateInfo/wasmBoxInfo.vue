@@ -10,7 +10,7 @@ export default {
   },
   props: {
     displayOp: {type: Object, required: true},
-    controlledCommand: {type: Object, required: true},
+    displayCommand: {type: Object, required: true},
   },
   computed: {
     wasmVectorInfo () {
@@ -19,14 +19,14 @@ export default {
         const outArgs = []
         const nIn = this.displayOp.wasm.width_i_parameter.reduce(
           (acc, i) => {
-            inArgs.push([this.controlledCommand.args.slice(acc, acc + i).map(reg => [regToStr(reg)]).join(', ')])
+            inArgs.push([this.displayCommand.args.slice(acc, acc + i).map(reg => [regToStr(reg)]).join(', ')])
             return acc + i
           },
           0
         )
         const nOut = this.displayOp.wasm.width_o_parameter.reduce(
           (acc, i) => {
-            outArgs.push([this.controlledCommand.args.slice(acc, acc + i).map(reg => [regToStr(reg)]).join(', ')])
+            outArgs.push([this.displayCommand.args.slice(acc, acc + i).map(reg => [regToStr(reg)]).join(', ')])
             return acc + i
           },
           nIn
