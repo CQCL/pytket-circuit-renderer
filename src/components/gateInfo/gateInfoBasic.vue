@@ -5,8 +5,10 @@ import {
   CLASSICAL_OPS,
   INFO_CONTENT_OPS,
   CONDITION_OPS,
+  CONTROLLED_OPS,
 } from '../circuitDisplay/consts'
-import classicalBoxInfo from './classicalBoxInfo.vue'
+import { renderOptions } from "@/components/circuitDisplay/provideKeys";
+import classicalBoxInfo from './classicalBoxInfo'
 import expBoxesInfo from "@/components/gateInfo/expBoxesInfo.vue";
 import phasePolyBoxInfo from "@/components/gateInfo/phasePolyBoxInfo.vue";
 import conditionalBoxInfo from "@/components/gateInfo/conditionalBoxInfo.vue";
@@ -42,6 +44,9 @@ export default {
     unitaryTabBoxInfo,
     diagonalBoxInfo,
   },
+  inject: {
+    cropParams: renderOptions.cropParams
+  },
   props: {
     command: { type: Object, required: true },
     controlledCommand: { type: Object },
@@ -55,10 +60,8 @@ export default {
   },
   computed: {
     isCondition () {
-      return CONDITION_OPS.includes(this.opType)
+      return CONTROLLED_OPS.includes(this.command.op.type)
     },
-    // Compute the command that's nested in a control op.
-
     matrixTitle () {
       // Special naming schemes:
       if (this.displayOp.type === 'ExpBox') return 'Exponentiated Matrix'
@@ -75,15 +78,17 @@ export default {
       return undefined
     },
     params () {
-      const params = 'params' in this.command.op && this.command.op.params ? this.command.op.params : []
+      // Try to find all the params for this command
+      const params = this.command.op.params ?? []
       return params.concat(
-        'box' in this.command.op && this.command.op.box.params ? this.command.op.box.params : [],
-        this.isCondition && this.command.op.conditional.op.params ? this.command.op.conditional.op.params : []
+          this.command.op.box?.params ? this.command.op.box.params : [],
+          this.isCondition ? this.displayOp.params ?? [] : [],
+          this.isCondition ? this.displayOp.box?.params ?? []: [],
       )
     },
     hasLongParams () {
-      return (this.params.length > 3) || (this.params.reduce((acc, param) => {
-        return acc || param.length > 5 || isNaN(Number(param))
+      return !this.cropParams && (this.params.length > 3) || (this.params.reduce((acc, param) => {
+        return acc || param.toString().length > 5 || isNaN(Number(param))
       }, false))
     },
     hasBaseContent () {

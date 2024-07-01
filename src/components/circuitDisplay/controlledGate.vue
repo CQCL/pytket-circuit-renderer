@@ -101,7 +101,7 @@ export default {
       return flags
     },
     controlledCommand () {
-      return extractControlledCommand(this.command, {})
+      return this.command ? extractControlledCommand(this.command, {}) : {}
     },
     posAdjust () {
       return this.controlledCommand.command.args.length - this.command.args.length
