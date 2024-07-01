@@ -12,6 +12,12 @@ This is to allow user-facing information to be more easily extracted from this c
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
+### Added
+- Circuit level information modal.
+- Reflect implicit permuation in the qubit labelling.
+
+### Fixed
+- Make entire gate clickable for extra information.
 
 ## [0.8.1] 2024-06-18
 ### Added:
