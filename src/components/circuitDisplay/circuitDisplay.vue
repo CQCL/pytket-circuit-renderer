@@ -24,7 +24,7 @@ export default {
   },
   props: {
     circuit: { validator: PendingDataValidator(Object) },
-    parentCommand: {type: Object, default: false},
+    parentCommand: {type: Object, default: undefined},
     navigatorStyling: { type: Object, required: false, default: () => { return {} } },
     isInlineCircuit: { type: Boolean, default: false }
   },

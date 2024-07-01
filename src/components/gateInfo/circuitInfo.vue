@@ -1,6 +1,5 @@
 <script>
 import { POSSIBLE_TOOLTIP_OPS } from '@/components/circuitDisplay/consts'
-import { extractControlledCommand } from '@/components/circuitDisplay/utils'
 import { renderOptions } from '@/components/circuitDisplay/provideKeys'
 import gateInfoBasic from './gateInfoBasic'
 import gateInfoTooltip from './gateInfoTooltip'
@@ -15,7 +14,7 @@ export default {
     gateInfoBasic,
   },
   props: {
-    command: { type: Object, required: true },
+    command: { type: Object, default: undefined },
     circuit: { type: Object, required: true },
   },
   inject: {
@@ -33,7 +32,7 @@ export default {
       return this.hasBaseContent ? this.opType : 'Circuit Information'
     },
     maybeHasContent () {
-      return POSSIBLE_TOOLTIP_OPS.includes(this.displayOp.type)
+      return this.command && POSSIBLE_TOOLTIP_OPS.includes(this.displayOp.type)
     },
     ...infoComputedBase
   },

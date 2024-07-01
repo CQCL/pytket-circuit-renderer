@@ -147,6 +147,7 @@ export default {
               return p.length > 5 ? p.slice(0, 4) + '...' : p
             }
           }
+          // 3dp
           return Math.round(num * 1000) / 1000
         })
       }
