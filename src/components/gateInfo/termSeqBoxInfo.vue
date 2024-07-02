@@ -5,7 +5,8 @@ import mathjaxContent from "@/components/mathjaxContent/mathjaxContent.vue";
 export default {
   name: 'term-seq-box-info',
   components: {
-    chartList, mathjaxContent,
+    chartList,
+    mathjaxContent,
     chartDef,
   },
   props: {
