@@ -18,6 +18,7 @@ export default {
     condensed: true,
     nested: 0,
     cropParams: true,
+    interpretMath: true,
     circuit: {
       qubits: [['Q', [0]]],
       commands: [],
@@ -34,6 +35,7 @@ const setupProvideRenderOptions = function (args) {
   provide(renderOptions.recursive, args.recursive)
   provide(renderOptions.condensed, args.condensed)
   provide(renderOptions.nested, args.nested)
+  provide(renderOptions.interpretMath, args.interpretMath)
   provide(renderOptions.cropParams, args.cropParams)
 }
 export { setupProvideRenderOptions }
@@ -97,6 +99,11 @@ SimpleNested.args = {
 export const Phase = Template.bind({})
 Phase.args = {
   circuit: circuitFixtures.Phase
+}
+
+export const Params = Template.bind({})
+Params.args = {
+  circuit: circuitFixtures.Params
 }
 
 export const Wide = Template.bind({})

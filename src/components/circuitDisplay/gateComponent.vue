@@ -3,6 +3,8 @@ import wire from './wire'
 import { formatClassicalExp, formatPosStr } from './utils'
 import { renderOptions } from './provideKeys'
 import { create, evaluateDependencies, piDependencies, eDependencies, iDependencies } from 'mathjs'
+import MathjaxContent from "@/components/mathjaxContent/mathjaxContent.vue";
+import { DAGGERED_OPS, SPIDER_OPS } from "@/components/circuitDisplay/consts";
 
 // Must explicitly choose which constants to support: pi, e, i
 const { evaluate } = create({
@@ -15,6 +17,7 @@ const { evaluate } = create({
 export default {
   name: 'gate-component',
   components: {
+    MathjaxContent,
     wire
   },
   props: {
@@ -26,16 +29,18 @@ export default {
   },
   inject: {
     zxStyle: { from: renderOptions.zxStyle },
-    cropParams: { from: renderOptions.cropParams }
+    cropParams: { from: renderOptions.cropParams },
+    inlineMath: { from: renderOptions.interpretMath },
   },
   computed: {
     opType () {
       return this.command.op.type
     },
     isSpider () {
-      return [
-        'X', 'U1', 'V', 'Vdg', 'Y', 'Z', 'S', 'Sdg', 'T', 'Tdg'
-      ].includes(this.opType)
+      return SPIDER_OPS.includes(this.opType)
+    },
+    isDaggered () {
+      return DAGGERED_OPS.includes(this.opType) || this.opType === 'StatePreparationBox' && op.box.is_inverse
     },
     specialGateClasses () {
       return {
@@ -115,17 +120,17 @@ export default {
       // If this should be a spider, return the phase to display.
       const phase = this.spiderPhase(this.opType, this.paramStr)
       if (phase && this.zxStyle) {
-        return phase
+        return this.inlineMath ? `$$${phase}$$` : phase
       }
 
       // If this box is daggered display it with a dag symbol
-      let daggered = this.opType === 'StatePreparationBox' && op.box.is_inverse
-      if (['Sdg', 'Tdg', 'Vdg', 'SXdg'].includes(this.opType)) {
-        daggered = true
+      if (DAGGERED_OPS.includes(this.opType)) {
         name = this.opType.slice(0, -2)
       }
 
-      return name + (daggered ? '†' : '') + this.paramStr
+      return this.inlineMath
+          ? name + (this.isDaggered ? '$${}^\\dagger$$' : '') + '`' + this.paramStr + '`'
+          : name + (this.isDaggered ? '†' : '') + this.paramStr
     },
     paramStr () {
       const op = this.command.op
@@ -215,7 +220,7 @@ export default {
   },
   methods: {
     spiderPhase (opType, paramStr) {
-      const convert = {
+      const convertPlain = {
         X: 'π',
         U1: paramStr + 'π',
         V: 'π/2',
@@ -229,8 +234,22 @@ export default {
         Reset: '0',
         H: ' '
       }
-      if (opType in convert) {
-        return convert[opType]
+      const convertMath = {
+        X: '\\pi',
+        U1: paramStr + '\\pi',
+        V: '\\pi / 2',
+        Vdg: '-\\pi / 2',
+        Y: '\\pi',
+        Z: '\\pi',
+        S: '\\pi /2',
+        Sdg: '- \\pi / 2',
+        T: '\\pi / 4',
+        Tdg: '- \\pi / 4',
+        Reset: '0',
+        H: ' '
+      }
+      if (opType in convertMath) {
+        return this.inlineMath ? convertMath[opType] : convertPlain[opType]
       } else {
         return false
       }
@@ -268,7 +287,9 @@ export default {
             [[# posStr.in #]]
           </span>
           <span :class="specialGateContentClasses" :style="[opType === 'Reset'? {margin: 0} : {}]">
-            [[# arg.flags.last || split ? name : '' #]]
+            <span v-if="arg.flags.last || split">
+              <mathjax-content inline-circuit :formula="name" :fallback="name"></mathjax-content>
+            </span>
           </span>
           <span v-if="arg.pos !== -1 && !arg.flags.single" class="wire-label end">
             [[# posStr.out #]]

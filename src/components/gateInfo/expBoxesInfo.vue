@@ -18,7 +18,7 @@ export default {
 <template>
   <div v-if="displayOp.type === 'ExpBox'">
     <chart-def title="Phase" hover>
-      <mathjax-content :formula="'\`' + displayOp.box.phase + '\`'"></mathjax-content>
+      <mathjax-content :formula="'\`' + displayOp.box.phase + '\`'" :fallback="displayOp.box.phase"></mathjax-content>
     </chart-def>
   </div>
 
@@ -30,7 +30,7 @@ export default {
       <template #title>
         <chart-list :chart="displayOp.box.paulis"></chart-list>
       </template>
-      <mathjax-content :formula="'\`' + displayOp.box.phase + '\`'"></mathjax-content>
+      <mathjax-content :formula="'\`' + displayOp.box.phase + '\`'" :fallback="displayOp.box.phase"></mathjax-content>
     </chart-def>
     <chart-def v-if="displayOp.box.cx_config" title="Config" hover>
       [[# displayOp.box.cx_config #]]
@@ -45,7 +45,7 @@ export default {
       <template #title>
         <chart-list :chart="paulis"></chart-list>
       </template>
-      <mathjax-content :formula="'\`' + displayOp.box.phase_pair[i] + '\`'"></mathjax-content>
+      <mathjax-content :formula="'\`' + displayOp.box.phase_pair[i] + '\`'" :fallback="displayOp.box.phase_pair[i]"></mathjax-content>
     </chart-def>
     <chart-def v-if="displayOp.box.cx_config" title="Config" hover>
       [[# displayOp.box.cx_config #]]
@@ -60,7 +60,7 @@ export default {
       <template #title>
         <chart-list :chart="gadget[0]"></chart-list>
       </template>
-      <mathjax-content :formula="'\`' + gadget[1] + '\`'"></mathjax-content>
+      <mathjax-content :formula="'\`' + gadget[1] + '\`'" :fallback="gadget[1]"></mathjax-content>
     </chart-def>
     <chart-def v-if="displayOp.box.cx_config" title="Config" hover>
       [[# displayOp.box.cx_config #]]

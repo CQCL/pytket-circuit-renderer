@@ -38,7 +38,7 @@ export default {
       <template #title>
         <chart-list :chart="gadget[0]"></chart-list>
       </template>
-      <mathjax-content :formula="'\`' + gadget[1] + '\`'"></mathjax-content>
+      <mathjax-content :formula="'\`' + gadget[1] + '\`'" :fallback="gadget[1]"></mathjax-content>
     </chart-def>
     <chart-def title="Synthesis Strategy" hover>
       [[# displayOp.box.synth_strategy #]]
