@@ -6,10 +6,11 @@ export const renderOptions = {
   condensed: Symbol('Render option: condense circuit into one line.'),
   recursive: Symbol('Render option: display nested circuits recursively.'),
   nested: Symbol('Render option: circuit is nested.'),
-  cropParams: Symbol('Render option: truncate params in main display if too long.')
+  interpretMath: Symbol('Render option: render params and names as math.'),
+  cropParams: Symbol('Render option: truncate params in main display if too long.'),
 }
 
 export const teleportConfig = {
   parent: Symbol('Root teleport container ref'),
-  to: Symbol('Teleport-to id to send modals to')
+  to: Symbol('Teleport-to id to send modals to'),
 }

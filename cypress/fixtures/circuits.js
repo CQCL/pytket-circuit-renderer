@@ -8,6 +8,7 @@ const Nested = require('./circuits/nested.json')
 const SimpleNested = require('./circuits/simple-nested.json')
 const Deep = require('./circuits/1000gates.json')
 const Phase = require('./circuits/phase.json')
+const Params = require('./circuits/params.json')
 const Wide = require('./circuits/wide.json')
 const WASM = require('./circuits/wasm.json')
 
@@ -22,6 +23,7 @@ export {
   SimpleNested,
   Deep,
   Phase,
+  Params,
   Wide,
   WASM
 }

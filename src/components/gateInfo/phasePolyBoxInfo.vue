@@ -59,7 +59,7 @@ export default {
         <template #title>
           <chart-matrix :matrix="entry[0]" :depth="1" :display-title="false" entry-type="boolStr"></chart-matrix>
         </template>
-        <mathjax-content :formula="'\`' + entry[1] + '\`'"></mathjax-content>
+        <mathjax-content :formula="'\`' + entry[1] + '\`'" :fallback="entry[1]"></mathjax-content>
       </chart-def>
     </div>
   </div>

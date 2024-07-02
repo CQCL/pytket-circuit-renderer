@@ -25,6 +25,7 @@ export default {
     condenseCBits: true,
     zxStyle: true,
     recursive: false,
+    interpretMath: true,
     cropParams: true
   }
 }
@@ -42,6 +43,7 @@ export const FromRaw = (args) => ({
             zxStyle: args.zxStyle,
             recursive: args.recursive,
             transparentBg: args.transparentBg,
+            interpretMath: args.interpretMath,
             cropParams: args.cropParams
           }
         : {}
@@ -67,6 +69,7 @@ export const FromDOMReactive = (args) => ({
             zxStyle: args.zxStyle,
             recursive: args.recursive,
             transparentBg: args.transparentBg,
+            interpretMath: args.interpretMath,
             cropParams: args.cropParams
           }
         : {}
