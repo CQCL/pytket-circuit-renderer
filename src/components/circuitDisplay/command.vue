@@ -103,7 +103,8 @@ export default {
       return this.registerOrder.slice(this.commandArgs.first.order, this.commandArgs.last.order + 1)
     },
     nWires () {
-      return this.indexedArgs.filter(arg => {
+      // Account for gates with no args (they are displayed as if they have 1 arg)
+      return Math.max(this.indexedArgs.filter(arg => {
         if (!arg.flags.classical) return true
         if (arg.flags.condensed) {
           if (arg.flags.globalClassical) return this.condenseCBits
@@ -111,7 +112,7 @@ export default {
         } else {
           return !this.condenseCBits && !this.condensedRegisters.toggles[arg[0]]
         }
-      }).length
+      }).length, 1)
     },
     indexedArgs () {
       // Need to sort the args according to order to ensure condensed registers are in the right place:

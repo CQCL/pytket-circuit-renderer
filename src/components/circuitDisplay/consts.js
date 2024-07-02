@@ -45,7 +45,15 @@ const PARAM_OPS = [
     'CU1', 'CU2', 'CU3',
     'ISWAP', 'PhasedISWAP', 'ESWAP', 'FSim',
     'XXPhase', 'YYPhase', 'ZZPhase', 'XXPhase3',
-    'PhasedX', 'NPhasedX',
+    'PhasedX', 'NPhasedX', 'Phase'
+]
+
+const SPIDER_OPS = [
+  'X', 'U1', 'V', 'Vdg', 'Y', 'Z', 'S', 'Sdg', 'T', 'Tdg'
+]
+const DAGGERED_OPS = [
+  // Not including controlled ops
+  'Sdg', 'Tdg', 'Vdg', 'SXdg'
 ]
 
 // Any op known to possibly generate a tooltip.
@@ -70,6 +78,8 @@ export {
   INFO_CONTENT_OPS,
   CONDITION_OPS,
   PARAM_OPS,
+  DAGGERED_OPS,
+  SPIDER_OPS,
   POSSIBLE_TOOLTIP_OPS,
   SPLIT_RENDERING,
 }
