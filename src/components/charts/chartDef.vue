@@ -32,6 +32,7 @@ export default {
     padding: 0.5em;
     flex-direction: row;
     font-size: 0.9rem;
+    border-radius: var(--radius);
 
     > .row-item-l {
       text-align: left;

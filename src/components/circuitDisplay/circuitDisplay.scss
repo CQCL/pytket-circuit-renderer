@@ -15,7 +15,7 @@
     --box-index-col: var(--text-secondary);
     --box-text-col: var(--text-primary);
   }
-  .theme_variables.light .circuit_variables {
+  .theme-mode-light > .theme_variables .circuit_variables {
     --spider-border: var(--base-wire-height);
     --wire-col: #{$grey900};
     --c-wire-col: #{$grey400};
@@ -37,7 +37,7 @@
     --z-light: #{$circuit-z-light};
     --z-dark: #{$circuit-z-dark};
   }
-  .theme_variables.dark .circuit_variables {
+  .theme-mode-dark > .theme_variables .circuit_variables {
     --spider-border: 0px; // No borders in dark mode.
     --wire-col: #{$grey500};
     --c-wire-col: #{$grey700};
@@ -253,6 +253,7 @@
       text-align: left;
       background: var(--box-col);
       display: flex;
+      align-items: center;
       z-index: 1;
       color: var(--box-text-col);
 

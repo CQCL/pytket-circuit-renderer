@@ -157,7 +157,7 @@ export default {
           ? this.isSystemDarkMode()
           : this.renderOptions.darkTheme
       )
-      return isDark ? 'dark' : 'light'
+      return isDark ? 'theme-mode-dark' : 'theme-mode-light'
     }
   },
   watch: {
@@ -251,8 +251,9 @@ export default {
 </script>
 
 <template>
+  <div :class=[themeMode]>
   <navigator-controller class="circuit-display-container theme_variables"
-                        :class="[themeMode, { 'transparent_bg': renderOptions.transparentBg }]"
+                        :class="[{ 'transparent_bg': renderOptions.transparentBg }]"
                         ref="navController" :navigator-previews="navPreviews"
                         :options="{ overrideStyle: true, externalZooming: true, externalScrolling: true, externalContent: true }"
                         v-model:ext-zoom-x="zoom" v-model:ext-zoom-y="zoom"
@@ -272,11 +273,11 @@ export default {
                @keyup.space="renderOptions[option] = disabledOptions[option] ? renderOptions[option] : !renderOptions[option]"
           >
             <div :title="options[option].title"
-                 class="icon" :class="{'active': renderOptions[option], 'disabled': disabledOptions[option]}"
+                 class="icon" :class="{'selected': renderOptions[option], 'disabled': disabledOptions[option]}"
                  role="checkbox"
                  v-html="options[option].icon"
             ></div>
-            <div class="icon-label" :class="{'active': renderOptions[option], 'disabled': disabledOptions[option]}">
+            <div class="icon-label" :class="{'selected': renderOptions[option], 'disabled': disabledOptions[option]}">
               [[# options[option].title #]]
             </div>
           </div>
@@ -317,6 +318,7 @@ export default {
       </circuit-display>
     </template>
   </navigator-controller>
+  </div>
 </template>
 
 <style scoped lang="scss">
@@ -371,7 +373,8 @@ export default {
 .display-options-menu-entry {
   display: flex;
   padding: 0.4em;
-  border-bottom: 1px solid var(--divider);
+  margin: 0.4em;
+  border-radius: var(--radius);
 }
 :last-child > .display-options-menu-entry {
   border-bottom: none;

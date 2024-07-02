@@ -112,7 +112,7 @@ export default {
   <div v-if="hasBaseContent">
     <!--  Long params  -->
     <chart-def v-if="hasLongParams" title="Box params" hover>
-      <div style="display: flex">
+      <div style="display: flex; align-items: center">
         <div v-for="(param, i) in params" :key="i" class="complex-number">
           <mathjax-content :formula="'\`' + param + '\`'"></mathjax-content>
         </div>
