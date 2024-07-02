@@ -121,9 +121,9 @@ export default {
     </div>
     <div :class="{rendering: rendering}">
       <form :style="{paddingTop: '0.5rem'}">
-        <div class="flex" v-for="(option, name) in options" :key="name">
+        <div style="display: flex" v-for="(option, name) in options" :key="name">
           <span class="tab-option-label">[[# option.title #]]</span>
-          <div class="flex tab-options">
+          <div class="tab-options">
             <div v-for="(value, name) in option.options" :key="name"
                  class="tab-option" :class="{selected: option.value === value}"
                  tabindex="0" role="radio"
@@ -144,11 +144,11 @@ export default {
     </div>
     <div :class="{rendering: rendering}">
       <div>
-        <h4>Image</h4>
+        <div class="row-heading">Image</div>
         <div class="image-preview" v-if="!!imageUrl">
           <img :src="imageUrl" alt="Image Preview" />
         </div>
-        <div class="flex">
+        <div style="display: flex;padding-top: 1rem">
           <input class="row-item" type="text" v-model="fileName" placeholder="File name"/>
           <div style="padding: 0.5em">.[[# options.fileType.value #]]</div>
           <button :class="{disabled: !imageUrl || !fileName}" @click="download">Save</button>
@@ -161,21 +161,15 @@ export default {
 .rendering{
   cursor: wait;
 }
-.flex{
-  display: flex;
-}
 .disabled{
   cursor: default !important;
   color: var(--text-disabled) !important;
   background: var(--paper) !important;
 }
 .tab-options{
+  display: flex;
   color: var(--text-primary);
-  border: 1px solid var(--primary-alpha);
-  box-shadow: 0 0 5px 0px var(--paper) inset;
-  margin-bottom: 5px;
   flex-grow: 1;
-  border-radius: 5px;
   overflow: hidden;
 }
 .tab-option-label{
@@ -184,22 +178,25 @@ export default {
 }
 .tab-option{
   padding: 10px;
+  margin: 0.25rem;
+  border-radius: var(--radius);
   flex-grow: 1;
   text-align: center;
   text-transform: capitalize;
 }
-
 .tab-option.selected{
-  background: var(--primary-alpha)
+  background: var(--paper-dark);
 }
-
+.tab-option:hover, .tab-option.selected:hover{
+  background: var(--paper);
+}
 .extra-info{
   font-size: 0.8em;
 }
 
 .image-preview{
   width: 100%;
-  height: 10em;
+  max-height: 10em;
   margin: 1em 0;
 }
 

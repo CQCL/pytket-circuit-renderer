@@ -87,7 +87,7 @@ export default {
 <template>
   <div v-if="subCircuit" style="overflow: auto;width: 100%">
     <chart-def :title="subCircuit.type + ' Circuit'" heading></chart-def>
-    <div class="gate_container nested">
+    <div class="gate_container nested" style="padding-bottom: 1rem">
       <circuit-display @updated="$emit('updated')" :circuit="subCircuit.circuit"></circuit-display>
     </div>
 

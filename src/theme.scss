@@ -1,40 +1,27 @@
 @import "@/themeVariables.scss";
+@import "@/tokens.css";
 
 @media all {
   .theme_variables {
     font-family: "roboto", system-ui, sans-serif;
   }
-  .theme_variables.light {
-    --primary-light: #{$primaryDark};
-    --primary-dark: #{$primaryLight};
-    --primary-alpha: #{rgba($primaryLight, 0.2)};
+  .theme_variables {
+    --primary-dark: hsl(var(--primary));
+    --primary-alpha: hsl(var(--primary-foreground), 0.2);
 
-    --text-primary: #{$grey800};
-    --text-secondary: #{$grey700};
-    --text-disabled: #{$grey400};
+    --text-primary: hsl(var(--foreground));
+    --text-secondary: hsl(var(--muted-foreground));
+    --text-disabled: hsl(var(--muted-foreground));
 
-    --divider: #{$grey300};
+    --divider: hsl(var(--border));
 
-    --circuit-background: #{$grey50}; // Background for circuits only
-    --background: #{$grey50}; // Background for other components (generally overlayed)
-    --paper: #{$grey100};
-    --paper-dark: #{$grey200};
+    --circuit-background: hsl(var(--background-)); // Background for circuits only
+    --background: hsl(var(--background-)); // Background for other components (generally overlayed)
+    --paper: hsl(from hsl(var(--muted)) h s calc(l + 0.02));
+    --paper-dark: hsl(var(--muted));
   }
-  .theme_variables.dark {
-    --primary-dark: #{$primaryDark};
-    --primary-light: #{$primaryLight};
-    --primary-alpha: #{rgba($primaryDark, 0.3)};
-
-    --text-primary: #{$grey50};
-    --text-secondary: #{$grey200};
-    --text-disabled: #{$grey500};
-
-    --divider: #{$grey600};
-
-    --circuit-background: #{$grey900};
-    --background: #{$grey900};
-    --paper: #{$grey800};
-    --paper-dark: #{$grey700};
+  .theme-mode-dark .theme_variables{
+    --paper: hsl(from hsl(var(--muted)) h s calc(l - 0.06));
   }
 
   .theme_variables.transparent_bg {
@@ -47,20 +34,23 @@
 
     .icon {
       padding: 0.4em;
-      height: 1em;
-      width: 1em;
+      height: 1.2em;
+      width: 1.2em;
       border-radius: 10%;
-      border: 1px solid var(--text-secondary);
       color: var(--text-primary);
       cursor: pointer;
 
       &.active {
-        border-color: var(--primary-dark);
-        box-shadow: 0 0 0 2px var(--primary-dark) inset;
-        background: var(--primary-alpha);
+        background: hsl(var(--muted));
+      }
+
+      &.selected {
+        background: hsl(var(--primary));
+        color: hsl(var(--primary-foreground));
 
         &.disabled {
-          box-shadow: 0 0 0 3px var(--grey300-alpha) inset;
+          background: hsl(var(--muted-foreground) / .6);
+          color: hsl(var(--muted));
         }
       }
 
@@ -71,8 +61,7 @@
     }
 
     .icon.disabled, .icon-label.disabled {
-      color: var(--text-disabled);
-      border-color: var(--text-disabled);
+      color: hsl(var(--muted-foreground) / .6);
       box-shadow: none;
       cursor: default;
     }
@@ -90,7 +79,7 @@
       flex-wrap: wrap;
       align-items: center;
       padding: 10px;
-      border-bottom: 1px solid var(--divider);
+      //border-bottom: 1px solid var(--divider);
       position: relative;
     }
 
@@ -125,12 +114,12 @@
       color: var(--text-primary);
       font-size: 1.2rem;
       margin-top: 20px;
-      border-bottom: 2px solid var(--primary-dark);
+      //border-bottom: 2px solid var(--primary-dark);
     }
 
     .row-sub-heading {
       color: var(--text-primary);
-      border-color: var(--primary-dark);
+      //border-color: var(--primary-dark);
       width: calc(100% - 20px);
     }
 
@@ -169,13 +158,13 @@
     [type=submit] {
       padding: 10px;
       cursor: pointer;
-      border-radius: 4px;
+      border-radius: var(--radius);
       border: none;
       transition: background-color 0.5s ease, color 0.25s ease;
       background: var(--primary-light);
       font: 400 13.3333px Arial;
-      background: var(--primary-alpha);
-      color: var(--text-primary);
+      background: var(--primary-dark);
+      color: hsl(var(--primary-foreground));
     }
 
     button:hover, button:focus,
@@ -183,8 +172,16 @@
     [type=button]:hover, [type=button]:focus,
     [type=reset]:hover, [type=reset]:focus,
     [type=submit]:hover, [type=submit]:focus {
-      background: var(--primary-dark);
-      color: var(--background)
+      background: hsla(var(--primary) / 0.9);
+    }
+
+    button:disabled,
+    .button:disabled,
+    [type=button]:disabled,
+    [type=reset]:disabled,
+    [type=submit]:disabled, {
+      background: hsl(var(--muted));
+      color: hsl(var(--muted--foreground));
     }
 
     input {
