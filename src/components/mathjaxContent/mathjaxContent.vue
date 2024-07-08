@@ -57,7 +57,9 @@ export default {
       if (this.isRenderingMath) {
         this.renderContent()
         if (!!window.MathJax && !!window.MathJax.typeset) {
-          window.MathJax.typeset(['[data-uid=' + this.uid + ']'])
+          this.$nextTick(() => {
+            window.MathJax.typeset(['[data-uid=' + this.uid + ']'])
+          })
         }
       }
     }
@@ -66,7 +68,8 @@ export default {
 </script>
 
 <template>
-  <span v-show="isRenderingMath" ref="mathJaxEl" :data-uid="uid" :class="['mathjax-content', {'inline-circuit-mathjax': inlineCircuit} ]">
+  <span v-show="isRenderingMath" ref="mathJaxEl" :data-uid="uid"
+        :class="['mathjax-content', {'inline-circuit-mathjax': inlineCircuit} ]">
       [[# formula #]]
   </span>
   <span v-show="!isRenderingMath" :data-uid="uid">
