@@ -48,7 +48,7 @@ export default {
       renderOptionGroups: {
         layout: ['zxStyle', 'condenseCBits', 'recursive', 'wrap'],
         theme: ['darkTheme', 'systemTheme', 'transparentBg'],
-        params: ['interpretMath', 'cropParams'],
+        params: ['interpretMath', 'cropParams']
       },
       themeChanged: 0,
       circuitEl: null,

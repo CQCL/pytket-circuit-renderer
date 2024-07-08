@@ -1,5 +1,5 @@
 <script>
-import { chartList, chartDef, chartMatrix, chartMapping } from '@/components/charts/init'
+import { chartDef, chartMatrix, chartMapping } from '@/components/charts/init'
 import mathjaxContent from '@/components/mathjaxContent/mathjaxContent.vue'
 
 export default {
@@ -7,12 +7,11 @@ export default {
   components: {
     chartMapping,
     chartMatrix,
-    chartList,
     chartDef,
-    mathjaxContent,
+    mathjaxContent
   },
   props: {
-    displayOp: { type: Object, required: true },
+    displayOp: { type: Object, required: true }
   },
   computed: {
     linearTransformationMatrix () {
@@ -22,8 +21,8 @@ export default {
         const basis = []
         for (const x of Array(2 ** nQubits).keys()) {
           basis.push(
-              (new Array(1 + nQubits).join('0') + x.toString(2))
-                  .slice(-nQubits)
+            (new Array(1 + nQubits).join('0') + x.toString(2))
+              .slice(-nQubits)
           )
         }
         const formattedMatrix = []
@@ -34,7 +33,7 @@ export default {
       }
       return undefined
     }
-  },
+  }
 }
 </script>
 

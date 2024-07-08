@@ -27,14 +27,14 @@ export default {
           ...('upper' in classical && { Upper: classical.upper }),
           ...('lower' in classical && { Lower: classical.lower }),
           ...('n' in classical && { Multi: classical.n }),
-          ...('op' in classical && { Operation: classical.op.classical.name }),
+          ...('op' in classical && { Operation: classical.op.classical.name })
         }
       }
       return {}
     },
     hasClassicalTable () {
       return Object.values(this.classicalTable).reduce((prev, next) => prev || (typeof next !== 'undefined'), false)
-    },
+    }
   },
   methods: {
     formatClassicalExp

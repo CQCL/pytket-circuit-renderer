@@ -1,19 +1,19 @@
 <script>
 import { chartDef, chartList, chartMatrix } from '@/components/charts/init'
-import { MULTIPLEXED_OPS } from "@/components/circuitDisplay/consts";
+import { MULTIPLEXED_OPS } from '@/components/circuitDisplay/consts'
 
 export default {
   name: 'multiplexed-box-info',
-  data() {
+  data () {
     return { MULTIPLEXED_OPS }
   },
   components: {
     chartList,
     chartMatrix,
-    chartDef,
+    chartDef
   },
   props: {
-    displayOp: { type: Object, required: true },
+    displayOp: { type: Object, required: true }
   },
   methods: {
     formatMultiplexedOpMap (opMap) {
@@ -24,7 +24,7 @@ export default {
     },
     getBoxName (box) {
       return `${box.type}${box.params ? '(' + box.params.join(',') + ')' : ''}`
-    },
+    }
   }
 }
 </script>

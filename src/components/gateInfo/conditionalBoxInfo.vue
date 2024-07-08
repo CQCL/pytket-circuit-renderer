@@ -1,14 +1,14 @@
 <script>
 import { chartDef } from '@/components/charts/init'
-import { CONDITION_OPS } from "@/components/circuitDisplay/consts";
+import { CONDITION_OPS } from '@/components/circuitDisplay/consts'
 
 export default {
   name: 'conditional-box-info',
   components: {
-    chartDef,
+    chartDef
   },
   props: {
-    command: {type: Object, required: true},
+    command: { type: Object, required: true }
   },
   computed: {
     isCondition () {

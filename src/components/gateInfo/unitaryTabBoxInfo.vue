@@ -1,16 +1,16 @@
 <script>
 import { chartDef, chartList, chartMatrix } from '@/components/charts/init'
-import { regToStr } from "@/components/circuitDisplay/utils";
+import { regToStr } from '@/components/circuitDisplay/utils'
 
 export default {
   name: 'unitary-tab-box-info',
   components: {
     chartList,
     chartMatrix,
-    chartDef,
+    chartDef
   },
   props: {
-    displayOp: {type: Object, required: true},
+    displayOp: { type: Object, required: true }
   },
   methods: {
     regToStr

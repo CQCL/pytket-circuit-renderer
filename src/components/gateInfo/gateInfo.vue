@@ -2,23 +2,23 @@
 import { NESTED_CIRCUIT_OPS, POSSIBLE_TOOLTIP_OPS } from '@/components/circuitDisplay/consts'
 import { renderOptions } from '@/components/circuitDisplay/provideKeys'
 import gateInfoSubCircuit from './gateInfoSubCircuit'
-import gateInfoBasic from "./gateInfoBasic";
-import gateInfoTooltip from "./gateInfoTooltip";
-import { infoComputedBase } from "./utils";
+import gateInfoBasic from './gateInfoBasic'
+import gateInfoTooltip from './gateInfoTooltip'
+import { infoComputedBase } from './utils'
 
 export default {
   name: 'gate-info',
   components: {
     gateInfoTooltip,
     gateInfoSubCircuit,
-    gateInfoBasic,
+    gateInfoBasic
   },
   props: {
     command: { type: Object, required: true },
-    nBlocks: { type: Number, default: 1},
+    nBlocks: { type: Number, default: 1 }
   },
   inject: {
-    recursive: { from: renderOptions.recursive },
+    recursive: { from: renderOptions.recursive }
   },
   emits: ['register-teleport'],
   data () {
@@ -30,16 +30,16 @@ export default {
           default: false,
           Compute: false,
           Action: false,
-          Uncompute: false,
-        },
+          Uncompute: false
+        }
       }
     }
   },
   computed: {
     ...infoComputedBase,
     hasContent () {
-      return this.flags.hasBaseContent
-          || Object.values(this.flags.hasSubCircuit).reduce((acc, next) => acc || next)
+      return this.flags.hasBaseContent ||
+          Object.values(this.flags.hasSubCircuit).reduce((acc, next) => acc || next)
     },
     hasSubCircuit () {
       return NESTED_CIRCUIT_OPS.includes(this.displayOp.type)
@@ -58,7 +58,7 @@ export default {
       this.$nextTick(() => {
         this.$refs.infoTooltip.$refs.infoModal.onResize()
       })
-    },
+    }
   }
 }
 </script>

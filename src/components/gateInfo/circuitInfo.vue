@@ -4,27 +4,27 @@ import { renderOptions } from '@/components/circuitDisplay/provideKeys'
 import gateInfoBasic from './gateInfoBasic'
 import gateInfoTooltip from './gateInfoTooltip'
 import gateInfoCircuit from './gateInfoCircuit'
-import {infoComputedBase} from "@/components/gateInfo/utils";
+import { infoComputedBase } from '@/components/gateInfo/utils'
 
 export default {
   name: 'circuit-info',
   components: {
     gateInfoCircuit,
     gateInfoTooltip,
-    gateInfoBasic,
+    gateInfoBasic
   },
   props: {
     command: { type: Object, default: undefined },
-    circuit: { type: Object, required: true },
+    circuit: { type: Object, required: true }
   },
   inject: {
-    recursive: { from: renderOptions.recursive },
+    recursive: { from: renderOptions.recursive }
   },
   emits: ['register-teleport'],
   data () {
     return {
       visible: false,
-      hasBaseContent: false,
+      hasBaseContent: false
     }
   },
   computed: {
@@ -35,7 +35,7 @@ export default {
       return this.command && POSSIBLE_TOOLTIP_OPS.includes(this.displayOp.type)
     },
     ...infoComputedBase
-  },
+  }
 }
 </script>
 

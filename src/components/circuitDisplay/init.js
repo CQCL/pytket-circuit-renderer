@@ -3,5 +3,5 @@ import circuitDisplayContainer from './circuitDisplayContainer'
 
 export {
   circuitDisplay,
-  circuitDisplayContainer,
+  circuitDisplayContainer
 }

@@ -3,7 +3,7 @@
   "commands":[
     {"op":{"type":"U3","params":["1.0","-0.56666666","Abs(0.5)"]},"args":[["q",[0]]]},
     {"op":{"type":"Sdg"},"args":[["q",[1]]]},
-    {"op":{"type":"U3","params":["sinh(theta / 2) / (acos(phi))","<hrkhrk","I'm evil>:)"]},"args":[["q",[2]]]},
+    {"op":{"type":"U3","params":["sinh(theta / 2) / acosh(phi**2)","<hrkhrk","I'm evil>:)"]},"args":[["q",[2]]]},
     {"op":{"type":"Rx", "params":["</div>"]},"args":[["q",[3]]]},
     {
       "op": {

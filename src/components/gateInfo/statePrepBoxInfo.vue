@@ -5,11 +5,11 @@ export default {
   name: 'state-prep-box-info',
   components: {
     chartMatrix,
-    chartDef,
+    chartDef
   },
   props: {
-    displayOp: {type: Object, required: true},
-  },
+    displayOp: { type: Object, required: true }
+  }
 }
 </script>
 

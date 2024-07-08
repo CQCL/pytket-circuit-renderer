@@ -4,11 +4,11 @@ import { chartDef } from '@/components/charts/init'
 export default {
   name: 'assertion-box-info',
   components: {
-    chartDef,
+    chartDef
   },
   props: {
-    displayOp: {type: Object, required: true},
-  },
+    displayOp: { type: Object, required: true }
+  }
 }
 </script>
 

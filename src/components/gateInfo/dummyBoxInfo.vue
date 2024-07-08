@@ -5,11 +5,11 @@ export default {
   name: 'dummy-box-info',
   components: {
     chartList,
-    chartDef,
+    chartDef
   },
   props: {
-    displayOp: { type: Object, required: true },
-  },
+    displayOp: { type: Object, required: true }
+  }
 }
 </script>
 

@@ -6,7 +6,7 @@ export default {
     title: { type: String, default: '' },
     vertical: Boolean,
     hover: Boolean,
-    heading: Boolean,
+    heading: Boolean
   }
 }
 </script>

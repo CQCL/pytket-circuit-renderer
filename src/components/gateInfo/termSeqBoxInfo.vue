@@ -1,16 +1,16 @@
 <script>
 import { chartDef, chartList } from '@/components/charts/init'
-import mathjaxContent from "@/components/mathjaxContent/mathjaxContent.vue";
+import mathjaxContent from '@/components/mathjaxContent/mathjaxContent.vue'
 
 export default {
   name: 'term-seq-box-info',
   components: {
     chartList,
     mathjaxContent,
-    chartDef,
+    chartDef
   },
   props: {
-    displayOp: { type: Object, required: true },
+    displayOp: { type: Object, required: true }
   },
   data () {
     return {

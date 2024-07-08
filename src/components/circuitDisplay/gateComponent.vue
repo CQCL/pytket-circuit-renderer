@@ -3,9 +3,10 @@ import wire from './wire'
 import { formatClassicalExp, formatPosStr } from './utils'
 import { renderOptions } from './provideKeys'
 import { create, evaluateDependencies, piDependencies, eDependencies, iDependencies } from 'mathjs'
-import MathjaxContent from "@/components/mathjaxContent/mathjaxContent.vue";
-import { DAGGERED_OPS, SPIDER_OPS } from "@/components/circuitDisplay/consts";
-import circuitLayer from "@/components/circuitDisplay/circuitLayer.vue";
+import MathjaxContent from '@/components/mathjaxContent/mathjaxContent.vue'
+import { DAGGERED_OPS, SPIDER_OPS } from '@/components/circuitDisplay/consts'
+import circuitLayer from '@/components/circuitDisplay/circuitLayer.vue'
+import { coerceSympyAsciimath } from '@/components/mathjaxContent/utils'
 
 // Must explicitly choose which constants to support: pi, e, i
 const { evaluate } = create({
@@ -23,16 +24,16 @@ export default {
     wire
   },
   props: {
-    args: {type: Array, required: true},
-    posAdjust: {type: Number, required: true},
-    split: {type: Boolean, default: false},
-    command: {type: Object, required: true},
-    linkVertical: {type: Boolean, default: false}
+    args: { type: Array, required: true },
+    posAdjust: { type: Number, required: true },
+    split: { type: Boolean, default: false },
+    command: { type: Object, required: true },
+    linkVertical: { type: Boolean, default: false }
   },
   inject: {
     zxStyle: { from: renderOptions.zxStyle },
     cropParams: { from: renderOptions.cropParams },
-    inlineMath: { from: renderOptions.interpretMath },
+    inlineMath: { from: renderOptions.interpretMath }
   },
   computed: {
     opType () {
@@ -42,7 +43,8 @@ export default {
       return SPIDER_OPS.includes(this.opType)
     },
     isDaggered () {
-      return DAGGERED_OPS.includes(this.opType) || this.opType === 'StatePreparationBox' && this.command.op.box.is_inverse
+      return DAGGERED_OPS.includes(this.opType) ||
+          (this.opType === 'StatePreparationBox' && this.command.op.box.is_inverse)
     },
     specialGateClasses () {
       return this.args.map((arg) => {
@@ -134,8 +136,8 @@ export default {
       }
 
       return this.inlineMath
-          ? name + (this.isDaggered ? '$${}^\\dagger$$' : '') + '`' + this.paramStr + '`'
-          : name + (this.isDaggered ? '†' : '') + this.paramStr
+        ? name + (this.isDaggered ? '$${}^\\dagger$$' : '') + '`' + this.paramStr + '`'
+        : name + (this.isDaggered ? '†' : '') + this.paramStr
     },
     paramStr () {
       const op = this.command.op
@@ -161,9 +163,12 @@ export default {
           return Math.round(num * 1000) / 1000
         })
       }
-      return params.length > 0
-        ? ((params.length > 3 && this.cropParams) ? `(${params.slice(0, 4)}...)` : `(${params})`)
-        : ''
+      if (params.length > 0) {
+        // Params are sympy strings. The best renderer for this is asciimath, but requires some help
+        const paramStr = (params.length > 3 && this.cropParams) ? `(${params.slice(0, 4)}...)` : `(${params})`
+        return coerceSympyAsciimath(paramStr)
+      }
+      return ''
     },
     posStr () {
       return this.args.map(this.getPosStr)
@@ -216,13 +221,13 @@ export default {
             return multiPos
           })
           const repeats = filtered.reduce(
-              (acc, multiPos) => Array.isArray(multiPos) ? Math.max(acc, multiPos.length) : acc,
-              1
+            (acc, multiPos) => Array.isArray(multiPos) ? Math.max(acc, multiPos.length) : acc,
+            1
           )
           const transposed = Array(repeats)
           for (let i = 0; i < repeats; i++) {
             transposed[i] = filtered.map(
-                multiPos => Array.isArray(multiPos) ? (multiPos.length >= i ? multiPos[i] : multiPos[-1]) : multiPos
+              multiPos => Array.isArray(multiPos) ? (multiPos.length >= i ? multiPos[i] : multiPos[-1]) : multiPos
             )
           }
           return transposed
@@ -242,8 +247,8 @@ export default {
         outputs = getMultiPos(pos => pos + this.posAdjust >= inputArgEnd && pos + this.posAdjust < outputArgEnd)
       } else {
         const classical = ('classical' in this.command.op)
-            ? this.command.op.classical
-            : 'box' in this.command.op ? this.command.op.box : {}
+          ? this.command.op.classical
+          : 'box' in this.command.op ? this.command.op.box : {}
 
         let outputArgStart = 'n_i' in classical ? classical.n_i : 0
         let inputArgEnd = 'n_io' in classical ? outputArgStart + classical.n_io : outputArgStart
@@ -272,7 +277,7 @@ export default {
 <template>
   <div :data-gate-component="opType">
     <!-- Barrier requires special rendering -->
-    <div v-if="opType === 'Barrier'" v-for="arg in args" style="height:var(--block-height)">
+    <div v-if="opType === 'Barrier'" v-for="arg in args" :key="arg" style="height:var(--block-height)">
       <wire :classical="arg.flags.classical" :condensed="arg.flags.condensed" :wasm="arg.flags.wasm"></wire>
       <div class="gate_container" :class="[gateColor]">
         <div v-if="arg.pos !== -1" class="link gate" :class="specialGateClasses"></div>
@@ -293,7 +298,7 @@ export default {
       <!-- StatePreparation with reset requires special resets -->
       <div v-if="opType === 'StatePreparationBox' && command.op.box.with_initial_reset"
            style="display: flex; flex-direction: column; justify-content: space-between">
-        <div v-for="arg in args">
+        <div v-for="arg in args" :key="arg">
           <div v-if="arg.pos > -1" :class="specialGateClasses" class="gate gate_reset"></div>
           <div v-else :class="specialGateClasses" class="gate gate_empty"></div>
         </div>
