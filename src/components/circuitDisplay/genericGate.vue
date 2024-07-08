@@ -166,7 +166,7 @@ export default {
     <div v-if="special0qGate.flag" data-gate="Special:no-args">
       <div v-for="(arg, i) in renderIndexedArgs" :key="i" class="gate_container">
         <gate-component v-if="i === renderIndexedArgs.length - 1" ref="special0qGateComponent"
-            :arg="special0qGate.fakeIndexedArg"
+            :args="[special0qGate.fakeIndexedArg]"
             :pos-adjust="posAdjust"
             :split="split"
             :command="{ op: command.op, args: special0qGate.fakeCommandArgs }"
@@ -200,8 +200,8 @@ export default {
 
     <!-- Generic -->
     <div v-if="opType !== 'ID' && !special2qGate && !special0qGate.flag && !nestedCircuitGate">
-      <gate-component v-for="(arg, i) in renderIndexedArgs" :key="i"
-              :arg="arg"
+      <gate-component
+              :args="renderIndexedArgs"
               :pos-adjust="posAdjust"
               :split="split"
               :command="command"

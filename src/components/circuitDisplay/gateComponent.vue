@@ -5,6 +5,7 @@ import { renderOptions } from './provideKeys'
 import { create, evaluateDependencies, piDependencies, eDependencies, iDependencies } from 'mathjs'
 import MathjaxContent from "@/components/mathjaxContent/mathjaxContent.vue";
 import { DAGGERED_OPS, SPIDER_OPS } from "@/components/circuitDisplay/consts";
+import circuitLayer from "@/components/circuitDisplay/circuitLayer.vue";
 
 // Must explicitly choose which constants to support: pi, e, i
 const { evaluate } = create({
@@ -17,15 +18,16 @@ const { evaluate } = create({
 export default {
   name: 'gate-component',
   components: {
+    circuitLayer,
     MathjaxContent,
     wire
   },
   props: {
-    arg: { type: Object, required: true },
-    posAdjust: { type: Number, required: true },
-    split: { type: Boolean, default: false },
-    command: { type: Object, required: true },
-    linkVertical: { type: Boolean, default: false }
+    args: {type: Array, required: true},
+    posAdjust: {type: Number, required: true},
+    split: {type: Boolean, default: false},
+    command: {type: Object, required: true},
+    linkVertical: {type: Boolean, default: false}
   },
   inject: {
     zxStyle: { from: renderOptions.zxStyle },
@@ -40,23 +42,26 @@ export default {
       return SPIDER_OPS.includes(this.opType)
     },
     isDaggered () {
-      return DAGGERED_OPS.includes(this.opType) || this.opType === 'StatePreparationBox' && op.box.is_inverse
+      return DAGGERED_OPS.includes(this.opType) || this.opType === 'StatePreparationBox' && this.command.op.box.is_inverse
     },
     specialGateClasses () {
-      return {
-        gate_top: !this.arg.flags.single && !this.split && this.arg.flags.first,
-        gate_mid: !this.arg.flags.single && !this.split && !this.arg.flags.first && !this.arg.flags.last,
-        gate_bottom: !this.arg.flags.single && !this.split && this.arg.flags.last,
-        gate_box: this.command.args.length === 1 || this.arg.flags.single || this.split,
-        classical: this.arg.flags.classical,
-        condensed: this.arg.flags.condensed,
-        gate_reset: this.opType === 'Reset',
-        gate_barrier: this.opType === 'Barrier',
-        gate_special: this.zxStyle && (this.opType === 'H' || this.isSpider || this.opType === 'Reset'),
-        gate_0q: this.opType === 'Phase',
-        'zx-hadamard': this.opType === 'H' && this.zxStyle,
-        'zx-spider': this.zxStyle && this.isSpider
-      }
+      return this.args.map((arg) => {
+        return {
+          // gate_top: !arg.flags.single && !this.split && arg.flags.first,
+          // gate_mid: !arg.flags.single && !this.split && !arg.flags.first && !arg.flags.last,
+          // gate_bottom: !arg.flags.single && !this.split && arg.flags.last,
+          gate_multi: !arg.flags.single,
+          gate_box: this.command.args.length === 1 || arg.flags.single || this.split,
+          classical: arg.flags.classical,
+          condensed: arg.flags.condensed,
+          gate_reset: this.opType === 'Reset',
+          gate_barrier: this.opType === 'Barrier',
+          gate_special: this.zxStyle && (this.opType === 'H' || this.isSpider || this.opType === 'Reset'),
+          gate_0q: this.opType === 'Phase',
+          'zx-hadamard': this.opType === 'H' && this.zxStyle,
+          'zx-spider': this.zxStyle && this.isSpider
+        }
+      })
     },
     specialGateContentClasses () {
       if (this.opType === 'Reset') {
@@ -161,61 +166,7 @@ export default {
         : ''
     },
     posStr () {
-      const getMultiPos = (filterFn) => {
-        if (this.arg.flags.condensed) {
-          const filtered = this.arg.multiPos.map(multiPos => {
-            if (Array.isArray(multiPos)) {
-              const mp = multiPos.filter(filterFn)
-              return mp.length > 0 ? mp : -1
-            }
-            return multiPos
-          })
-          const repeats = filtered.reduce(
-            (acc, multiPos) => Array.isArray(multiPos) ? Math.max(acc, multiPos.length) : acc,
-            1
-          )
-          const transposed = Array(repeats)
-          for (let i = 0; i < repeats; i++) {
-            transposed[i] = filtered.map(
-              multiPos => Array.isArray(multiPos) ? (multiPos.length >= i ? multiPos[i] : multiPos[-1]) : multiPos
-            )
-          }
-          return transposed
-        }
-        // Not condensed so we can filter directly
-        return this.arg.multiPos.filter(filterFn)
-      }
-
-      let inputs = []
-      let outputs = []
-      if (this.opType === 'WASM' && !this.arg.flags.wasm) {
-        // Handle classical wires with wasm boxes specially.
-        const inputArgEnd = this.command.op.wasm.width_i_parameter.reduce((acc, i) => i + acc, 0)
-        const outputArgEnd = inputArgEnd + this.command.op.wasm.width_o_parameter.reduce((acc, i) => i + acc, 0)
-
-        inputs = getMultiPos(pos => pos + this.posAdjust < inputArgEnd)
-        outputs = getMultiPos(pos => pos + this.posAdjust >= inputArgEnd && pos + this.posAdjust < outputArgEnd)
-      } else {
-        const classical = ('classical' in this.command.op)
-          ? this.command.op.classical
-          : 'box' in this.command.op ? this.command.op.box : {}
-
-        let outputArgStart = 'n_i' in classical ? classical.n_i : 0
-        let inputArgEnd = 'n_io' in classical ? outputArgStart + classical.n_io : outputArgStart
-        const outputArgEnd = 'n_o' in classical ? inputArgEnd + classical.n_o : this.command.args.length
-
-        // Want only inputs to be defined when not classical
-        if (!('n_i' in classical) && !('n_io' in classical) && !('n_o' in classical)) {
-          inputArgEnd = this.command.args.length
-          outputArgStart = this.command.args.length
-        }
-        inputs = getMultiPos(pos => pos + this.posAdjust >= 0 && pos + this.posAdjust < inputArgEnd)
-        outputs = getMultiPos(pos => pos + this.posAdjust >= outputArgStart && pos + this.posAdjust < outputArgEnd)
-      }
-      return {
-        in: inputs.length > 0 ? inputs.map(pos => this.formatPosStr(pos, this.posAdjust)).join(' | ') : '',
-        out: outputs.length > 0 ? outputs.map(pos => this.formatPosStr(pos, this.posAdjust)).join(' | ') : ''
-      }
+      return this.args.map(this.getPosStr)
     }
   },
   methods: {
@@ -254,6 +205,63 @@ export default {
         return false
       }
     },
+    getPosStr (arg) {
+      const getMultiPos = (filterFn) => {
+        if (arg.flags.condensed) {
+          const filtered = arg.multiPos.map(multiPos => {
+            if (Array.isArray(multiPos)) {
+              const mp = multiPos.filter(filterFn)
+              return mp.length > 0 ? mp : -1
+            }
+            return multiPos
+          })
+          const repeats = filtered.reduce(
+              (acc, multiPos) => Array.isArray(multiPos) ? Math.max(acc, multiPos.length) : acc,
+              1
+          )
+          const transposed = Array(repeats)
+          for (let i = 0; i < repeats; i++) {
+            transposed[i] = filtered.map(
+                multiPos => Array.isArray(multiPos) ? (multiPos.length >= i ? multiPos[i] : multiPos[-1]) : multiPos
+            )
+          }
+          return transposed
+        }
+        // Not condensed so we can filter directly
+        return arg.multiPos !== -1 ? arg.multiPos.filter(filterFn) : []
+      }
+
+      let inputs = []
+      let outputs = []
+      if (this.opType === 'WASM' && !arg.flags.wasm) {
+        // Handle classical wires with wasm boxes specially.
+        const inputArgEnd = this.command.op.wasm.width_i_parameter.reduce((acc, i) => i + acc, 0)
+        const outputArgEnd = inputArgEnd + this.command.op.wasm.width_o_parameter.reduce((acc, i) => i + acc, 0)
+
+        inputs = getMultiPos(pos => pos + this.posAdjust < inputArgEnd)
+        outputs = getMultiPos(pos => pos + this.posAdjust >= inputArgEnd && pos + this.posAdjust < outputArgEnd)
+      } else {
+        const classical = ('classical' in this.command.op)
+            ? this.command.op.classical
+            : 'box' in this.command.op ? this.command.op.box : {}
+
+        let outputArgStart = 'n_i' in classical ? classical.n_i : 0
+        let inputArgEnd = 'n_io' in classical ? outputArgStart + classical.n_io : outputArgStart
+        const outputArgEnd = 'n_o' in classical ? inputArgEnd + classical.n_o : this.command.args.length
+
+        // Want only inputs to be defined when not classical
+        if (!('n_i' in classical) && !('n_io' in classical) && !('n_o' in classical)) {
+          inputArgEnd = this.command.args.length
+          outputArgStart = this.command.args.length
+        }
+        inputs = getMultiPos(pos => pos + this.posAdjust >= 0 && pos + this.posAdjust < inputArgEnd)
+        outputs = getMultiPos(pos => pos + this.posAdjust >= outputArgStart && pos + this.posAdjust < outputArgEnd)
+      }
+      return {
+        in: inputs.length > 0 ? inputs.map(pos => this.formatPosStr(pos, this.posAdjust)).join(' | ') : '',
+        out: outputs.length > 0 ? outputs.map(pos => this.formatPosStr(pos, this.posAdjust)).join(' | ') : ''
+      }
+    },
     formatClassicalExp,
     formatPosStr
   }
@@ -264,7 +272,7 @@ export default {
 <template>
   <div :data-gate-component="opType">
     <!-- Barrier requires special rendering -->
-    <div v-if="opType === 'Barrier'" style="height:var(--block-height)">
+    <div v-if="opType === 'Barrier'" v-for="arg in args" style="height:var(--block-height)">
       <wire :classical="arg.flags.classical" :condensed="arg.flags.condensed" :wasm="arg.flags.wasm"></wire>
       <div class="gate_container" :class="[gateColor]">
         <div v-if="arg.pos !== -1" class="link gate" :class="specialGateClasses"></div>
@@ -272,34 +280,60 @@ export default {
     </div>
 
     <!-- Generic single block gate -->
-    <div v-else class="gate_container nested" style="height:var(--block-height)">
-      <wire v-if="arg.pos !== -1" class="wire_in" :class="{flex_wire: arg.flags.single, 'self-controlled-padding-generic': arg.selfControl}" :classical="arg.flags.classical" :condensed="arg.flags.condensed" :wasm="arg.flags.wasm"></wire>
-      <wire v-else class="wire_in transparent-wire" :class="{flex_wire: arg.flags.single}" :classical="arg.flags.classical" :condensed="arg.flags.condensed" :wasm="arg.flags.wasm"></wire>
+    <div v-else class="gate_container nested"
+         :style="{height: 'calc(var(--block-height) * ' + args?.length ?? 1 + ')'}">
+      <circuit-layer :nested="true">
+        <div v-for="(arg, i) in args" :key="i" class="gate_container">
+          <wire v-if="arg.pos !== -1" :classical="arg.flags.classical" :condensed="arg.flags.condensed"
+                :wasm="arg.flags.wasm" :class="{'self-controlled-padding': arg.selfControl}"></wire>
+          <div v-else class="wire transparent-wire"></div>
+        </div>
+      </circuit-layer>
 
       <!-- StatePreparation with reset requires special resets -->
-      <div v-if="opType === 'StatePreparationBox' && command.op.box.with_initial_reset && arg.pos > -1"
-           :class="specialGateClasses" class="gate gate_reset"
-      ></div>
-
-      <div class="gate_container" :class="[gateColor, {'generic': !arg.flags.single}]">
-        <div class="gate connected" :class="specialGateClasses">
-          <span v-if="arg.pos !== -1 && !arg.flags.single" class="wire-label">
-            [[# posStr.in #]]
-          </span>
-          <span :class="specialGateContentClasses" :style="[opType === 'Reset'? {margin: 0} : {}]">
-            <span v-if="arg.flags.last || split">
-              <mathjax-content inline-circuit :formula="name" :fallback="name"></mathjax-content>
-            </span>
-          </span>
-          <span v-if="arg.pos !== -1 && !arg.flags.single" class="wire-label end">
-            [[# posStr.out #]]
-          </span>
+      <div v-if="opType === 'StatePreparationBox' && command.op.box.with_initial_reset"
+           style="display: flex; flex-direction: column; justify-content: space-between">
+        <div v-for="arg in args">
+          <div v-if="arg.pos > -1" :class="specialGateClasses" class="gate gate_reset"></div>
+          <div v-else :class="specialGateClasses" class="gate gate_empty"></div>
         </div>
-        <div v-if="linkVertical" class="link link-top" :class="{'classical': arg.flags.classical}"></div>
       </div>
 
-      <wire v-if="arg.pos !== -1" class="wire_in" :class="{flex_wire: arg.flags.single}" :classical="arg.flags.classical" :condensed="arg.flags.condensed" :wasm="arg.flags.wasm"></wire>
-      <wire v-else class="wire_in transparent-wire" :class="{flex_wire: arg.flags.single}" :classical="arg.flags.classical" :condensed="arg.flags.condensed" :wasm="arg.flags.wasm"></wire>
+      <div class="gate_container" :class="[gateColor, 'generic']">
+        <div class="gate connected" :class="specialGateClasses">
+          <!--    Pos strings    -->
+          <div v-if="args.length > 1" class="gate_wire-label">
+            <div v-for="(arg, i) in args" :key="arg">
+              <span v-if="arg.pos !== -1" class="wire-label">
+                [[# posStr[i].in #]]
+              </span>
+            </div>
+          </div>
+
+          <!--    Gate name    -->
+          <div :class="specialGateContentClasses" :style="[opType === 'Reset'? {margin: 0} : {}]">
+            <mathjax-content inline-circuit :formula="name" :fallback="name"></mathjax-content>
+          </div>
+
+          <!--    Pos strings    -->
+          <div v-if="args.length > 1" class="gate_wire-label">
+            <div v-for="(arg, i) in args" :key="arg">
+              <span v-if="arg.pos !== -1" class="wire-label end">
+                [[# posStr[i].out #]]
+              </span>
+            </div>
+          </div>
+        </div>
+        <div v-if="linkVertical" class="link link-top" :class="{'classical': args[0].flags.classical}"></div>
+      </div>
+
+      <circuit-layer :nested="true">
+        <div v-for="(arg, i) in args" :key="i" class="gate_container">
+          <wire v-if="arg.pos !== -1" :classical="arg.flags.classical" :condensed="arg.flags.condensed"
+                :wasm="arg.flags.wasm" :class="{'self-controlled-padding': arg.selfControl}"></wire>
+          <div v-else class="wire transparent-wire"></div>
+        </div>
+      </circuit-layer>
     </div>
 
   </div>

@@ -200,6 +200,7 @@
         display: flex;
         flex-wrap: nowrap;
         height: fit-content;
+        align-content: stretch;
 
         &:after {
           display: flex;
@@ -208,7 +209,7 @@
       }
 
       &.generic {
-        flex-grow: 1;
+        height: auto;
       }
 
       .gate.classical {
@@ -218,11 +219,14 @@
 
 
     // Wire index
+    .gate_wire-label{
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 100%;
+    }
     .wire-label {
       color: var(--box-index-col);
-      width: -moz-fit-content;
-      width: fit-content;
-      padding-right: 0.4em;
 
       &.end {
         padding-right: 0;
@@ -249,7 +253,7 @@
       position: relative;
       margin: var(--box-margin);
       border: var(--box-border-width) solid var(--wire-col);
-      padding: calc(0.4em + var(--box-padding)) 0.4em;
+      padding: 0.4em;
       text-align: left;
       background: var(--box-col);
       display: flex;
@@ -298,6 +302,10 @@
         padding-bottom: calc(var(--box-padding) + var(--box-margin));
         border-bottom: none;
       }
+      &.gate_multi {
+        height: calc(100% - var(--box-margin) - 2 * var(--box-padding) + 1px);
+        gap: 0.4em;
+      }
 
       .gate_name {
         text-align: center;
@@ -319,6 +327,13 @@
       &.gate_empty {
         background: transparent;
         border-color: transparent;
+
+        &.gate_multi{
+          height: calc(var(--box-height) + 2 * var(--box-padding));
+          margin-left: 0;
+          margin-right: 0;
+          padding: 0;
+        }
       }
 
       &.gate_connection {
@@ -402,6 +417,10 @@
         border: none !important;
         border-left: var(--base-wire-height) solid var(--wire-col) !important;
         background: transparent;
+
+        &.gate_multi{
+          height: calc(var(--box-height) + 2 * var(--box-padding));
+        }
       }
 
       &.gate_reset_spider {
