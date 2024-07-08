@@ -24,7 +24,7 @@ export default {
       commands: [],
       bits: [],
       phase: 0,
-      implicit_permutation: [[['Q', [0]], ['Q', [0]]]],
+      implicit_permutation: [[['Q', [0]], ['Q', [0]]]]
     } // Empty circuit with 1 qubit.
   }
 }

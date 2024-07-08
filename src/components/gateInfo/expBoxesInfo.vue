@@ -7,11 +7,11 @@ export default {
   components: {
     chartList,
     chartDef,
-    mathjaxContent,
+    mathjaxContent
   },
   props: {
-    displayOp: { type: Object, required: true },
-  },
+    displayOp: { type: Object, required: true }
+  }
 }
 </script>
 

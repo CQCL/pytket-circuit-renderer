@@ -4,7 +4,7 @@ export default {
   name: 'info-modal',
   props: {
     modelValue: { type: Boolean, required: true },
-    hasActions: { type: Boolean, default: false },
+    hasActions: { type: Boolean, default: false }
   },
   emits: ['update:modelValue'],
   data () {

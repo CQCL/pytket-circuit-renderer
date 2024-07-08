@@ -2,11 +2,11 @@
 import { extractSubCircuit, extractControlledCommand } from '@/components/circuitDisplay/utils'
 import { renderOptions } from '@/components/circuitDisplay/provideKeys'
 import { chartDef } from '@/components/charts/init'
-import gateInfoCircuit from "./gateInfoCircuit";
+import gateInfoCircuit from './gateInfoCircuit'
 
 export default {
   name: 'gate-info-sub-circuit',
-  components: {gateInfoCircuit, chartDef },
+  components: { gateInfoCircuit, chartDef },
   props: {
     op: { type: Object, required: true },
     circuitType: { default: undefined },
@@ -72,10 +72,10 @@ export default {
   },
   watch: {
     hasSubCircuit: {
-      handler(next) {
+      handler (next) {
         this.$emit('update:hasSubCircuit', next)
       },
-      immediate: true,
+      immediate: true
     }
   },
   beforeCreate () {

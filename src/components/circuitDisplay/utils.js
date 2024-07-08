@@ -100,7 +100,7 @@ const renderIndexedArgs = function () {
 // Deal with nested circuits.
 const extractSubCircuit = function (operation) {
   if (['Custom', 'CustomGate', 'Composite', 'CompositeGate'].includes(operation.type)) {
-    const circuit =  operation.box.gate.definition
+    const circuit = operation.box.gate.definition
     if (!circuit.name) circuit.name = operation.box.gate.name
     return circuit
   }

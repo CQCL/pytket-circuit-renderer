@@ -1,16 +1,16 @@
 <script>
 import { chartDef } from '@/components/charts/init'
-import mathjaxContent from "@/components/mathjaxContent/mathjaxContent.vue";
+import mathjaxContent from '@/components/mathjaxContent/mathjaxContent.vue'
 
 export default {
   name: 'custom-box-info',
   components: {
     mathjaxContent,
-    chartDef,
+    chartDef
   },
   props: {
-    displayOp: {type: Object, required: true},
-  },
+    displayOp: { type: Object, required: true }
+  }
 }
 </script>
 

@@ -6,11 +6,11 @@ export default {
   components: {
     chartMapping,
     chartMatrix,
-    chartDef,
+    chartDef
   },
   props: {
-    displayOp: { type: Object, required: true },
-  },
+    displayOp: { type: Object, required: true }
+  }
 }
 </script>
 

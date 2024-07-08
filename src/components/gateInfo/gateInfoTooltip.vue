@@ -1,32 +1,32 @@
 <script>
-import {renderOptions, teleportConfig} from '@/components/circuitDisplay/provideKeys'
+import { renderOptions, teleportConfig } from '@/components/circuitDisplay/provideKeys'
 import { teleportFrom } from '@/components/teleport/init'
 import infoModal from './infoModal'
 
 export default {
   name: 'gate-info-tooltip',
   props: {
-    ifDisplay: {type: Boolean, default: false},
-    showDisplay: {type: Boolean, default: false},
-    refString: {type: String, required: true},
-    nBlocks: {type: Number, default: 1},
+    ifDisplay: { type: Boolean, default: false },
+    showDisplay: { type: Boolean, default: false },
+    refString: { type: String, required: true },
+    nBlocks: { type: Number, default: 1 }
   },
   components: {
     infoModal,
-    teleportFrom,
+    teleportFrom
   },
   inject: {
     teleportId: { from: teleportConfig.to },
-    nested: { from: renderOptions.nested },
+    nested: { from: renderOptions.nested }
 
   },
   emits: ['register-teleport', 'updated'],
   data () {
     return {
       visible: false,
-      teleportToId: this.teleportId,
+      teleportToId: this.teleportId
     }
-  },
+  }
 }
 </script>
 
@@ -50,10 +50,10 @@ export default {
     <!-- content to be rendered in the info modal -->
     <div style="display: none">
       <teleport-from :to="visible ? teleportToId : ''">
-        <info-modal ref="infoModal" v-model="visible" class="tool-tip-content" :data-cy="'teleported-'+refString">
+        <info-modal ref="infoModal" v-model="visible" class="tool-tip-content" v-show="visible" :data-cy="'teleported-'+refString">
           <template #title><slot name="title"></slot></template>
           <!-- Defer rendering contents until modal is opened -->
-          <template #content v-show="visible"><slot name="content"></slot></template>
+          <template #content><slot name="content"></slot></template>
           <template #buttons><slot name="buttons"></slot></template>
         </info-modal>
       </teleport-from>

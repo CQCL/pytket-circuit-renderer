@@ -2,7 +2,7 @@
 // Vue wrapper for Mathjax.
 // Must use this if the formula can change dynamically.
 import './mathjaxLoader'
-import { renderOptions } from "@/components/circuitDisplay/provideKeys";
+import { renderOptions } from '@/components/circuitDisplay/provideKeys'
 
 let nMJC = 0
 
@@ -13,10 +13,10 @@ export default {
     formula: { type: String, default: '' },
     fallback: { type: String, default: undefined },
     safe: { type: Boolean, default: true },
-    inlineCircuit: { type: Boolean, default: false },
+    inlineCircuit: { type: Boolean, default: false }
   },
   inject: {
-    interpretMath: { from: renderOptions.interpretMath },
+    interpretMath: { from: renderOptions.interpretMath }
   },
   data () {
     nMJC++

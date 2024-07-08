@@ -7,7 +7,7 @@ export default {
   props: {
     qubits: { type: Boolean, default: false },
     argList: { type: Array, default () { return [] } },
-    permutation: { type: Array, default () {return []}},
+    permutation: { type: Array, default () { return [] } },
     condensedRegisters: { type: Object, default () { return {} } }
   },
   computed: {

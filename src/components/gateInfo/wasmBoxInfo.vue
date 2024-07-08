@@ -1,16 +1,16 @@
 <script>
 import { chartDef, chartMatrix } from '@/components/charts/init'
-import { regToStr } from "@/components/circuitDisplay/utils";
+import { regToStr } from '@/components/circuitDisplay/utils'
 
 export default {
   name: 'wasm-box-info',
   components: {
     chartMatrix,
-    chartDef,
+    chartDef
   },
   props: {
-    displayOp: {type: Object, required: true},
-    displayCommand: {type: Object, required: true},
+    displayOp: { type: Object, required: true },
+    displayCommand: { type: Object, required: true }
   },
   computed: {
     wasmVectorInfo () {
