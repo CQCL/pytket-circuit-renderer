@@ -1,8 +1,10 @@
 {
-  "phase":"0.5",
+  "phase":"2 * \\pi / 3",
   "commands":[
-    {"op":{"type":"U3","params":["1.0","-0.56666666","0.5"]},"args":[["q",[0]]]},
+    {"op":{"type":"U3","params":["1.0","-0.56666666","Abs(0.5)"]},"args":[["q",[0]]]},
     {"op":{"type":"Sdg"},"args":[["q",[1]]]},
+    {"op":{"type":"U3","params":["sinh(theta / 2) / (acos(phi))","<hrkhrk","I'm evil>:)"]},"args":[["q",[2]]]},
+    {"op":{"type":"Rx", "params":["</div>"]},"args":[["q",[3]]]},
     {
       "op": {
         "conditional": {
@@ -22,8 +24,9 @@
       },
       "args": [["c", [0]]]
     },
-    {"op": {"type": "Rx", "params": ["0.25 * pi"]}, "args": [["q", [0]]]},
-    {"op": {"type": "Ry", "params": ["atan2(x,y)"]}, "args": [["q", [1]]]},
+    {"op":{"type":"Rz", "params":["ceiling(sqrt(pi/2)) + floor(cbrt(2345))"]},"args":[["q",[0]]]},
+    {"op": {"type": "Rx", "params": ["0.25 * pi"]}, "args": [["q", [2]]]},
+    {"op": {"type": "Ry", "params": ["atan2(x,y)"]}, "args": [["q", [3]]]},
     {"op":{"type":"CircBox","box":{"id":"621ee04f-bc1f-4ae3-bbf5-0db8385e9e01","type":"CircBox","circuit":{
       "name": "Circbox with Phase Gate",
       "phase":"0.0",
@@ -50,7 +53,31 @@
         {"op":{"type":"U2"},"args":[["q",[1]]]}
       ],
       "implicit_permutation":[[["q",[0]],["q",[0]]],[["q",[1]],["q",[1]]],[["q",[2]],["q",[2]]],[["q",[3]],["q",[3]]]]}}},
+      "args":[["q",[3]],["q",[2]]]
+    },
+    {"op":{"type":"CircBox","box":{"id":"621ee04f-bc1f-4ae3-bbf5-0db8385e9e01","type":"CircBox","circuit":{
+      "name": "<I'm dodgy",
+      "phase":"0.0",
+      "qubits":[["q",[0]],["q",[1]]],
+      "bits":[],
+      "commands":[
+        {"op":{"type":"U1"},"args":[["q",[0]]]},
+        {"op":{"type":"U2"},"args":[["q",[1]]]}
+      ],
+      "implicit_permutation":[[["q",[0]],["q",[0]]],[["q",[1]],["q",[1]]],[["q",[2]],["q",[2]]],[["q",[3]],["q",[3]]]]}}},
       "args":[["q",[0]],["q",[1]]]
+    },
+    {"op":{"type":"CircBox","box":{"id":"621ee04f-bc1f-4ae3-bbf5-0db8385e9e01","type":"CircBox","circuit":{
+      "name": "</div> hahaha",
+      "phase":"0.0",
+      "qubits":[["q",[0]],["q",[1]]],
+      "bits":[],
+      "commands":[
+        {"op":{"type":"U1"},"args":[["q",[0]]]},
+        {"op":{"type":"U2"},"args":[["q",[1]]]}
+      ],
+      "implicit_permutation":[[["q",[0]],["q",[0]]],[["q",[1]],["q",[1]]],[["q",[2]],["q",[2]]],[["q",[3]],["q",[3]]]]}}},
+      "args":[["q",[2]],["q",[3]]]
     },
     {"op":{"type":"CircBox","box":{"id":"621ee04f-bc1f-4ae3-bbf5-0db8385e9e01","type":"CircBox","circuit":{
       "name": "$$\\alpha \\cdot \\frac{1}{\\sqrt{2}}$$",
@@ -64,10 +91,11 @@
       "implicit_permutation":[[["q",[0]],["q",[0]]],[["q",[1]],["q",[1]]],[["q",[2]],["q",[2]]],[["q",[3]],["q",[3]]]]}}},
       "args":[["q",[0]],["q",[1]]]
     },
-    {"op":{"type":"Measure"},"args":[["q",[0]],["c",[0]]]},
-    {"op":{"type":"Measure"},"args":[["q",[1]],["c",[1]]]}
+    {"op":{"type":"Measure"},"args":[["q",[2]],["c",[0]]]},
+    {"op":{"type":"Measure"},"args":[["q",[3]],["c",[1]]]}
   ],
-  "qubits":[["q",[0]],["q",[1]]],
+  "qubits":[["q",[0]],["q",[1]], ["q",[2]],["q",[3]]],
   "bits":[["c",[0]],["c",[1]]],
+  "name": "<h4 [[/]\\[]",
   "implicit_permutation":[[["q",[0]],["q",[1]]],[["q",[1]],["q",[0]]]]
 }
