@@ -45,6 +45,11 @@ export default {
         interpretMath: this.initRenderOptions.interpretMath ?? true,
         cropParams: this.initRenderOptions.cropParams ?? true
       },
+      renderOptionGroups: {
+        layout: ['zxStyle', 'condenseCBits', 'recursive', 'wrap'],
+        theme: ['darkTheme', 'systemTheme', 'transparentBg'],
+        params: ['interpretMath', 'cropParams'],
+      },
       themeChanged: 0,
       circuitEl: null,
       circuitDimensions: {
@@ -272,19 +277,21 @@ export default {
            @click="menuOptions = !menuOptions" @keyup.space="menuOptions = !menuOptions"
       ></div>
       <div v-if="menuOptions" class="display-options-menu">
-        <div v-for="(val, option) in renderOptions" :key="option">
-          <div v-if="option in options" class="display-options-menu-entry"
-               tabindex="0"
-               @click="renderOptions[option] = disabledOptions[option] ? renderOptions[option] : !renderOptions[option]"
-               @keyup.space="renderOptions[option] = disabledOptions[option] ? renderOptions[option] : !renderOptions[option]"
-          >
-            <div :title="options[option].title"
-                 class="icon" :class="{'selected': renderOptions[option], 'disabled': disabledOptions[option]}"
-                 role="checkbox"
-                 v-html="options[option].icon"
-            ></div>
-            <div class="icon-label" :class="{'selected': renderOptions[option], 'disabled': disabledOptions[option]}">
-              [[# options[option].title #]]
+        <div v-for="optionGroup in Object.keys(renderOptionGroups)" :key="optionGroup" class="display-options-menu-group">
+          <div v-for="option in renderOptionGroups[optionGroup]" :key="option">
+            <div v-if="option in options" class="display-options-menu-entry"
+                 tabindex="0"
+                 @click="renderOptions[option] = disabledOptions[option] ? renderOptions[option] : !renderOptions[option]"
+                 @keyup.space="renderOptions[option] = disabledOptions[option] ? renderOptions[option] : !renderOptions[option]"
+            >
+              <div :title="options[option].title"
+                   class="icon" :class="{'selected': renderOptions[option], 'disabled': disabledOptions[option]}"
+                   role="checkbox"
+                   v-html="options[option].icon"
+              ></div>
+              <div class="icon-label" :class="{'selected': renderOptions[option], 'disabled': disabledOptions[option]}">
+                [[# options[option].title #]]
+              </div>
             </div>
           </div>
         </div>
@@ -376,10 +383,15 @@ export default {
   overflow: auto;
   z-index: 10;
 }
+.display-options-menu-group {
+  padding: 0.4em;
+}
+.display-options-menu-group:not(:first-child) {
+  border-top: 1px solid var(--divider);
+}
 .display-options-menu-entry {
   display: flex;
   padding: 0.4em;
-  margin: 0.4em;
   border-radius: var(--radius);
 }
 :last-child > .display-options-menu-entry {
