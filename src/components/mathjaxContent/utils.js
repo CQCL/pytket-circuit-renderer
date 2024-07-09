@@ -17,15 +17,15 @@ const TRANSLATIONS_ASCIIMATH = [
   ['**', '^']
 ]
 
-// todo: can't really escape need for a parser: named functions need added brackets to stay as functions...
+// todo: symbolic matrices
+// todo: proper parser
 export const coerceSympyAsciimath = function (formula) {
   // Recognised functions get put in quotemarks.
-  // Apply function translations
+  // This is intended as an intermediate measure before we have a custom parser.
   const regex = new RegExp(FUNCTIONS.join('|'), 'g')
   let coerced = formula.replaceAll(regex, '"$&"')
   for (const [match, replacement] of TRANSLATIONS_ASCIIMATH) {
     coerced = coerced.replaceAll(match, replacement)
   }
-  console.log(formula, '->', coerced)
   return coerced
 }
