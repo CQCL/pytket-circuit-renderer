@@ -17,9 +17,11 @@ export default {
 }
 
 const htmlTemplate = `
-  <div class="circuit-display-container theme_variables" :class="[args.darkTheme ? 'dark' : 'light']">
-    <div class="circuit-container circuit-preview circuit_variables">
-      <generic-gate v-bind="args" />
+  <div :class="[args.darkTheme ? 'theme-mode-dark' : 'theme-mode-light']">
+    <div class="circuit-display-container theme_variables">
+      <div class="circuit-container circuit-preview circuit_variables">
+        <generic-gate v-bind="args" />
+      </div>
     </div>
   </div>`
 

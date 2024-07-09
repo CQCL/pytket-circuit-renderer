@@ -37,15 +37,17 @@ const Template = (args) => ({
       this.isReady = true
     }
   },
-  template: `<div class="circuit-display-container theme_variables" :class="[darkTheme ? 'dark' : 'light']">
-    <div style="justify-content: flex-start" class="circuit-container circuit-preview circuit_variables condensed">
-      <div class="circuit-inner-scroll" data-cy="command-container">
-        <circuit-command :ref="'commandRef'" v-bind="args" @mounted="onMounted">
-          <template #gate-info>
-            <div data-description="placeholder"></div>
-          </template>
-        </circuit-command>
-        <wrapper :command-ref="commandRef" :ready="isReady"></wrapper>
+  template: `<div :class="[args.darkTheme ? 'theme-mode-dark' : 'theme-mode-light']">
+    <div class="circuit-display-container theme_variables">
+      <div style="justify-content: flex-start" class="circuit-container circuit-preview circuit_variables condensed">
+        <div class="circuit-inner-scroll" data-cy="command-container">
+          <circuit-command :ref="'commandRef'" v-bind="args" @mounted="onMounted">
+            <template #gate-info>
+              <div data-description="placeholder"></div>
+            </template>
+          </circuit-command>
+          <wrapper :command-ref="commandRef" :ready="isReady"></wrapper>
+        </div>
       </div>
     </div>
   </div>`

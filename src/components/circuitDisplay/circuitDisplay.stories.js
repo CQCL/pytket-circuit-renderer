@@ -46,9 +46,12 @@ export const Template = (args) => ({
     setupProvideRenderOptions(args)
     return { circuit: args.circuit, darkTheme: args.darkTheme }
   },
-  template: `<div class="circuit-display-container theme_variables" :class="[darkTheme ? 'dark' : 'light']">
-    <circuit-display :circuit="circuit" />
-  </div>`
+  template: `
+    <div :class="[darkTheme ? 'theme-mode-dark' : 'theme-mode-light']">
+      <div class="circuit-display-container theme_variables">
+          <circuit-display :circuit="circuit" />
+      </div>
+    </div>`
 })
 
 export const Basic = Template.bind({})

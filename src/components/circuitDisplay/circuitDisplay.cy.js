@@ -31,7 +31,7 @@ describe('Circuit display component', () => {
             cy.get('[data-cy=teleport-to][data-cy-depth=0]')
               .find('[data-cy-tooltip=close]')
             // Nested gate-infos might have multiple defined within...
-              .last()
+              .first()
               .scrollIntoView().should('be.visible')
               .click()
           })
