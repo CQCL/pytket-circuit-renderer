@@ -135,6 +135,11 @@ export default {
         name = this.opType.slice(0, -2)
       }
 
+      // If the name is super long consider cropping it
+      if (this.cropParams && !this.inlineMath && name.length > 20) {
+        name = name.slice(0, 20) + '...'
+      }
+
       return this.inlineMath
         ? name + (this.isDaggered ? '$${}^\\dagger$$' : '') + '`' + this.paramStr + '`'
         : name + (this.isDaggered ? '†' : '') + this.paramStr
