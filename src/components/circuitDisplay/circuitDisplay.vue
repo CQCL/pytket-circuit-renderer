@@ -8,12 +8,14 @@ import splitCircuitLayers from './splitCircuitLayers'
 import circuitCommand from './command'
 import { gateInfo, circuitInfo } from '../gateInfo/init'
 import { renderOptions, teleportConfig } from './provideKeys'
+import MathjaxContent from "@/components/mathjaxContent/mathjaxContent.vue";
 
 let nCircuits = 0 // circuits needs unique ids.
 
 export default {
   name: 'circuit-display',
   components: {
+    MathjaxContent,
     teleportContainer,
     teleportTo,
     circuitLayer,
@@ -247,7 +249,9 @@ export default {
 
       <div ref="navigatorContent" :class="{'circuit-inner-scroll': condensed}" :style="navigatorStyling">
         <div ref="renderedCircuit">
-          <div v-if="circuit && circuit.name" class="circuit-name-tag circuit-tag-below">[[# circuit.name #]]</div>
+          <div v-if="circuit && circuit.name" class="circuit-name-tag circuit-tag-below">
+            <mathjax-content :formula="circuit.name" :fallback="circuit.name" inline-circuit></mathjax-content>
+          </div>
 
           <div ref="renderedCircuitDimensions" class="circuit-container"
               :class="{nested: nested > 0 || condensed, zx: zxStyle}">
@@ -326,22 +330,20 @@ export default {
   padding: 0.25em 0.5em;
   z-index: 2;
   font-size: 0.7em;
-  color: var(--box-index-col);
-}
-.circuit-name-tag.circuit-tag-above{
-  top: -1.5em;
+  border-radius: var(--radius);
 }
 .circuit-name-tag.circuit-tag-below{
-  top: 1px;
-  background: var(--current-circuit-background);
+  top: 0.5rem;
+  background: hsl(from var(--paper-dark) h s l / 0.9);
 }
 .nested-circuit-container.inline-circuit > .circuit-inner-scroll > div > .circuit-name-tag {
-  left: 3.5em;
+  left: 2.5rem;
 }
 .nested-circuit-container:not(.inline-circuit) > .circuit-inner-scroll > div > .circuit-name-tag {
   left: 1px;
 }
-.circuit-name-tag {
+.circuit-name-tag,
+.tool-tip-content .nested-circuit-container:hover > .circuit-inner-scroll > div > .circuit-name-tag {
   display: none;
 }
 
