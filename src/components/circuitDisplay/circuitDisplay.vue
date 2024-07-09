@@ -8,7 +8,7 @@ import splitCircuitLayers from './splitCircuitLayers'
 import circuitCommand from './command'
 import { gateInfo, circuitInfo } from '../gateInfo/init'
 import { renderOptions, teleportConfig } from './provideKeys'
-import MathjaxContent from "@/components/mathjaxContent/mathjaxContent.vue";
+import MathjaxContent from '@/components/mathjaxContent/mathjaxContent.vue'
 
 let nCircuits = 0 // circuits needs unique ids.
 
@@ -37,6 +37,7 @@ export default {
     recursive: { from: renderOptions.recursive },
     condensed: { from: renderOptions.condensed },
     nested: { from: renderOptions.nested },
+    cropParams: { from: renderOptions.cropParams },
     globalTeleportParent: { from: teleportConfig.parent, default: false },
     globalTeleportToId: { from: teleportConfig.to, default: false }
   },
@@ -121,6 +122,13 @@ export default {
     commandRefs () {
       // Force update each time a new command gets rendered or the circuit changes.
       return this.nRenderedCommands > 0 ? this.$refs.commands.slice(0, this.circuit.commands.length) : []
+    },
+    displayName () {
+      const name = this.cropParams
+        ? (this.circuit.name.length > 20 ? this.circuit.name.slice(0, 15) + '...' : this.circuit.name)
+        : this.circuit.name
+      console.log('name', name)
+      return name
     }
   },
   watch: {
@@ -250,7 +258,7 @@ export default {
       <div ref="navigatorContent" :class="{'circuit-inner-scroll': condensed}" :style="navigatorStyling">
         <div ref="renderedCircuit">
           <div v-if="circuit && circuit.name" class="circuit-name-tag circuit-tag-below">
-            <mathjax-content :formula="circuit.name" :fallback="circuit.name" inline-circuit></mathjax-content>
+            <mathjax-content :formula="circuit.name" :fallback="displayName" inline-circuit></mathjax-content>
           </div>
 
           <div ref="renderedCircuitDimensions" class="circuit-container"
