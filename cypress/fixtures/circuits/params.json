@@ -28,7 +28,7 @@
     {"op": {"type": "Rx", "params": ["0.25 * pi"]}, "args": [["q", [2]]]},
     {"op": {"type": "Ry", "params": ["atan2(x,y)"]}, "args": [["q", [3]]]},
     {"op":{"type":"CircBox","box":{"id":"621ee04f-bc1f-4ae3-bbf5-0db8385e9e01","type":"CircBox","circuit":{
-      "name": "Circbox with Phase Gate",
+      "name": "A $$\\mathbb{COOL}$$ circuit.",
       "phase":"0.0",
       "qubits":[["q",[0]],["q",[1]]],
       "bits":[],
@@ -69,6 +69,18 @@
     },
     {"op":{"type":"CircBox","box":{"id":"621ee04f-bc1f-4ae3-bbf5-0db8385e9e01","type":"CircBox","circuit":{
       "name": "</div> hahaha",
+      "phase":"0.0",
+      "qubits":[["q",[0]],["q",[1]]],
+      "bits":[],
+      "commands":[
+        {"op":{"type":"U1"},"args":[["q",[0]]]},
+        {"op":{"type":"U2"},"args":[["q",[1]]]}
+      ],
+      "implicit_permutation":[[["q",[0]],["q",[0]]],[["q",[1]],["q",[1]]],[["q",[2]],["q",[2]]],[["q",[3]],["q",[3]]]]}}},
+      "args":[["q",[2]],["q",[3]]]
+    },
+    {"op":{"type":"CircBox","box":{"id":"621ee04f-bc1f-4ae3-bbf5-0db8385e9e01","type":"CircBox","circuit":{
+      "name": "$$\\begin{bmatrix} H & u & g & e \\\\ m & atrix & 130 & f \\cdot g \\\\ 0 & 1 & 2 & 3 \\\\ ov & er & fl & ow \\end{bmatrix}$$",
       "phase":"0.0",
       "qubits":[["q",[0]],["q",[1]]],
       "bits":[],

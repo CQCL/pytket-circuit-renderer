@@ -305,6 +305,7 @@
       &.gate_multi {
         height: calc(100% - var(--box-margin) - 2 * var(--box-padding) + 1px);
         gap: 0.4em;
+        overflow: hidden;
       }
 
       .gate_name {
