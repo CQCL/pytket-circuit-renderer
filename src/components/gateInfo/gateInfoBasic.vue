@@ -22,11 +22,11 @@ import statePrepBoxInfo from '@/components/gateInfo/statePrepBoxInfo.vue'
 import toffoliBoxInfo from '@/components/gateInfo/toffoliBoxInfo.vue'
 import unitaryTabBoxInfo from '@/components/gateInfo/unitaryTabBoxInfo.vue'
 import diagonalBoxInfo from '@/components/gateInfo/diagonalBoxInfo.vue'
-import { coerceSympyAsciimath } from '@/components/mathjaxContent/utils'
+import { coerceSympyTex } from '@/components/mathjaxContent/utils'
 
 export default {
   name: 'gate-info-basic',
-  methods: { coerceSympyAsciimath },
+  methods: { coerceSympyTex },
   components: {
     chartMatrix,
     chartDef,
@@ -116,7 +116,7 @@ export default {
     <chart-def v-if="hasLongParams" title="Box params" hover>
       <div style="display: flex; align-items: center">
         <div v-for="(param, i) in params" :key="i" class="complex-number">
-          <mathjax-content :formula="'\`' + coerceSympyAsciimath(param.toString()) + '\`'" :fallback="param.toString()"></mathjax-content>
+          <mathjax-content :formula="'$$' + coerceSympyTex(param.toString(), {flat: false, crop: false}) + '$$'" :fallback="param.toString()"></mathjax-content>
         </div>
       </div>
     </chart-def>

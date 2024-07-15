@@ -127,7 +127,6 @@ export default {
       const name = this.cropParams
         ? (this.circuit.name.length > 20 ? this.circuit.name.slice(0, 15) + '...' : this.circuit.name)
         : this.circuit.name
-      console.log('name', name)
       return name
     }
   },

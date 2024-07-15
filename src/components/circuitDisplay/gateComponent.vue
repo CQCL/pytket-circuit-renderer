@@ -6,7 +6,7 @@ import { create, evaluateDependencies, piDependencies, eDependencies, iDependenc
 import MathjaxContent from '@/components/mathjaxContent/mathjaxContent.vue'
 import { DAGGERED_OPS, SPIDER_OPS } from '@/components/circuitDisplay/consts'
 import circuitLayer from '@/components/circuitDisplay/circuitLayer.vue'
-import { coerceSympyAsciimath } from '@/components/mathjaxContent/utils'
+import { coerceSympyTex } from '@/components/mathjaxContent/utils'
 
 // Must explicitly choose which constants to support: pi, e, i
 const { evaluate } = create({
@@ -141,7 +141,7 @@ export default {
       }
 
       return this.inlineMath
-        ? name + (this.isDaggered ? '$${}^\\dagger$$' : '') + '`' + this.paramStr + '`'
+        ? name + (this.isDaggered ? '$${}^\\dagger$$' : '') + '$$' + this.paramStr + '$$'
         : name + (this.isDaggered ? '†' : '') + this.paramStr
     },
     paramStr () {
@@ -160,8 +160,9 @@ export default {
               }
               throw new Error('Can\'t evaluate')
             } catch (e) {
-              // Just truncate the string
-              return p.length > 5 ? p.slice(0, 4) + '...' : p
+              // Just truncate the string (todo: this is moving to the parser)
+              // return p.length > 5 ? p.slice(0, 4) + '...' : p
+              return p
             }
           }
           // 3dp
@@ -171,7 +172,10 @@ export default {
       if (params.length > 0) {
         // Params are sympy strings. The best renderer for this is asciimath, but requires some help
         const paramStr = (params.length > 3 && this.cropParams) ? `(${params.slice(0, 4)}...)` : `(${params})`
-        return coerceSympyAsciimath(paramStr)
+        return `(${params.map(p => coerceSympyTex(p.toString(), {
+          flat: this.inlineMath,
+          crop: this.cropParams,
+        }))})`
       }
       return ''
     },
