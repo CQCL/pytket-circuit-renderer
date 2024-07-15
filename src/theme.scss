@@ -17,11 +17,11 @@
 
     --circuit-background: hsl(var(--background-)); // Background for circuits only
     --background: hsl(var(--background-)); // Background for other components (generally overlayed)
-    --paper: hsl(from hsl(var(--muted)) h s calc(l + 0.02));
+    --paper: hsl(from hsl(var(--muted)) h s calc(l * 1.02));
     --paper-dark: hsl(var(--muted));
   }
   .theme-mode-dark .theme_variables{
-    --paper: hsl(from hsl(var(--muted)) h s calc(l - 0.06));
+    --paper: hsl(from hsl(var(--muted)) h s calc(l * 0.7));
   }
 
   .theme_variables.transparent_bg {

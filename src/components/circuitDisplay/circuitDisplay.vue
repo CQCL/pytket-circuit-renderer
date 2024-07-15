@@ -339,6 +339,7 @@ export default {
   z-index: 2;
   font-size: 0.7em;
   border-radius: var(--radius);
+  color: var(--text-primary);
 }
 .circuit-name-tag.circuit-tag-below{
   top: 0.5rem;
