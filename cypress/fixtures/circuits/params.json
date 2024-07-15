@@ -5,6 +5,9 @@
     {"op":{"type":"Sdg"},"args":[["q",[1]]]},
     {"op":{"type":"U3","params":["sinh(theta / 2) / acosh(phi**2)","<hrkhrk","I'm evil>:)"]},"args":[["q",[2]]]},
     {"op":{"type":"Rx", "params":["</div>"]},"args":[["q",[3]]]},
+    {"op":{"type":"Rx", "params":["[down]_n@n_n@n_1"]},"args":[["q",[0]]]},
+    {"op":{"type":"Ry", "params":["Product( f(x) / g(x), (x, 1, oo) ) + 5*x**3"]},"args":[["q",[1]]]},
+    {"op":{"type":"Rz", "params":["[\\down]_n@n_n@n_0"]},"args":[["q",[2]]]},
     {
       "op": {
         "conditional": {
@@ -25,8 +28,9 @@
       "args": [["c", [0]]]
     },
     {"op":{"type":"Rz", "params":["ceiling(sqrt(pi/2)) + floor(cbrt(2345))"]},"args":[["q",[0]]]},
+    {"op":{"type":"U1", "params":["gamma / sqrt(2)"]},"args":[["q",[1]]]},
     {"op": {"type": "Rx", "params": ["0.25 * pi"]}, "args": [["q", [2]]]},
-    {"op": {"type": "Ry", "params": ["atan2(x,y)"]}, "args": [["q", [3]]]},
+    {"op": {"type": "Ry", "params": ["atan2(x,2*alpha / theta)"]}, "args": [["q", [3]]]},
     {"op":{"type":"CircBox","box":{"id":"621ee04f-bc1f-4ae3-bbf5-0db8385e9e01","type":"CircBox","circuit":{
       "name": "A $$\\mathbb{COOL}$$ circuit.",
       "phase":"0.0",
@@ -34,7 +38,7 @@
       "bits":[],
       "commands":[
         {"op":{"type":"SWAP"},"args":[["q",[1]],["q",[0]]]},
-        {"op":{"type":"Rx","n_qb":1,"params":["cy", "alpha^2 + beta^3"]},"args":[["q",[1]]]},
+        {"op":{"type":"Rx","n_qb":1,"params":["cy", "alpha**2 + beta**3"]},"args":[["q",[1]]]},
         {"op": {"type": "Phase", "params": ["0.5"]}, "args": null},
         {"op": {"type": "Phase", "params": ["0.5"]}, "args": null},
         {"op":{"type":"CZ"},"args":[["q",[0]],["q",[1]]]},
