@@ -56,7 +56,7 @@ export default {
         padding-top: 0.25em;
       }
     }
-    &.hover:hover {
+    &.hover:nth-child(2n) {
       background: var(--paper);
     }
     &.heading {

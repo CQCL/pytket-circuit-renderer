@@ -15,7 +15,7 @@ export default {
 </script>
 
 <template>
-  <div v-if="['Custom', 'Composite', 'CompositeGate'].includes(displayOp.type)" class="hover-highlight">
+  <div v-if="['Custom', 'Composite', 'CompositeGate'].includes(displayOp.type)">
     <chart-def title="Parameters" heading></chart-def>
     <chart-def v-for="(param, i) in displayOp.box.params" :key="i" title="" hover>
       <template #title>
