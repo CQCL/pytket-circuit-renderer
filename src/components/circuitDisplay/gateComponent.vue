@@ -94,13 +94,21 @@ export default {
     name () {
       // Name of this gate.
       let name = this.opType
+      let customName = false
       const op = this.command.op
 
+      // Make the name more readable
+      name = name.replace(/([a-z])([A-Z])/g, '$1 $2')
+      name = name.replace(/([0-9])([A-Z])/g, '$1 $2')
+      name = name.replace(/([a-z])([0-9])/g, '$1 $2')
+
       if (this.opType === 'CircBox' && 'box' in op && 'circuit' in op.box) {
+        customName |= 'name' in op.box.circuit
         name = 'name' in op.box.circuit ? op.box.circuit.name : 'Circuit'
       }
       if (['Custom', 'CustomGate', 'Composite', 'CompositeGate'].includes(this.opType) &&
           'box' in op && 'gate' in op.box) {
+        customName |= 'name' in op.box.gate
         name = 'name' in op.box.gate ? op.box.gate.name : 'Parametrised Circuit'
       }
       // Display classical op params more directly
@@ -136,7 +144,7 @@ export default {
       }
 
       // If the name is super long consider cropping it
-      if (this.cropParams && !this.inlineMath && name.length > 20) {
+      if (customName && this.cropParams && !this.inlineMath && name.length > 20) {
         name = name.slice(0, 20) + '...'
       }
 
