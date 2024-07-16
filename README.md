@@ -61,7 +61,9 @@ The render options you can specify are the following:
 - `systemTheme` : Default to system theme. On by default.
 - `transparentBg`: Display the circuit with a transparent background. 
 - `cropParams`: Crop long gate parameters. 
-  It is advised that you also set the theme to avoid clashes.
+- `interpretMath`: Render math names and parameters via latex.
+ 
+It is advised that you also set the theme to avoid clashes.
 
 Check the example folder for a basic sample app that uses this component.
 
