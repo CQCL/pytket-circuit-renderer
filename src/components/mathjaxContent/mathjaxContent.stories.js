@@ -1,17 +1,17 @@
 import { provide } from 'vue'
 import MathjaxContent from './mathjaxContent.vue'
-import {renderOptions} from "@/components/circuitDisplay/provideKeys";
-import sympyParser from "@/sympyParser/sympy";
+import { renderOptions } from '@/components/circuitDisplay/provideKeys'
+import sympyParser from '@/sympyParser/sympy'
 
 export default {
-  components: {MathjaxContent},
+  components: { MathjaxContent },
   title: 'Mathjax',
   component: MathjaxContent,
   excludeStories: [],
   args: {
     interpretMath: true,
     inlineCircuit: true,
-    formula: "$$\\pi$$"
+    formula: '$$\\pi$$'
   }
 }
 
@@ -33,7 +33,6 @@ export const Default = (args) => ({
     </div>`
 })
 
-
 export const WithParser = (args) => ({
   components: { MathjaxContent },
   setup () {
@@ -43,7 +42,7 @@ export const WithParser = (args) => ({
     try {
       parsedFormula = sympyParser.parse(args.formula, {
         crop: args.crop,
-        flat: args.flat,
+        flat: args.flat
       })
     } catch (e) {
       parseError = e
@@ -75,5 +74,5 @@ export const WithParser = (args) => ({
 WithParser.args = {
   formula: 'cosh(phi)',
   crop: true,
-  flat: true,
+  flat: true
 }

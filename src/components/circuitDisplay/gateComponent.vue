@@ -182,7 +182,7 @@ export default {
         const paramStr = (params.length > 3 && this.cropParams) ? `(${params.slice(0, 4)}...)` : `(${params})`
         return `(${params.map(p => coerceSympyTex(p.toString(), {
           flat: this.inlineMath,
-          crop: this.cropParams,
+          crop: this.cropParams
         }))})`
       }
       return ''
