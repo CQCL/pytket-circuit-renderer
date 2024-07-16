@@ -90,5 +90,8 @@ export default {
   margin: 0;
   overflow: auto;
 }
+.mathjax-content.inline-circuit-mathjax > mjx-container[jax="CHTML"][display="true"] {
+  overflow: visible;
+}
 
 </style>
