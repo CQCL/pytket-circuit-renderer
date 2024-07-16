@@ -149,7 +149,7 @@ export default {
       }
 
       return this.inlineMath
-        ? name + (this.isDaggered ? '$${}^\\dagger$$' : '') + '$$' + this.paramStr + '$$'
+        ? `${name} $$ ${this.isDaggered ? '{}^\\dagger' : ''} ${this.paramStr} $$`
         : name + (this.isDaggered ? '†' : '') + this.paramStr
     },
     paramStr () {
@@ -177,7 +177,7 @@ export default {
       }
       if (params.length > 0) {
         // Params are sympy strings. The best renderer for this is asciimath, but requires some help
-        const paramStr = (params.length > 3 && this.cropParams) ? `(${params.slice(0, 4)}...)` : `(${params})`
+        if (!this.inlineMath) return (params.length > 3 && this.cropParams) ? `(${params.slice(0, 4)}...)` : `(${params})`
         return `(${params.map(p => coerceSympyTex(p.toString(), {
           flat: this.inlineMath,
           crop: this.cropParams

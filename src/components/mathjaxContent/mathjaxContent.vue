@@ -88,10 +88,6 @@ export default {
 .mathjax-content > mjx-container[jax="CHTML"][display="true"] {
   text-align: inherit;
   margin: 0;
-  overflow: auto;
-}
-.mathjax-content.inline-circuit-mathjax > mjx-container[jax="CHTML"][display="true"] {
   overflow: visible;
 }
-
 </style>
