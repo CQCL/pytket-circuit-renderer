@@ -168,8 +168,6 @@ export default {
               }
               throw new Error('Can\'t evaluate')
             } catch (e) {
-              // Just truncate the string (todo: this is moving to the parser)
-              // return p.length > 5 ? p.slice(0, 4) + '...' : p
               return p
             }
           }
