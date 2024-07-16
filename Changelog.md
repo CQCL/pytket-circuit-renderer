@@ -13,7 +13,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## Unreleased
 
-## [0.9.0] 2024-07-09
+## [0.9.0] 2024-07-16
 ### Added
 - Circuit level information modal.
 - Reflect implicit permuation in the qubit labelling.
@@ -25,7 +25,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ### Fixed
 - Make entire gate clickable for extra information.
 - Gates with no params now clickable.
-- (temporary) improve accuracy of parameter rendering as math.
+- Improve rendering of parameters as math.
 
 ## [0.8.1] 2024-06-18
 ### Added:
