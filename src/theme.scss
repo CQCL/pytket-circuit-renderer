@@ -198,14 +198,6 @@
       box-shadow: none;
     }
 
-    .hover-highlight tr:nth-child(2n+1) {
-      background: var(--grey200-alpha);
-    }
-
-    .no-hover-highlight tr:nth-child(2n+1) {
-      background: revert;
-    }
-
     td, th {
       padding: 10px;
       position: relative;
