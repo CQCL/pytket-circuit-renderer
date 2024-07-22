@@ -53,10 +53,9 @@ export default {
           gatePositionClasses = {
             gate_top: !arg.flags.single && !this.split && arg.flags.first,
             gate_mid: !arg.flags.single && !this.split && !arg.flags.first && !arg.flags.last,
-            gate_bottom: !arg.flags.single && !this.split && arg.flags.last,
+            gate_bottom: !arg.flags.single && !this.split && arg.flags.last
           }
-        }
-        else {
+        } else {
           gatePositionClasses = { gate_multi: !arg.flags.single }
         }
         return {
