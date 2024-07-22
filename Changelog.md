@@ -13,7 +13,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## Unreleased
 
-## [0.9.0] 2024-07-16
+## [0.9.0] 2024-07-22
 ### Added
 - Circuit level information modal.
 - Reflect implicit permuation in the qubit labelling.
