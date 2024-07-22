@@ -1,5 +1,5 @@
 
-name: Test PR builds
+name: Test build
 
 on:
   pull_request:
@@ -15,6 +15,7 @@ jobs:
         with:
           node-version: 16
       - run: npm ci
-      - run: npm lint
-      - run: npm test
-      - run: npm build-lib
+      - run: npm run parser
+      - run: npm run lint
+      - run: npm run test
+      - run: npm run build-lib
