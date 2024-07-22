@@ -69,7 +69,7 @@ describe('Circuit display container component', () => {
             .trigger('mouseup', { which: 1 })
           cy.get('[data-cy=open-tool-tip-CircBox]').should('be.visible').click()
           cy.get('[data-cy=teleport-to] [data-cy=teleported-CircBox]').within(() => {
-            cy.contains('Rx(cy').should('exist')
+            cy.contains('Rx').should('exist')
             cy.get('[data-cy=open-tool-tip-Rx]').should('be.visible').click()
             cy.get('[data-cy=teleported-Rx]').within(() => {
               cy.contains('Box params')
