@@ -6,6 +6,9 @@
 "use strict";
 
 
+
+/* eslint-disable */
+
 function peg$subclass(child, parent) {
   function C() { this.constructor = child; }
   C.prototype = parent.prototype;
@@ -175,8 +178,8 @@ function peg$parse(input, options) {
   var peg$FAILED = {};
   var peg$source = options.grammarSource;
 
-  var peg$startRuleFunctions = { Expression: peg$parseExpression };
-  var peg$startRuleFunction = peg$parseExpression;
+  var peg$startRuleFunctions = { MathExpr: peg$parseMathExpr };
+  var peg$startRuleFunction = peg$parseMathExpr;
 
   var peg$c0 = "**";
   var peg$c1 = "(";
@@ -654,13 +657,10 @@ function peg$parse(input, options) {
     );
   }
 
-  function peg$parseExpression() {
+  function peg$parseMathExpr() {
     var s0;
 
     s0 = peg$parseAddExpr();
-    if (s0 === peg$FAILED) {
-      s0 = peg$parseLogicalExpr();
-    }
 
     return s0;
   }
@@ -3171,7 +3171,7 @@ function peg$parse(input, options) {
 }
 
 module.exports = {
-  StartRules: ["Expression"],
+  StartRules: ["MathExpr"],
   SyntaxError: peg$SyntaxError,
   parse: peg$parse
 };

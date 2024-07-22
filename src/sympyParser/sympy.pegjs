@@ -1,5 +1,9 @@
 // Sympy Expression grammar (approx). Converts to tex strings
 
+{{
+/* eslint-disable */
+}}
+
 {
     const flat = options.flat ?? false;
     const crop = options.crop ?? false;
