@@ -83,15 +83,17 @@ export default {
           @updated:has-base-content="(val) => flags.hasBaseContent = val"
       ></gate-info-basic>
 
-      <gate-info-sub-circuit v-if="displayOp.type === 'ConjugationBox'"
-          v-for="key in ['Compute', 'Action', 'Uncompute']"
-          :key="key"
-          @updated="onCircuitDisplayUpdate"
-          @update:has-sub-circuit="(val) => {flags.hasSubCircuit[key] = val}"
-          :op="displayOp"
-          :args="command.args"
-          :circuit-type="key"
-      ></gate-info-sub-circuit>
+      <template  v-if="displayOp.type === 'ConjugationBox'">
+        <gate-info-sub-circuit
+            v-for="key in ['Compute', 'Action', 'Uncompute']"
+            :key="key"
+            @updated="onCircuitDisplayUpdate"
+            @update:has-sub-circuit="(val) => {flags.hasSubCircuit[key] = val}"
+            :op="displayOp"
+            :args="command.args"
+            :circuit-type="key"
+        ></gate-info-sub-circuit>
+      </template>
 
       <gate-info-sub-circuit v-if="hasSubCircuit"
           @updated="onCircuitDisplayUpdate"
