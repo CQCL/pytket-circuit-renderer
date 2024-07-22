@@ -97,11 +97,6 @@ export default {
       let customName = false
       const op = this.command.op
 
-      // Make the name more readable
-      name = name.replace(/([a-z])([A-Z])/g, '$1 $2')
-      name = name.replace(/([0-9])([A-Z])/g, '$1 $2')
-      name = name.replace(/([a-z])([0-9])/g, '$1 $2')
-
       if (this.opType === 'CircBox' && 'box' in op && 'circuit' in op.box) {
         customName |= 'name' in op.box.circuit
         name = 'name' in op.box.circuit ? op.box.circuit.name : 'Circuit'
