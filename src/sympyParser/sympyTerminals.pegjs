@@ -17,13 +17,16 @@ GreekLetter "greek_letters"
 
 SpecialSymbol "special symbols"
     = "oo" {return '\\infty'}
-    / "EmptySet" {return '\\emptyset'}
+    / "zoo" {return '\\tilde\\infty'}
+    / "Exp1" {return 'e'}
+    / "I" {return 'i'}
+    / "nan" {return '\\mathsf{NaN}'}
 
-Integer "int" = _ [0-9]+ { return parseInt(text(), 10).toString(); }
+Integer "int" = _ num:[0-9]+ { return parseInt(num, 10).toString(); }
 
 Float "float" = _ [0-9]* "." [0-9]+ { return parseFloat(text(), 10).toString(); }
 
-Variable "var" = _ [a-z]i+ { return `{${text()}}` }
+Variable "var" = _ varname:[a-z]i+ { return `{${varname}}` }
 
 _ "whitespace"
   = [ \t\n\r]*
