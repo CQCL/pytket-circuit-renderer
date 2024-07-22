@@ -1,8 +1,5 @@
 // Sympy Expression grammar (approx). Converts to tex strings
-
-{{
-/* eslint-disable */
-}}
+{{/* eslint-disable */}}
 
 {
     const flat = options.flat ?? false;
@@ -25,7 +22,6 @@
         return flat ? `\\sqrt[${n}]{}` + brackets.l + x + brackets.r : ` {\\sqrt[${n}]{${x}}} `
     }
 }
-
 // Todo: can't backtrack to logicalExp --> include lookahead to determine which is picked?
 // todo: can we get logical exp nested inside a mathexp? eg in a summation boundary?
 //Expression = MathExpr / LogicalExpr

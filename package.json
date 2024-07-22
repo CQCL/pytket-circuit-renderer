@@ -22,7 +22,7 @@
     "cypress": "npx cypress open --component",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "parser": "peggy src/sympyParser/sympy.pegjs src/sympyParser/sympyLogic.pegjs src/sympyParser/sympyTerminals.pegjs"
+    "parser": "peggy src/sympyParser/sympy.pegjs src/sympyParser/sympyLogic.pegjs src/sympyParser/sympyTerminals.pegjs && npx eslint 'src/sympyParser/sympy.js' --fix"
   },
   "main": "./dist/pytket-circuit-renderer.common.js",
   "dependencies": {
