@@ -48,11 +48,19 @@ export default {
     },
     specialGateClasses () {
       return this.args.map((arg) => {
+        let gatePositionClasses
+        if (this.opType === 'Barrier') {
+          gatePositionClasses = {
+            gate_top: !arg.flags.single && !this.split && arg.flags.first,
+            gate_mid: !arg.flags.single && !this.split && !arg.flags.first && !arg.flags.last,
+            gate_bottom: !arg.flags.single && !this.split && arg.flags.last,
+          }
+        }
+        else {
+          gatePositionClasses = { gate_multi: !arg.flags.single }
+        }
         return {
-          // gate_top: !arg.flags.single && !this.split && arg.flags.first,
-          // gate_mid: !arg.flags.single && !this.split && !arg.flags.first && !arg.flags.last,
-          // gate_bottom: !arg.flags.single && !this.split && arg.flags.last,
-          gate_multi: !arg.flags.single,
+          ...gatePositionClasses,
           gate_box: this.command.args.length === 1 || arg.flags.single || this.split,
           classical: arg.flags.classical,
           condensed: arg.flags.condensed,
@@ -287,12 +295,14 @@ export default {
 <template>
   <div :data-gate-component="opType">
     <!-- Barrier requires special rendering -->
-    <div v-if="opType === 'Barrier'" v-for="arg in args" :key="arg" style="height:var(--block-height)">
-      <wire :classical="arg.flags.classical" :condensed="arg.flags.condensed" :wasm="arg.flags.wasm"></wire>
-      <div class="gate_container" :class="[gateColor]">
-        <div v-if="arg.pos !== -1" class="link gate" :class="specialGateClasses"></div>
+    <template v-if="opType === 'Barrier'">
+      <div v-for="(arg, i) in args" :key="[arg, i]" style="height:var(--block-height)">
+        <wire :classical="arg.flags.classical" :condensed="arg.flags.condensed" :wasm="arg.flags.wasm"></wire>
+        <div class="gate_container" :class="[gateColor]">
+          <div v-if="arg.pos !== -1" class="link gate" :class="specialGateClasses[i]"></div>
+        </div>
       </div>
-    </div>
+    </template>
 
     <!-- Generic single block gate -->
     <div v-else class="gate_container nested"
@@ -318,7 +328,7 @@ export default {
         <div class="gate connected" :class="specialGateClasses">
           <!--    Pos strings    -->
           <div v-if="args.length > 1" class="gate_wire-label">
-            <div v-for="(arg, i) in args" :key="arg">
+            <div v-for="(arg, i) in args" :key="[arg, i]">
               <span v-if="arg.pos !== -1" class="wire-label">
                 [[# posStr[i].in #]]
               </span>
@@ -332,7 +342,7 @@ export default {
 
           <!--    Pos strings    -->
           <div v-if="args.length > 1" class="gate_wire-label">
-            <div v-for="(arg, i) in args" :key="arg">
+            <div v-for="(arg, i) in args" :key="[arg, i]">
               <span v-if="arg.pos !== -1" class="wire-label end">
                 [[# posStr[i].out #]]
               </span>
