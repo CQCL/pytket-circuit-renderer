@@ -93,3 +93,56 @@ export const FromDOMReactive = (args) => ({
       </div>
     </div>`
 })
+
+
+export const MultiCircuit = (args) => ({
+  components: { CircuitDisplayContainer },
+  setup () {
+    const circuitPreset = reactive({ val: args.circuitPreset })
+    const circuitPreset2 = reactive({ val: args.circuitPreset })
+    return {
+      circuitStories: CircuitStories,
+      circuitPreset,
+      circuitPreset2,
+      presets: Object.keys(CircuitStories).filter(key => !CircuitStories.default.excludeStories.includes(key)),
+      circuitElementStr: '#circuitJSON',
+      initRenderOptions: args.initOptions
+        ? {
+            darkTheme: args.darkTheme,
+            condensed: args.condensed,
+            condenseCBits: args.condenseCBits,
+            zxStyle: args.zxStyle,
+            recursive: args.recursive,
+            transparentBg: args.transparentBg,
+            interpretMath: args.interpretMath,
+            cropParams: args.cropParams
+          }
+        : {}
+    }
+  },
+  template: `<div>
+      <div style="position: relative; width: 100%; height: 400px">
+        <circuit-display-container :circuit-element-str="circuitElementStr" :init-render-options="initRenderOptions">
+        </circuit-display-container>
+      </div>
+      
+      Reactive circuit choices:
+      <select v-model="circuitPreset.val">
+        <option v-for="preset in presets" :value="preset">
+          {{ preset }}
+        </option>
+      </select>
+      <select v-model="circuitPreset2.val">
+        <option v-for="preset in presets" :value="preset">
+          {{ preset }}
+        </option>
+      </select>
+      
+      <div id="circuitJSON" style="margin-top: 20px; font-size: 10px">
+        {{ JSON.stringify([
+            circuitStories[circuitPreset.val].args.circuit,
+            circuitStories[circuitPreset2.val].args.circuit,
+        ]) }}
+      </div>
+    </div>`
+})
