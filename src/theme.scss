@@ -19,6 +19,8 @@
     --background: hsl(var(--background-)); // Background for other components (generally overlayed)
     --paper: hsl(from hsl(var(--muted)) h s calc(l * 1.02));
     --paper-dark: hsl(var(--muted));
+
+    --current-background: var(--background);
   }
   .theme-mode-dark .theme_variables{
     --paper: hsl(from hsl(var(--muted)) h s calc(l * 0.7));

@@ -1,6 +1,7 @@
 <script>
 import { navigator } from './provideKeys'
 import { RefValidator } from '@/components/propValidators'
+import { getScroll, initSelf } from './utils'
 
 export default {
   name: 'navigator-preview',
@@ -13,29 +14,85 @@ export default {
     controller: { validator: RefValidator, required: true } // Ref to navigator controller
   },
   inject: {
-    styles: { from: navigator.styles }
+    offset: { from: navigator.offset },
+    coeff: { from: navigator.coeff },
   },
+  emits: ['update:preview-x', 'update:preview-y'],
   data () {
     return {
       scrolling: false,
-      zooming: false
+      zooming: false,
+      self: {
+        x: undefined,
+        y: undefined
+      }
     }
   },
   computed: {
     zoomKey () {
       return this.direction === 'x' ? 'zoomX' : 'zoomY'
+    },
+    len () {
+      return Math.min(this.coeff[this.direction], 1)
+    },
+    scroll () {
+      return this.getScroll([this.direction])
+    },
+    scrollbarThumbStyle () {
+      const len = this.len * 100
+      const start = this.scroll * 100
+      return this.direction === 'x'
+        ? { left: start + '%', width: len + '%' }
+        : { top: start + '%', height: len + '%' }
+    },
+    scrollbarTrackStyle () {
+      return this.direction === 'y'
+        ? {
+          left: 0,
+          width: `${100 / Math.max(this.coeff.x, 1)}%`,
+          height: '100%'
+        }
+        : {
+          top: 0,
+          width: '100%',
+          height: `${100 / Math.max(this.coeff.y, 1)}%`
+        }
     }
+  },
+  mounted () {
+    this.initSelf()
+    window.addEventListener('resize', this.initSelf)
+  },
+  beforeUnmount () {
+    window.removeEventListener('resize', this.initSelf)
   },
   methods: {
     startZooming (position, e) {
       this.zooming = true
       this.controller.startZooming(this.direction, position, e)
-      document.addEventListener('mouseup', () => { this.zooming = false })
+      document.addEventListener('mouseup', () => {
+        this.zooming = false
+      })
     },
     startScrolling (e) {
-      this.scrolling = true
-      this.controller.startScrolling(this.direction, e)
-      document.addEventListener('mouseup', () => { this.scrolling = false })
+      if (this.len < 1) {
+        // Only allow scrolling when content isn't taking up the whole space.
+        this.scrolling = true
+        this.controller.startScrolling(this.direction, e)
+        document.addEventListener('mouseup', () => {
+          this.scrolling = false
+        })
+      }
+    },
+    getScroll,
+    initSelf,
+  },
+  watch: {
+    'self.x' (newVal) {
+      this.$emit('update:preview-x', newVal)
+    },
+    'self.y' (newVal) {
+      this.$emit('update:preview-y', newVal)
     }
   }
 }
@@ -44,9 +101,9 @@ export default {
 
 <template>
   <div :class="['navigator-preview-block-'+direction]" style="display:flex">
-    <div :class="['navigator-preview', 'navigator-preview-'+direction]" :ref="'preview'">
+    <div :class="['navigator-preview', 'navigator-preview-'+direction]" :ref="'contentSelf'">
       <div :class="['navigator-controller', 'nav-'+direction, { 'scrolling': scrolling }]"
-           :style="styles[direction]"
+           :style="scrollbarThumbStyle"
            @mousedown="startScrolling"
            @dblclick="() => controller.resetZoom(direction)"
       >
@@ -58,12 +115,13 @@ export default {
         ></div>
       </div>
 
-      <div :class="['navigator-background nav-'+direction]" :style="styles[direction+'Preview']"
+      <div :class="['navigator-background nav-'+direction]" :style="scrollbarTrackStyle"
            @click="e => controller.jumpScroll(direction, e)">
         <slot></slot>
       </div>
     </div>
-    <div v-if="fitZoom" class="icon zoom-control-icon" :class="{'active': controller && controller[zoomKey] === controller.self[direction]/controller.content[direction]}"
+    <div v-if="fitZoom" class="icon zoom-control-icon"
+         :class="{'active': controller && controller[zoomKey] === controller.self[direction]/controller.content[direction]}"
          @click="controller.fitZoom(direction)" data-cy="fitZoom" title="Fit content to viewport">
       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-zoom-fit" viewBox="0 0 16 16">
         <path d="M7.79645 3.94645C7.99171 3.75118 8.30829 3.75118 8.50355 3.94645L10.7036 6.14645C10.7973 6.24021 10.85 6.36739 10.85 6.5C10.85 6.63261 10.7973 6.75979 10.7036 6.85355L8.50355 9.05355C8.30829 9.24882 7.99171 9.24882 7.79645 9.05355C7.60118 8.85829 7.60118 8.54171 7.79645 8.34645L9.64289 6.5L7.79645 4.65355C7.60118 4.45829 7.60118 4.14171 7.79645 3.94645Z"/>

@@ -3,7 +3,7 @@ import { computed } from 'vue'
 import circuitDisplay from './circuitDisplay'
 import { infoModal } from '@/components/gateInfo/init'
 import exportImage from '@/components/exportImage/exportImage'
-import { navigatorController, navigatorPreview } from '@/components/navigator/init'
+import { navigatorController, navigatorPreview, navigatorView } from '@/components/navigator/init'
 import { renderOptions } from './provideKeys'
 
 export default {
@@ -13,7 +13,8 @@ export default {
     infoModal,
     exportImage,
     navigatorController,
-    navigatorPreview
+    navigatorPreview,
+    navigatorView,
   },
   props: {
     circuitRaw: { type: Object, required: false, default: undefined },
@@ -51,15 +52,18 @@ export default {
         params: ['interpretMath', 'cropParams']
       },
       themeChanged: 0,
+      // Image export
       circuitEl: null,
       circuitDimensions: {
         width: undefined,
         height: undefined
       },
       backgroundCol: '#ffffff', // default background for jpeg image export.
+      // Displayed content
+      circuitDisplayRefs: [],
       displayedCircuitDimensions: {
-        x: undefined,
-        y: undefined
+        x: [],
+        y: []
       },
       exportImageModal: false, // toggle export dialog
       menuOptions: false, // toggle display options menu
@@ -117,7 +121,6 @@ export default {
           icon: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-text-lambda" viewBox="0 0 16 16" ><path fill-rule="evenodd" clip-rule="evenodd" d="M14 9C14.5523 9 15 8.55228 15 8C15 7.44772 14.5523 7 14 7C13.4477 7 13 7.44772 13 8C13 8.55228 13.4477 9 14 9ZM14 10C15.1046 10 16 9.10457 16 8C16 6.89543 15.1046 6 14 6C12.8954 6 12 6.89543 12 8C12 9.10457 12.8954 10 14 10Z" /><path fill-rule="evenodd" clip-rule="evenodd" d="M2 9C2.55228 9 3 8.55228 3 8C3 7.44772 2.55228 7 2 7C1.44772 7 1 7.44772 1 8C1 8.55228 1.44772 9 2 9ZM2 10C3.10457 10 4 9.10457 4 8C4 6.89543 3.10457 6 2 6C0.895431 6 0 6.89543 0 8C0 9.10457 0.895431 10 2 10Z" /><path fill-rule="evenodd" clip-rule="evenodd" d="M1.5 2.5C1.5 1.67157 2.17157 1 3 1H13C13.8284 1 14.5 1.67157 14.5 2.5V6.5H13.5V2.5C13.5 2.22386 13.2761 2 13 2H3C2.72386 2 2.5 2.22386 2.5 2.5V6.5H1.5V2.5ZM2.5 9.5V13.5C2.5 13.7761 2.72386 14 3 14H13C13.2761 14 13.5 13.7761 13.5 13.5V9.5H14.5V13.5C14.5 14.3284 13.8284 15 13 15H3C2.17157 15 1.5 14.3284 1.5 13.5V9.5H2.5Z" /> <path d="M5.9795 12.144C6.0915 12.192 6.1755 12.216 6.2315 12.216C6.2635 12.216 6.2995 12.184 6.3395 12.12C6.3795 12.064 6.4155 12 6.4475 11.928C6.4795 11.856 6.4995 11.808 6.5075 11.784C6.6435 11.536 6.7915 11.264 6.9515 10.968C7.1195 10.664 7.2795 10.36 7.4315 10.056C7.5915 9.752 7.7355 9.468 7.8635 9.204C7.9915 8.932 8.0915 8.708 8.1635 8.532C8.1795 8.5 8.1915 8.488 8.1995 8.496C8.2155 8.496 8.2275 8.512 8.2355 8.544C8.2755 8.816 8.3235 9.128 8.3795 9.48C8.4435 9.824 8.5155 10.168 8.5955 10.512C8.6755 10.856 8.7555 11.16 8.8355 11.424C8.9235 11.72 9.0475 11.92 9.2075 12.024C9.3755 12.128 9.5595 12.18 9.7595 12.18C9.8875 12.18 10.0115 12.152 10.1315 12.096C10.2515 12.04 10.3595 11.96 10.4555 11.856C10.5515 11.752 10.6275 11.632 10.6835 11.496C10.7395 11.36 10.7675 11.212 10.7675 11.052C10.7675 11.02 10.7515 10.996 10.7195 10.98C10.6955 10.956 10.6675 10.944 10.6355 10.944C10.5875 10.944 10.4915 10.98 10.3475 11.052C10.2115 11.116 10.0355 11.144 9.8195 11.136C9.7235 11.136 9.5995 11.1 9.4475 11.028C9.2955 10.948 9.1835 10.784 9.1115 10.536C9.0315 10.24 8.9515 9.936 8.8715 9.624C8.7995 9.304 8.7315 8.984 8.6675 8.664C8.6115 8.344 8.5555 8.036 8.4995 7.74C8.3555 6.908 8.2035 6.184 8.0435 5.568C7.8915 4.944 7.6955 4.464 7.4555 4.128C7.2235 3.784 6.9075 3.612 6.5075 3.612C6.3395 3.612 6.1715 3.656 6.0035 3.744C5.8355 3.824 5.6795 3.928 5.5355 4.056C5.3995 4.176 5.2875 4.3 5.1995 4.428C5.1115 4.548 5.0675 4.648 5.0675 4.728C5.0675 4.784 5.0755 4.82 5.0915 4.836C5.1075 4.852 5.1355 4.86 5.1755 4.86C5.2075 4.86 5.2435 4.852 5.2835 4.836C5.3315 4.812 5.3835 4.78 5.4395 4.74C5.5675 4.652 5.6915 4.584 5.8115 4.536C5.9395 4.488 6.0595 4.464 6.1715 4.464C6.5635 4.464 6.8835 4.584 7.1315 4.824C7.3795 5.064 7.5675 5.384 7.6955 5.784C7.8315 6.176 7.9275 6.6 7.9835 7.056C7.9995 7.152 8.0035 7.22 7.9955 7.26C7.9875 7.292 7.9635 7.364 7.9235 7.476C7.8355 7.764 7.6955 8.092 7.5035 8.46C7.3195 8.82 7.1115 9.188 6.8795 9.564C6.6555 9.94 6.4315 10.296 6.2075 10.632C5.9915 10.96 5.8075 11.24 5.6555 11.472C5.5995 11.56 5.5635 11.612 5.5475 11.628C5.5395 11.644 5.5355 11.696 5.5355 11.784C5.5355 11.856 5.5795 11.924 5.6675 11.988C5.7635 12.052 5.8675 12.104 5.9795 12.144Z" /><path fill-rule="evenodd" clip-rule="evenodd" d="M3 1C2.17157 1 1.5 1.67157 1.5 2.5V6.06301C0.637386 6.28503 0 7.06808 0 8C0 8.93192 0.637386 9.71497 1.5 9.93699V13.5C1.5 14.3284 2.17157 15 3 15H13C13.8284 15 14.5 14.3284 14.5 13.5V9.93699C15.3626 9.71497 16 8.93192 16 8C16 7.06808 15.3626 6.28503 14.5 6.06301V2.5C14.5 1.67157 13.8284 1 13 1H3ZM13.5 6.06301V2.5C13.5 2.22386 13.2761 2 13 2H3C2.72386 2 2.5 2.22386 2.5 2.5V6.06301C3.36261 6.28503 4 7.06808 4 8C4 8.93192 3.36261 9.71497 2.5 9.93699V13.5C2.5 13.7761 2.72386 14 3 14H13C13.2761 14 13.5 13.7761 13.5 13.5V9.93699C12.6374 9.71497 12 8.93192 12 8C12 7.06808 12.6374 6.28503 13.5 6.06301ZM2 9C2.55228 9 3 8.55228 3 8C3 7.44772 2.55228 7 2 7C1.44772 7 1 7.44772 1 8C1 8.55228 1.44772 9 2 9ZM14 9C14.5523 9 15 8.55228 15 8C15 7.44772 14.5523 7 14 7C13.4477 7 13 7.44772 13 8C13 8.55228 13.4477 9 14 9Z" /></svg>'
         }
       },
-      navPreviews: []
     }
   },
   provide () {
@@ -132,12 +135,15 @@ export default {
     }
   },
   computed: {
-    circuit () {
+    circuits () {
       if (this.circuitElementStr) {
-        return this.embeddedCircuit
+        return Array.isArray(this.embeddedCircuit) ? this.embeddedCircuit : [this.embeddedCircuit]
       } else {
-        return this.circuitRaw
+        return Array.isArray(this.circuitRaw) ? this.circuitRaw : [this.circuitRaw]
       }
+    },
+    nCircuits () {
+      return this.circuits.length
     },
     disabledOptions () {
       return {
@@ -147,19 +153,6 @@ export default {
         condensed: this.renderOptions.recursive,
         wrap: this.renderOptions.recursive,
         darkTheme: this.renderOptions.systemTheme
-      }
-    },
-    zoomStyling () {
-      if (this.renderOptions.wrap) {
-        return {
-          width: `calc(100% / ${this.zoom})`,
-          transform: `scale(${this.zoom}) translate(-${this.scrollX * 100}%, -${this.scrollY * 100}%)`,
-          transformOrigin: 'top left'
-        }
-      }
-      return {
-        transform: `scale(${this.zoom}) translate(-${this.scrollX * 100}%, -${this.scrollY * 100}%)`,
-        transformOrigin: 'top left'
       }
     },
     themeMode () {
@@ -174,16 +167,11 @@ export default {
   watch: {
     circuitElementStr () {
       this.watchCircuitFromDOM(true)
-    },
-    zoomStyling () {
-      this.updateNav()
     }
   },
   mounted () {
     // Collect the circuit from a designated element. Make sure we watch for changes.
     this.watchCircuitFromDOM(false)
-    this.navPreviews = [this.$refs.navX, this.$refs.navY]
-    this.updateNav()
 
     // Detect system theme if not overriden
     if (!('darkTheme' in this.initRenderOptions)) {
@@ -224,8 +212,8 @@ export default {
         this.embeddedCircuit = circuit
       }
     },
-    getCircuitDims () {
-      const { circuit, width, height } = this.$refs.circuitDisplay.getRenderedCircuitEl()
+    getCircuitDims (i) {
+      const { circuit, width, height } = this.circuitDisplayRefs[i].getRenderedCircuitEl()
       this.circuitEl = circuit
       this.circuitDimensions.width = width
       this.circuitDimensions.height = height
@@ -239,20 +227,18 @@ export default {
     },
     prepareExport () {
       this.$refs.imageExport.resetState()
-      this.getCircuitDims()
+      this.getCircuitDims(0)
       this.getDefaultBackground()
       this.exportImageModal = true
     },
     modalContentUpdate (targetRef) {
       this.$refs[targetRef].onResize()
     },
-    updateNav () {
-      if (this.$refs.circuitDisplay) {
-        const { x, y } = this.$refs.circuitDisplay.getDisplayedCircuitDimensions()
-        this.displayedCircuitDimensions.x = x
-        this.displayedCircuitDimensions.y = y
-        this.$refs.navController.initDimensions()
+    appendCircuitRef (i, el) {
+      while (this.circuitDisplayRefs.length < i) {
+        this.circuitDisplayRefs.push(undefined)
       }
+      this.circuitDisplayRefs[i] = el
     },
     isSystemDarkMode () {
       return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
@@ -263,56 +249,58 @@ export default {
 
 <template>
   <div :class=[themeMode]>
-  <navigator-controller class="circuit-display-container theme_variables"
-                        :class="[{ 'transparent_bg': renderOptions.transparentBg }]"
-                        ref="navController" :navigator-previews="navPreviews"
-                        :options="{ overrideStyle: true, externalZooming: true, externalScrolling: true, externalContent: true }"
-                        v-model:ext-zoom-x="zoom" v-model:ext-zoom-y="zoom"
-                        v-model:ext-offset-x="scrollX" v-model:ext-offset-y="scrollY"
-                        :ext-content-x="displayedCircuitDimensions.x" :ext-content-y="displayedCircuitDimensions.y"
+  <navigator-controller
+      class="circuit-display-container theme_variables"
+      :class="[{ 'transparent_bg': renderOptions.transparentBg }]"
+      ref="navController"
+      :n-views="nCircuits"
+      :ext-content-x="displayedCircuitDimensions.x?.reduce((acc, x) => (acc > x ? acc : x), 0)"
+      :ext-content-y="displayedCircuitDimensions.y?.reduce((acc, y) => (acc > y ? acc : y), 0)"
+      override-style
   >
-    <div class="display-options-container" v-if="circuit">
-      <div class="icon" :class="{'active': menuOptions}" role="checkbox" tabindex="0"
-           :title="options.menu.title" v-html="options.menu.icon"
-           @click="menuOptions = !menuOptions" @keyup.space="menuOptions = !menuOptions"
-      ></div>
-      <div v-if="menuOptions" class="display-options-menu">
-        <div v-for="optionGroup in Object.keys(renderOptionGroups)" :key="optionGroup" class="display-options-menu-group">
-          <div v-for="option in renderOptionGroups[optionGroup]" :key="option">
-            <div v-if="option in options" class="display-options-menu-entry"
-                 tabindex="0"
-                 @click="renderOptions[option] = disabledOptions[option] ? renderOptions[option] : !renderOptions[option]"
-                 @keyup.space="renderOptions[option] = disabledOptions[option] ? renderOptions[option] : !renderOptions[option]"
-            >
-              <div :title="options[option].title"
-                   class="icon" :class="{'selected': renderOptions[option], 'disabled': disabledOptions[option]}"
-                   role="checkbox"
-                   v-html="options[option].icon"
-              ></div>
-              <div class="icon-label" :class="{'selected': renderOptions[option], 'disabled': disabledOptions[option]}">
-                [[# options[option].title #]]
+    <template #menus="{updateX, updateY}">
+      <div class="display-options-container" v-if="circuits">
+        <div class="icon" :class="{'active': menuOptions}" role="checkbox" tabindex="0"
+             :title="options.menu.title" v-html="options.menu.icon"
+             @click="menuOptions = !menuOptions" @keyup.space="menuOptions = !menuOptions"
+        ></div>
+        <div v-if="menuOptions" class="display-options-menu">
+          <div v-for="optionGroup in Object.keys(renderOptionGroups)" :key="optionGroup" class="display-options-menu-group">
+            <div v-for="option in renderOptionGroups[optionGroup]" :key="option">
+              <div v-if="option in options" class="display-options-menu-entry"
+                   tabindex="0"
+                   @click="renderOptions[option] = disabledOptions[option] ? renderOptions[option] : !renderOptions[option]"
+                   @keyup.space="renderOptions[option] = disabledOptions[option] ? renderOptions[option] : !renderOptions[option]"
+              >
+                <div :title="options[option].title"
+                     class="icon" :class="{'selected': renderOptions[option], 'disabled': disabledOptions[option]}"
+                     role="checkbox"
+                     v-html="options[option].icon"
+                ></div>
+                <div class="icon-label" :class="{'selected': renderOptions[option], 'disabled': disabledOptions[option]}">
+                  [[# options[option].title #]]
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <navigator-preview ref="navX" :controller="$refs.navController" direction="x" :fit-zoom="!renderOptions.wrap" :reset-zoom="true">
-    </navigator-preview>
-    <navigator-preview ref="navY" :controller="$refs.navController" direction="y"></navigator-preview>
+      <navigator-preview @update:preview-x="updateX" :controller="$refs.navController" direction="x" :fit-zoom="!renderOptions.wrap" :reset-zoom="true">
+      </navigator-preview>
+      <navigator-preview @update:preview-y="updateY" :controller="$refs.navController" direction="y"></navigator-preview>
 
-    <div class="download-button">
-        <div :title="options['save'].title"
-             class="icon" :class="{'active': exportImageModal}"
-             role="button"
-             @click="prepareExport"
-             @keyup.space="prepareExport"
-             v-html="options['save'].icon">
-        </div>
-    </div>
+      <div class="download-button">
+          <div :title="options['save'].title"
+               class="icon" :class="{'active': exportImageModal}"
+               role="button"
+               @click="prepareExport"
+               @keyup.space="prepareExport"
+               v-html="options['save'].icon">
+          </div>
+      </div>
 
-    <info-modal v-model="exportImageModal" ref="imageExportModal" style="z-index: 10">
+      <info-modal v-model="exportImageModal" ref="imageExportModal" style="z-index: 10">
       <template #title>Export circuit as an image</template>
       <template #content>
         <export-image ref="imageExport"
@@ -324,11 +312,21 @@ export default {
         </export-image>
       </template>
     </info-modal>
-
-    <template #content>
-      <circuit-display @click="menuOptions = false" @updated="updateNav" ref="circuitDisplay" style="flex-grow: 1"
-                       :circuit="circuit" :navigator-styling="zoomStyling">
-      </circuit-display>
+    </template>
+    <template #content="{updateContent, updateView}">
+      <div v-for="(circuit, i) in circuits" :key="i"
+           @click="menuOptions = false"
+           :style="{width: `calc(100% / ${nCircuits} - 0.5em * ${nCircuits - 1})`}"
+      >
+        <circuit-display
+           @update:content-x="val => updateContent(val, 'x', i)"
+           @update:content-y="val => updateContent(val, 'y', i)"
+           @update:self-x="val => updateView(val, 'x', i)"
+           @update:self-y="val => updateView(val, 'y', i)"
+           :ref="(el) => appendCircuitRef(i, el)"
+           :circuit="circuit"
+        ></circuit-display>
+      </div>
     </template>
   </navigator-controller>
   </div>
