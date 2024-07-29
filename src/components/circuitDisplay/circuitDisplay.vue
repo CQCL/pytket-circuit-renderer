@@ -9,12 +9,14 @@ import circuitCommand from './command'
 import { gateInfo, circuitInfo } from '../gateInfo/init'
 import { renderOptions, teleportConfig } from './provideKeys'
 import MathjaxContent from '@/components/mathjaxContent/mathjaxContent.vue'
+import {navigatorView} from "@/components/navigator/init";
 
 let nCircuits = 0 // circuits needs unique ids.
 
 export default {
   name: 'circuit-display',
   components: {
+    navigatorView,
     MathjaxContent,
     teleportContainer,
     teleportTo,
@@ -70,7 +72,11 @@ export default {
         names: {},
         toggles: {},
         order: {}
-      }
+      },
+      circuitDimensions: {
+        x: undefined,
+        y: undefined,
+      },
     }
   },
   computed: {
@@ -194,106 +200,136 @@ export default {
       }
     },
     getDisplayedCircuitDimensions () {
-      return {
-        x: this.$refs.renderedCircuit?.clientWidth,
-        y: this.$refs.renderedCircuit?.clientHeight
-      }
+      this.circuitDimensions.x = this.$refs.renderedCircuit?.clientWidth
+      this.circuitDimensions.y = this.$refs.renderedCircuit?.clientHeight
+      return this.circuitDimensions
     },
     onDisplayUpdate () {
+      this.getDisplayedCircuitDimensions()
       this.$emit('updated')
-    }
+    },
+    getZoomStyling ({ zoom, scroll }) {
+      if (this.condensed) {
+        return {
+          width: 'fit-content',
+          transform: `scale(${zoom.x}) translate(-${scroll.x * 100}%, -${scroll.y * 100}%)`,
+          transformOrigin: 'top left'
+        }
+      }
+      return {
+        width: `${100 / zoom.x }%`,
+        transform: `scale(${zoom.x})  translate(0, -${scroll.y * 100}%)`,
+        transformOrigin: 'top left'
+      }
+    },
   }
 }
 </script>
 
 <template>
-  <teleport-container :names="infoModal.teleport.names" ref="teleportParent"
-    :class="{condensed: condensed, 'circuit-preview circuit_variables': nested === 0}"
+  <teleport-container
+      :names="infoModal.teleport.names"
+      ref="teleportParent"
   >
-    <div v-if="circuit" tabindex="0" :class="{
-      'nested-circuit-container': condensed,
-      'parent': nested === 0,
-      'odd_nesting': nested % 2 === 1,
-      'inline-circuit': isInlineCircuit
-    }" style="position: relative">
-      <!--  Pre-processing for the commands we want to display  -->
-      <div style="display:none">
-        <circuit-command
-            :ref="'command-id'"
-            :command="{op: {type: 'ID'}, args: circuitDetails.registerOrder}"
-            :register-order="circuitDetails.registerOrder"
-            :classical-threshold="circuitDetails.qubits.length"
-            :wasm-threshold="circuitDetails.qubits.length + circuitDetails.bits.length"
-            :condensed-registers="condensedRegisters"
-            @mounted="idCommandRef = $refs['command-id']"
-        ></circuit-command>
-        <circuit-command v-for="(command, j) in circuit.commands" :key="j"
-            :ref="'commands'"
-            :command="command"
-            :register-order="circuitDetails.registerOrder"
-            :classical-threshold="circuitDetails.qubits.length"
-            :wasm-threshold="circuitDetails.qubits.length + circuitDetails.bits.length"
-            :condensed-registers="condensedRegisters"
-            @mounted="nRenderedCommands++"
-        >
-          <template #gate-info>
-            <gate-info
-                :command="command"
-                :n-blocks="$refs.commands[j].nWires"
-                @register-teleport="registerTeleport"
-            >
-            </gate-info>
-          </template>
-        </circuit-command>
-      </div>
-
-      <circuit-info
-          v-if="nested === 0 || isInlineCircuit"
-          :style="{position: 'absolute', left: nested === 0 ? 0: '0.5em', top: '0.5em', zIndex: 1}"
-          :command="parentCommand"
-          :circuit="circuit"
-      ></circuit-info>
-
-      <div ref="navigatorContent" :class="{'circuit-inner-scroll': condensed}" :style="navigatorStyling">
-        <div ref="renderedCircuit">
-          <div v-if="circuit && circuit.name" class="circuit-name-tag circuit-tag-below">
-            <mathjax-content :formula="circuit.name" :fallback="displayName" inline-circuit></mathjax-content>
-          </div>
-
-          <div ref="renderedCircuitDimensions" class="circuit-container"
-              :class="{nested: nested > 0 || condensed, zx: zxStyle}">
-            <circuit-layer
-                :qubits="true"
-                :style="{'text-align': 'right'}"
-                :argList="activeArgs"
-                :condensed-registers="recursive ? {} : condensedRegisters.toggles"
-                @toggle="updateCondensedRegisterToggles">
-            </circuit-layer>
-
-            <!--  Circuit commands will actually render in here:  -->
-            <div v-if="commandRefs.length === 0"></div>
-            <split-circuit-layers v-else
+    <navigator-view
+      v-bind="$attrs"
+      @update:display="onDisplayUpdate"
+      :ext-content-x="circuitDimensions.x"
+      :ext-content-y="circuitDimensions.y"
+      :get-style="getZoomStyling"
+      :active="nested === 0"
+    >
+      <div :class="{
+        condensed: condensed,
+        'circuit-preview': nested === 0,
+        'circuit_variables border-box': nested === 0 || !isInlineCircuit,
+      }">
+        <div v-if="circuit" tabindex="0" :class="{
+          'nested-circuit-container': condensed,
+          'parent': nested === 0,
+          'odd_nesting': nested % 2 === 1,
+          'inline-circuit': isInlineCircuit
+        }" style="position: relative">
+          <!--  Pre-processing for the commands we want to display  -->
+          <div style="display:none">
+            <circuit-command
+                :ref="'command-id'"
+                :command="{op: {type: 'ID'}, args: circuitDetails.registerOrder}"
                 :register-order="circuitDetails.registerOrder"
-                :command-refs="commandRefs"
-                :id-command-ref="idCommandRef"
-                :condensed-registers="condensedRegisters.toggles"
                 :classical-threshold="circuitDetails.qubits.length"
                 :wasm-threshold="circuitDetails.qubits.length + circuitDetails.bits.length"
-                @updated="onDisplayUpdate">
-            </split-circuit-layers>
+                :condensed-registers="condensedRegisters"
+                @mounted="idCommandRef = $refs['command-id']"
+            ></circuit-command>
+            <circuit-command v-for="(command, j) in circuit.commands" :key="j"
+                :ref="'commands'"
+                :command="command"
+                :register-order="circuitDetails.registerOrder"
+                :classical-threshold="circuitDetails.qubits.length"
+                :wasm-threshold="circuitDetails.qubits.length + circuitDetails.bits.length"
+                :condensed-registers="condensedRegisters"
+                @mounted="nRenderedCommands++"
+            >
+              <template #gate-info>
+                <gate-info
+                    :command="command"
+                    :n-blocks="$refs.commands[j].nWires"
+                    @register-teleport="registerTeleport"
+                >
+                </gate-info>
+              </template>
+            </circuit-command>
+          </div>
 
-            <circuit-layer
-                :qubits="true"
-                :style="{'text-align': 'left'}"
-                :argList="activeArgs"
-                :permutation="circuit.implicit_permutation"
-                :condensed-registers="recursive ? {} : condensedRegisters.toggles"
-                @toggle="updateCondensedRegisterToggles">
-            </circuit-layer>
+          <circuit-info
+              v-if="nested === 0 || isInlineCircuit"
+              :style="{position: 'absolute', left: nested === 0 ? 0: '0.5em', top: '0.5em', zIndex: 1}"
+              :command="parentCommand"
+              :circuit="circuit"
+          ></circuit-info>
+
+          <div ref="navigatorContent" :class="{'circuit-inner-scroll': condensed}" :style="navigatorStyling">
+            <div ref="renderedCircuit">
+              <div v-if="circuit && circuit.name" class="circuit-name-tag circuit-tag-below">
+                <mathjax-content :formula="circuit.name" :fallback="displayName" inline-circuit></mathjax-content>
+              </div>
+
+              <div ref="renderedCircuitDimensions" class="circuit-container"
+                  :class="{nested: nested > 0 || condensed, zx: zxStyle}">
+                <circuit-layer
+                    :qubits="true"
+                    :style="{'text-align': 'right'}"
+                    :argList="activeArgs"
+                    :condensed-registers="recursive ? {} : condensedRegisters.toggles"
+                    @toggle="updateCondensedRegisterToggles">
+                </circuit-layer>
+
+                <!--  Circuit commands will actually render in here:  -->
+                <div v-if="commandRefs.length === 0"></div>
+                <split-circuit-layers v-else
+                    :register-order="circuitDetails.registerOrder"
+                    :command-refs="commandRefs"
+                    :id-command-ref="idCommandRef"
+                    :condensed-registers="condensedRegisters.toggles"
+                    :classical-threshold="circuitDetails.qubits.length"
+                    :wasm-threshold="circuitDetails.qubits.length + circuitDetails.bits.length"
+                    @updated="onDisplayUpdate">
+                </split-circuit-layers>
+
+                <circuit-layer
+                    :qubits="true"
+                    :style="{'text-align': 'left'}"
+                    :argList="activeArgs"
+                    :permutation="circuit.implicit_permutation"
+                    :condensed-registers="recursive ? {} : condensedRegisters.toggles"
+                    @toggle="updateCondensedRegisterToggles">
+                </circuit-layer>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </navigator-view>
 
     <!-- Gates in circuit will send extra info modals here. -->
     <teleport-to
@@ -301,6 +337,7 @@ export default {
         ref="infoModals" style="z-index:10"
         data-cy="teleport-to"
         :data-cy-depth="nested"
+        class="border-box"
     ></teleport-to>
   </teleport-container>
 </template>
@@ -309,7 +346,7 @@ export default {
 /* FOR DISPLAYING CIRCUITS */
 /* Main preview container */
 .circuit-preview {
-    width: 100%;
+    max-width: 100%;
     height: 100%;
     text-align: center;
     color: black;
@@ -319,7 +356,6 @@ export default {
     display: flex;
     flex-wrap: nowrap;
 }
-
 /* Circuits */
 .circuit-container{
     max-width: 100%;
@@ -355,7 +391,8 @@ export default {
   display: none;
 }
 
-.circuit-preview.condensed > .circuit-container{
+.circuit-preview.condensed > .circuit-container,
+.circuit-preview.condensed > > .circuit-container{
     flex-wrap: nowrap;
     min-width: fit-content;
 }

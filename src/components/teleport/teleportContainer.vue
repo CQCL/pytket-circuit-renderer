@@ -19,5 +19,5 @@ export default {
 </script>
 
 <template>
-  <div><slot></slot></div>
+  <slot></slot>
 </template>

@@ -1,47 +1,52 @@
 <script>
 import { navigator } from './provideKeys'
 import { computed } from 'vue'
+import { getCoeff, initSelf } from './utils'
 
 const MAX_COEFF = 100 // (content takes up at least a 1/100 of the available space)
 const MIN_COEFF = 0.02 // (content zooms to at most one 20th)
+
+/*
+Some defs:
+ offset: A number in the range [0, 1]. The thumb-width independent proportion of the content scrolled.
+ scroll: A number in the range [0, 1]. The distance from the start of the track at which the scrollbar
+         thumb is to be displayed, as a proportion of the track size. Takes into account the width of the scrollbar-thumb.
+         Equivalently, the offset for the displayed content (accounting for the currently visible content)
+ zoom: The zooming factor to be applied to the content.
+ coeff: A number in the range [MIN_COEFF, MAX_COEFF]. The proportion of the viewport taken up by the zoomed content.
+ self: The unscaled size (in px) of the viewport.
+ content: The unscaled size (in px) of the content to be displayed.
+ preview: The size (in px) of the scrollbar tracks.
+
+ zoom = self / (content * coeff)
+ scroll = offset * (1 - Min(coeff, 1))
+
+ The state of the navigator is tracked by (offset, coeff), from which zoom and scroll values are derived.
+*/
 
 export default {
   name: 'navigator-controller',
   components: {
   },
   props: {
-    navigatorPreviews: { type: Array, default: () => { return [] } },
-    extZoomX: { type: Number, default: 1 },
-    extZoomY: { type: Number, default: 1 },
-    extOffsetX: { type: Number, default: 0 },
-    extOffsetY: { type: Number, default: 0 },
-    extContentX: { type: Number },
-    extContentY: { type: Number },
-    options: {
-      type: Object,
-      default: () => {
-        return {
-          externalContent: false, // Report independent content size
-          externalZooming: true, // Parent handles zooming
-          externalScrolling: false, // Parent handles scrolling
-          overrideStyle: false // whether to override default display configuration
-        }
-      }
-    }
+    nViews: { type: Number, default: 1 },
+    keepAspectRatio: { type: Boolean, default: true},
+    overrideStyle: { type: Boolean, default: false},
   },
-  emits: ['update:extZoomX', 'update:extZoomY', 'update:extOffsetX', 'update:extOffsetY'],
   provide () {
     return {
-      [navigator.styles]: computed(() => this.styles)
+      [navigator.offset]: computed(() => this.offset),
+      [navigator.coeff]: computed(() => this.coeff),
+      [navigator.zoom]: computed(() => this.zoom),
     }
   },
   data () {
     return {
-      self: { x: undefined, y: undefined },
       previews: { x: undefined, y: undefined },
-      internalContent: { x: undefined, y: undefined },
-      internalOffset: { x: 0, y: 0 },
-      internalZoom: { x: 1, y: 1 },
+      views: { x: [], y: [] },
+      contents: { x: [], y: [] },
+      offset: { x: 0, y: 0 },
+      zoom: { x: 1, y: 1 },
       scrolling: {
         direction: undefined,
         x: undefined,
@@ -56,127 +61,51 @@ export default {
     }
   },
   computed: {
-    zoomX: {
-      get () {
-        if (this.options.externalZooming) {
-          return this.extZoomX
-        }
-        return this.internalZoom.x
-      },
-      set (newValue) {
-        if (this.options.externalZooming) {
-          this.$emit('update:extZoomX', newValue)
-        }
-        this.internalZoom.x = newValue
-      }
-    },
-    zoomY: {
-      get () {
-        if (this.options.externalZooming) {
-          return this.extZoomY
-        }
-        return this.internalZoom.y
-      },
-      set (newValue) {
-        if (this.options.externalZooming) {
-          this.$emit('update:extZoomY', newValue)
-        }
-        this.internalZoom.y = newValue
-      }
-    },
-    offsetX: {
-      get () {
-        if (this.options.externalScrolling) {
-          return this.extOffsetX
-        }
-        return this.internalOffset.x
-      },
-      set (newValue) {
-        if (this.options.externalScrolling) {
-          this.$emit('update:extOffsetX', newValue)
-        }
-        this.internalOffset.x = newValue
-      }
-    },
-    offsetY: {
-      get () {
-        if (this.options.externalScrolling) {
-          return this.extOffsetY
-        }
-        return this.internalOffset.y
-      },
-      set (newValue) {
-        if (this.options.externalScrolling) {
-          this.$emit('update:extOffsetY', newValue)
-        }
-        this.internalOffset.y = newValue
-      }
-    },
     content () {
-      if (this.options.externalContent) {
-        return { x: this.extContentX, y: this.extContentY }
-      }
-      return { x: this.internalContent.x, y: this.internalContent.y }
-    },
-    coeffs () {
-      // Proportion of content we can see.
-      return {
-        x: this.self.x / (this.content.x * this.zoomX),
-        y: this.self.y / (this.content.y * this.zoomY)
-      }
-    },
-    styles () {
-      return {
-        x: {
-          left: `${this.offsetX * 100}%`,
-          width: `${Math.min(this.coeffs.x, 1) * 100}%`
-        },
-        y: {
-          top: `${this.offsetY * 100}%`,
-          height: `${Math.min(this.coeffs.y, 1) * 100}%`
-        },
-        xPreview: {
-          left: 0,
-          height: '100%',
-          width: `${100 / Math.max(this.coeffs.x, 1)}%`
-        },
-        yPreview: {
-          top: 0,
-          width: '100%',
-          height: `${100 / Math.max(this.coeffs.y, 1)}%`
-        },
-        content: {
-          height: this.options.externalContent ? '100%' : 'fit-content',
-          width: this.options.externalContent ? '100%' : 'fit-content',
-          transform: (
-            this.options.externalZooming ? '' : `scale(${this.zoomX}, ${this.zoomY})`
-          ) + (
-            this.options.externalScrolling ? '' : `translate(-${this.offsetX * (this.content.x * this.zoomX)}px, -${this.offsetY * (this.content.y * this.zoomY)}px)`
-          ),
-          transformOrigin: 'top left'
+      if (this.nViews > 0) {
+        return {
+          x: Math.max(...this.contents.x.slice(0, this.nViews), 1),
+          y: Math.max(...this.contents.y.slice(0, this.nViews), 1),
         }
+      }
+      return {x: undefined, y: undefined}
+    },
+    self () {
+      if (this.nViews > 0) return { x: this.views.x[0], y: this.views.y[0] }
+      return {x: undefined, y: undefined}
+    },
+    previewLen () {
+      // The max offset (px) of the preview bar.
+      return {
+        x: this.previews.x * (1 - Math.min(this.coeff.x, 1)),
+        y: this.previews.y * (1 - Math.min(this.coeff.y, 1)),
+      }
+    },
+    coeff () {
+      return {
+        x: this.getCoeff('x'),
+        y: this.getCoeff('y')
       }
     }
   },
   mounted () {
-    this.initDimensions()
-    window.addEventListener('resize', this.initDimensions)
+    this.initSelf()
+    window.addEventListener('resize', this.initSelf)
   },
   beforeUnmount () {
-    window.removeEventListener('resize', this.initDimensions)
+    window.removeEventListener('resize', this.initSelf)
   },
   methods: {
-    initDimensions () {
-      this.navigatorPreviews.forEach((preview) => {
-        if (preview) {
-          const property = preview.direction === 'x' ? 'clientWidth' : 'clientHeight'
-          this.previews[preview.direction] = preview.$el[property]
-        }
-      })
-      this.self.x = this.$refs.contentSize?.clientWidth
-      this.self.y = this.$refs.contentSize?.clientHeight
-      this.internalContent.x = this.$refs.content?.clientWidth
-      this.internalContent.y = this.$refs.content?.clientHeight
+    getCoeff,
+    initSelf,
+    updatePreview (val, direction) {
+      this.previews[direction] = val
+    },
+    updateList (key, val, direction, index) {
+      while (this[key][direction].length < this.nViews) {
+        this[key][direction].push(0)
+      }
+      this[key][direction][index] = val
     },
     startZooming (direction, position, e) {
       this.zooming.x = e.clientX
@@ -184,29 +113,30 @@ export default {
       this.zooming.direction = direction
       this.zooming.position = position
       document.addEventListener('mouseup', this.stopZooming)
-      document.addEventListener('mousemove', this.zoom)
+      document.addEventListener('mousemove', this.zoomFn)
     },
-    zoom (e) {
+    zoomFn (e) {
       const mouseOffsets = {
         x: e.clientX,
         y: e.clientY
       }
       const direction = this.zooming.direction
-      const zoomKey = direction === 'x' ? 'zoomX' : 'zoomY'
       const diff = (mouseOffsets[direction] - this.zooming[direction]) / this.previews[direction]
-      const zoom = this.adjustCoeff(
-        this.coeffs[direction] + ((this.zooming.position === 'start' ? -1 : 1) * diff),
-        direction,
-        true,
-        diff
-      )
 
       // Update reference point
       this.zooming.x = mouseOffsets.x
       this.zooming.y = mouseOffsets.y
 
       // Update the zoom value
-      this[zoomKey] = zoom
+      this.updateZoom(
+        this.adjustZoom(
+          this.coeff[direction] + ((this.zooming.position === 'start' ? -1 : 1) * diff),
+          direction,
+          true,
+          diff
+        ),
+        direction
+      )
     },
     wheelZoom (e) {
       // Zoom all directions equally.
@@ -216,44 +146,45 @@ export default {
       )
     },
     incrementZoom (xDiff, yDiff) {
-      this.zoomX = this.adjustCoeff(this.coeffs.x + xDiff, 'x', false)
-      this.zoomY = this.adjustCoeff(this.coeffs.y + yDiff, 'y', false)
+      this.updateZoom(this.adjustZoom(this.coeff.x + xDiff, 'x', false), 'x')
+      this.updateZoom(this.adjustZoom(this.coeff.y + yDiff, 'y', false), 'y')
     },
     resetZoom (direction) {
-      const zoomKey = direction === 'x' ? 'zoomX' : 'zoomY'
-      this[zoomKey] = this.adjustCoeff(this.self[direction] / this.content[direction], direction, false)
+      this.updateZoom(1, direction)
     },
     fitZoom (direction) {
-      const zoomKey = direction === 'x' ? 'zoomX' : 'zoomY'
-      this[zoomKey] = this.adjustCoeff(1, direction, false)
+      this.updateZoom(this.adjustZoom(1, direction, false), direction)
     },
     stopZooming () {
       document.removeEventListener('mouseup', this.stopZooming)
-      document.removeEventListener('mousemove', this.zoom)
+      document.removeEventListener('mousemove', this.zoomFn)
     },
     startScrolling (direction, e) {
       this.scrolling.x = e.clientX
       this.scrolling.y = e.clientY
       this.scrolling.direction = direction
       document.addEventListener('mouseup', this.stopScrolling)
-      document.addEventListener('mousemove', this.scroll)
+      document.addEventListener('mousemove', this.scrollFn)
     },
-    scroll (e) {
+    scrollFn (e) {
       const mouseOffsets = {
         x: e.clientX,
         y: e.clientY
       }
 
       this.intervalScroll(
-        this.scrolling.direction === 'x' ? (mouseOffsets.x - this.scrolling.x) / this.previews.x : 0,
-        this.scrolling.direction === 'y' ? (mouseOffsets.y - this.scrolling.y) / this.previews.y : 0
+        this.scrolling.direction === 'x' ? (mouseOffsets.x - this.scrolling.x) / this.previewLen.x : 0,
+        this.scrolling.direction === 'y' ? (mouseOffsets.y - this.scrolling.y) / this.previewLen.y : 0
       )
 
       // Update reference point
       this.scrolling[this.scrolling.direction] = mouseOffsets[this.scrolling.direction]
     },
     wheelScroll (e) {
-      const noChange = this.intervalScroll(e.deltaX * 0.001, e.deltaY * 0.001)
+      const noChange = this.intervalScroll(
+          this.previewLen.x !== 0 ? e.deltaX * 0.001 : 0,
+          this.previewLen.y !== 0 ? e.deltaY * 0.01 : 0,
+      )
       if (!noChange) {
         e.stopPropagation()
         e.preventDefault()
@@ -261,18 +192,16 @@ export default {
     },
     intervalScroll (xDiff, yDiff) {
       const offsetX = this.adjustOffset(
-        Math.max(0, Math.min(this.offsetX + xDiff, 1)),
-        'x'
+        Math.max(0, Math.min(this.offset.x + xDiff, 1)),
       )
       const offsetY = this.adjustOffset(
-        Math.max(0, Math.min(this.offsetY + yDiff, 1)),
-        'y'
+        Math.max(0, Math.min(this.offset.y + yDiff, 1)),
       )
-      if (this.offsetX === offsetX && this.offsetY === offsetY) {
+      if (this.offset.x === offsetX && this.offset.y === offsetY) {
         return true
       }
-      this.offsetX = offsetX
-      this.offsetY = offsetY
+      this.offset.x = offsetX
+      this.offset.y = offsetY
     },
     jumpScroll (direction, e) {
       // Jump the scrollbar to the clicked point.
@@ -280,34 +209,47 @@ export default {
         x: e.offsetX,
         y: e.offsetY
       }
-      const offsetKey = direction === 'x' ? 'offsetX' : 'offsetY'
-      this[offsetKey] = this.adjustOffset(mouseOffsets[direction] / this.previews[direction], direction)
+      const thumbAdjust = (this.previews[direction] - this.previewLen[direction]) / 2
+      this.offset[direction] = this.adjustOffset(
+          Math.max(
+            0,
+            Math.min(
+              (mouseOffsets[direction] - thumbAdjust) / this.previewLen[direction],
+              1
+            )
+          )
+      )
     },
     stopScrolling () {
       document.removeEventListener('mouseup', this.stopScrolling)
-      document.removeEventListener('mousemove', this.scroll)
+      document.removeEventListener('mousemove', this.scrollFn)
     },
-    adjustCoeff (newCoeff, direction, zooming, diff) {
-      const offsetKey = direction === 'x' ? 'offsetX' : 'offsetY'
+    adjustZoom (newCoeff, direction, zooming, diff) {
       newCoeff = Math.max(MIN_COEFF, Math.min(newCoeff, MAX_COEFF))
 
       // Adjust display
       if (zooming && this.zooming.position === 'start') {
-        this[offsetKey] += diff
+        // Dragging the starting point to adjust the zoom level.
+        this.offset[direction] += diff
       }
       if (newCoeff >= 1) {
-        this[offsetKey] = 0
+        // Entire content is visible
+        this.offset[direction] = 0
       }
-
-      return (this.self[direction] / newCoeff) / this.content[direction]
+      const newZoom = this.self[direction] / (this.content[direction] * newCoeff)
+      return newZoom
     },
-    adjustOffset (newOffset, direction) {
-      // Can't scroll past end or before start
-      const scrollCoeff = Math.min(this.coeffs[direction], 1)
-      if (newOffset + scrollCoeff >= 1) {
-        newOffset = 1 - scrollCoeff
+    updateZoom (newZoom, direction) {
+      if (this.keepAspectRatio) {
+        this.zoom.x = newZoom
+        this.zoom.y = newZoom
+      } else {
+        this.zoom[direction] = newZoom
       }
-      newOffset = Math.max(0, newOffset)
+    },
+    adjustOffset (newOffset) {
+      // Offset capped to [0, 1]
+      newOffset = Math.max(0, Math.min(newOffset, 1))
       return newOffset
     }
   }
@@ -316,7 +258,7 @@ export default {
 </script>
 
 <template>
-  <div :class="{ 'navigator-container': !options.overrideStyle }"
+  <div :class="{ 'navigator-container': !overrideStyle }"
        tabindex="0"
        @keydown.up="() => intervalScroll(0,-0.02)"
        @keydown.down="() => intervalScroll(0,0.02)"
@@ -327,21 +269,23 @@ export default {
        @keydown.0.exact="() => resetZoom('x')"
        @keydown.0.ctrl="() => fitZoom('x')"
   >
-    <slot>
+    <slot name="menus"
+          :updateX="(x) => updatePreview(x, 'x')"
+          :updateY="(y) => updatePreview(y, 'y')"
+    >
       <!--  Put previews in here for correct styling.  -->
     </slot>
 
-    <div class="navigator-content" ref="contentSize"
+    <div class="navigator-content"
          @wheel.ctrl.prevent.stop="wheelZoom"
          @wheel.exact="wheelScroll"
     >
-      <div ref="content" class="no-text-highlighting" :style="styles.content">
-        <slot name="content">
-          <!--
-            Content of the slot can implement methods for
-            zooming/scrolling in x and y directions,
-            triggered by v-model update events.
-          -->
+      <div ref="contentSelf" class="no-text-highlighting navigator-views">
+        <slot name="content"
+              :updateContent="(...props) => updateList('contents', ...props)"
+              :updateView="(...props) => updateList('views', ...props)"
+        >
+          <!-- Expect navigator-view elements here -->
         </slot>
       </div>
     </div>
@@ -369,6 +313,21 @@ export default {
   grid-area: preview;
   border-radius: 0.25em;
   overflow: hidden;
+}
+
+.navigator-views {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5em;
+  width: 100%;
+  height: 100%;
+
+  & > :nth-child(2n) {
+    background: var(--paper);
+    --current-background: var(--paper);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
 }
 
 .no-text-highlighting {
