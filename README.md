@@ -46,6 +46,10 @@ Or collect it from an element on the page by specifying the query string:
 <circuit-display-container :circuit-element-str="'#circuit-json-to-display'"></circuit-display-container>
 ```
 
+You can supply either a single circuit or a list of circuits. In the case of a list, the circuits will be displayed
+alongside each other. The stacking orientation is controlled by the `viewFormat` prop, 
+and can be either `row` (default) or `column`.
+
 Note that the display container includes a choice of rendering options. You can choose to specify 
 default options when first mounting the component:
 ```

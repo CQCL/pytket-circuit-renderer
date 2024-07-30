@@ -13,6 +13,9 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## Unreleased
 
+### Added
+- Multi-circuit view
+
 ## [0.9.0] 2024-07-22
 ### Added
 - Circuit level information modal.
