@@ -14,21 +14,23 @@ describe('Circuit display container component', () => {
         })
 
         it('can scroll the circuit', () => {
+          cy.viewport(500, 500)
           cy.mount({ name, ...components[useCase]({ circuitPreset: 'Classical' }) })
           cy.contains('(a XOR b)').should('not.be.visible')
           cy.get('.navigator-controller.nav-x')
             .trigger('mousedown', { which: 1 })
-            .trigger('mousemove', { clientX: 250, clientY: 0 })
+            .trigger('mousemove', { clientX: 240, clientY: 0 })
             .trigger('mouseup', { which: 1 })
           cy.contains('(a XOR b)').should('be.visible')
           // Jump scrollbar to end
           cy.get('.navigator-preview-x')
-            .click('right')
+            .click(300, 2)
           cy.contains('SetBits(1,1,0,0)').should('not.be.visible')
           cy.contains('(b RSH 1)').should('be.visible')
         })
 
         it('can zoom the circuit', () => {
+          cy.viewport(500, 500)
           cy.mount({ name, ...components[useCase]({ circuitPreset: 'Classical' }) })
           cy.contains('(a XOR b)').should('not.be.visible')
           // zoom out
@@ -62,12 +64,13 @@ describe('Circuit display container component', () => {
         })
 
         it('Can view nested info modals', () => {
+          cy.viewport(500, 500)
           cy.mount({ name, ...components[useCase]({ circuitPreset: 'SimpleNested' }) })
           cy.get('.navigator-controller.nav-x')
             .trigger('mousedown', { which: 1 })
-            .trigger('mousemove', { clientX: 350, clientY: 0 })
+            .trigger('mousemove', { clientX: 310, clientY: 0 })
             .trigger('mouseup', { which: 1 })
-          cy.get('[data-cy=open-tool-tip-CircBox]').should('be.visible').click()
+          cy.get('[data-cy=open-tool-tip-CircBox]').should('be.visible').first().click()
           cy.get('[data-cy=teleport-to] [data-cy=teleported-CircBox]').within(() => {
             cy.contains('Rx').should('exist')
             cy.get('[data-cy=open-tool-tip-Rx]').should('be.visible').click()
@@ -77,6 +80,7 @@ describe('Circuit display container component', () => {
           })
         })
         it('Can view nested info modals when displaying circuits recursively', () => {
+          cy.viewport(500, 500)
           cy.mount({
             name,
             ...components[useCase]({
@@ -85,9 +89,9 @@ describe('Circuit display container component', () => {
           })
           cy.get('.navigator-controller.nav-x')
             .trigger('mousedown', { which: 1 })
-            .trigger('mousemove', { clientX: 350, clientY: 0 })
+            .trigger('mousemove', { clientX: 270, clientY: 0 })
             .trigger('mouseup', { which: 1 })
-          cy.get('[data-cy=open-tool-tip-Rx]').should('be.visible').click()
+          cy.get('[data-cy=open-tool-tip-Rx]').should('be.visible').first().click()
           cy.get('[data-cy=teleport-to] [data-cy=teleported-Rx]').within(() => {
             cy.contains('Box params').should('be.visible')
           })

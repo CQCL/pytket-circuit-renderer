@@ -66,10 +66,10 @@
     // Backgrounds should be kept when printing for legibility
     print-color-adjust: exact !important;
     background: var(--circuit-background);
+  }
 
-    * {
-      box-sizing: border-box !important;
-    }
+  .border-box *{
+    box-sizing: border-box !important;
   }
 
   .circuit-container {
