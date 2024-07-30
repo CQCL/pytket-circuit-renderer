@@ -248,8 +248,7 @@ export default {
         // Entire content is visible
         this.offset[direction] = 0
       }
-      const newZoom = this.self[direction] / (this.content[direction] * newCoeff)
-      return newZoom
+      return this.self[direction] / (this.content[direction] * newCoeff)
     },
     updateZoom (newZoom, direction) {
       if (this.keepAspectRatio) {

@@ -177,7 +177,7 @@ export default {
     if (!('darkTheme' in this.initRenderOptions)) {
       this.darkTheme = this.isSystemDarkMode()
     }
-    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
       this.themeChanged = 1 - this.themeChanged
     })
   },
@@ -317,7 +317,7 @@ export default {
       <div v-for="(circuit, i) in circuits" :key="i"
            @click="menuOptions = false"
            :style="{
-             [viewFormat == 'row' ? 'width' : 'height']: `calc(100% / ${nCircuits} - 0.5em * ${Math.max(0, nCircuits - 1)})`,
+             [viewFormat === 'row' ? 'width' : 'height']: `calc(100% / ${nCircuits} - 0.5em * ${Math.max(0, nCircuits - 1)})`,
            }"
       >
         <circuit-display
@@ -378,7 +378,7 @@ export default {
   margin: 0.6em;
   background: var(--background);
   border-radius: 0.4em;
-  box-shadow: 0px 5px 10px 0px rgba($grey900, 0.1);
+  box-shadow: 0 5px 10px 0 rgba($grey900, 0.1);
   border: 1px solid var(--divider);
   overflow: auto;
   z-index: 10;
