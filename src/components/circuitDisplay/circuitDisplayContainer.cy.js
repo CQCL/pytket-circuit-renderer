@@ -14,6 +14,7 @@ describe('Circuit display container component', () => {
         })
 
         it('can scroll the circuit', () => {
+          cy.viewport(500,500)
           cy.mount({ name, ...components[useCase]({ circuitPreset: 'Classical' }) })
           cy.contains('(a XOR b)').should('not.be.visible')
           cy.get('.navigator-controller.nav-x')
@@ -29,6 +30,7 @@ describe('Circuit display container component', () => {
         })
 
         it('can zoom the circuit', () => {
+          cy.viewport(500,500)
           cy.mount({ name, ...components[useCase]({ circuitPreset: 'Classical' }) })
           cy.contains('(a XOR b)').should('not.be.visible')
           // zoom out
@@ -62,6 +64,7 @@ describe('Circuit display container component', () => {
         })
 
         it('Can view nested info modals', () => {
+          cy.viewport(500,500)
           cy.mount({ name, ...components[useCase]({ circuitPreset: 'SimpleNested' }) })
           cy.get('.navigator-controller.nav-x')
             .trigger('mousedown', { which: 1 })
@@ -77,6 +80,7 @@ describe('Circuit display container component', () => {
           })
         })
         it('Can view nested info modals when displaying circuits recursively', () => {
+          cy.viewport(500,500)
           cy.mount({
             name,
             ...components[useCase]({
