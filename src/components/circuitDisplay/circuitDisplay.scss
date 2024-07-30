@@ -65,7 +65,7 @@
   .circuit-preview {
     // Backgrounds should be kept when printing for legibility
     print-color-adjust: exact !important;
-    background: var(--current-background);
+    background: var(--circuit-background);
   }
 
   .border-box *{

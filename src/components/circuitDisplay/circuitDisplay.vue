@@ -205,8 +205,10 @@ export default {
       return this.circuitDimensions
     },
     onDisplayUpdate () {
-      this.getDisplayedCircuitDimensions()
-      this.$emit('updated')
+      this.$nextTick(() => {
+        this.getDisplayedCircuitDimensions()
+        this.$emit('updated')
+      })
     },
     getZoomStyling ({ zoom, scroll }) {
       if (this.condensed) {
@@ -244,7 +246,7 @@ export default {
         'circuit-preview': nested === 0,
         'circuit_variables border-box': nested === 0 || !isInlineCircuit,
       }">
-        <div v-if="circuit" tabindex="0" :class="{
+        <div v-if="circuit" tabindex="0" ref="renderedCircuit" :class="{
           'nested-circuit-container': condensed,
           'parent': nested === 0,
           'odd_nesting': nested % 2 === 1,
@@ -288,8 +290,8 @@ export default {
               :circuit="circuit"
           ></circuit-info>
 
-          <div ref="navigatorContent" :class="{'circuit-inner-scroll': condensed}" :style="navigatorStyling">
-            <div ref="renderedCircuit">
+          <div :class="{'circuit-inner-scroll': condensed}" :style="navigatorStyling">
+            <div>
               <div v-if="circuit && circuit.name" class="circuit-name-tag circuit-tag-below">
                 <mathjax-content :formula="circuit.name" :fallback="displayName" inline-circuit></mathjax-content>
               </div>
@@ -420,7 +422,7 @@ export default {
   overflow: hidden
 }
 .nested-circuit-container.odd_nesting{
-    --current-circuit-background: var(--paper);
+    --current-circuit-background: var(--circuit-background-dark);
 }
 .theme_variables.dark .nested-circuit-container:not(.parent){
     box-shadow: 0 0 0 1px var(--paper-dark) inset;

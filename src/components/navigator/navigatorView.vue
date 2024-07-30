@@ -12,7 +12,13 @@ export default {
     // Optional, if the styling is to be implemented by the parent.
     getStyle: { type: Function, default: undefined },
   },
-  // emits: ['update:display'],
+  emits: [
+    'update:display',
+    'update:self-x',
+    'update:self-y',
+    'update:content-x',
+    'update:content-y'
+  ]
 }
 </script>
 
@@ -22,6 +28,11 @@ export default {
       :ext-content-y="extContentY"
       :get-style="getStyle"
       v-bind="$attrs"
+      @update:display="(...params) => $emit('update:display', ...params)"
+      @update:content-x="(...params) => $emit('update:content-x', ...params)"
+      @update:content-y="(...params) => $emit('update:content-y', ...params)"
+      @update:self-x="(...params) => $emit('update:self-x', ...params)"
+      @update:self-y="(...params) => $emit('update:self-y', ...params)"
   >
     <slot></slot>
   </navigator-view-inner>
