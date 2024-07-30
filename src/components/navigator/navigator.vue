@@ -26,8 +26,6 @@ Some defs:
 
 export default {
   name: 'navigator-controller',
-  components: {
-  },
   props: {
     nViews: { type: Number, default: 1 },
     keepAspectRatio: { type: Boolean, default: true},
@@ -99,6 +97,27 @@ export default {
         this[key][direction].push(0)
       }
       this[key][direction][index] = val
+    },
+    handleAction ({type, args}) {
+      switch (type) {
+        case 'scroll':
+          this.startScrolling(...args)
+          break
+        case 'zoom':
+          this.startZooming(...args)
+          break
+        case 'resetZoom':
+          this.resetZoom(...args)
+          break
+        case 'fitZoom':
+          this.fitZoom(...args)
+          break
+        case 'jumpScroll':
+          this.jumpScroll(...args)
+          break
+        default:
+          break
+      }
     },
     startZooming (direction, position, e) {
       this.zooming.x = e.clientX
@@ -265,6 +284,7 @@ export default {
     <slot name="menus"
           :updateX="(x) => updatePreview(x, 'x')"
           :updateY="(y) => updatePreview(y, 'y')"
+          :onAction="handleAction"
     >
       <!--  Put previews in here for correct styling.  -->
     </slot>
@@ -317,12 +337,15 @@ export default {
   --temp-bg: var(--circuit-background);
   --temp-bg-dark: var(--circuit-background-dark);
 
+  & > :nth-child(n) {
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+
   & > :nth-child(2n) {
     --circuit-background-dark: var(--temp-bg);
     --circuit-background: var(--temp-bg-dark);
     background: var(--paper);
-    border-radius: var(--radius);
-    overflow: hidden;
   }
 }
 

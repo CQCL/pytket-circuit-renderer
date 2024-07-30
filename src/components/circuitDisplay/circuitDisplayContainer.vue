@@ -253,14 +253,13 @@ export default {
   <navigator-controller
       class="circuit-display-container theme_variables"
       :class="[{ 'transparent_bg': renderOptions.transparentBg }]"
-      ref="navController"
       :n-views="nCircuits"
       :ext-content-x="displayedCircuitDimensions.x?.reduce((acc, x) => (acc > x ? acc : x), 0)"
       :ext-content-y="displayedCircuitDimensions.y?.reduce((acc, y) => (acc > y ? acc : y), 0)"
       :view-format="viewFormat"
       override-style
   >
-    <template #menus="{updateX, updateY}">
+    <template #menus="{updateX, updateY, onAction}">
       <div class="display-options-container" v-if="circuits">
         <div class="icon" :class="{'active': menuOptions}" role="checkbox" tabindex="0"
              :title="options.menu.title" v-html="options.menu.icon"
@@ -288,9 +287,9 @@ export default {
         </div>
       </div>
 
-      <navigator-preview @update:preview-x="updateX" :controller="$refs.navController" direction="x" :fit-zoom="!renderOptions.wrap" :reset-zoom="true">
+      <navigator-preview @action="onAction" @update:preview-x="updateX" direction="x" :fit-zoom="!renderOptions.wrap" :reset-zoom="true">
       </navigator-preview>
-      <navigator-preview @update:preview-y="updateY" :controller="$refs.navController" direction="y"></navigator-preview>
+      <navigator-preview @action="onAction" @update:preview-y="updateY" direction="y"></navigator-preview>
 
       <div class="download-button">
           <div :title="options['save'].title"
