@@ -11,13 +11,13 @@ export default {
     direction: { type: String, required: true, validator: (val) => val === 'x' || val === 'y' },
     fitZoom: { type: Boolean, default: false },
     resetZoom: { type: Boolean, default: false },
-    controller: { validator: RefValidator, required: true } // Ref to navigator controller
   },
   inject: {
     offset: { from: navigator.offset },
     coeff: { from: navigator.coeff },
+    zoom: { from: navigator.zoom },
   },
-  emits: ['update:preview-x', 'update:preview-y'],
+  emits: ['update:preview-x', 'update:preview-y', 'action'],
   data () {
     return {
       scrolling: false,
@@ -29,9 +29,6 @@ export default {
     }
   },
   computed: {
-    zoomKey () {
-      return this.direction === 'x' ? 'zoomX' : 'zoomY'
-    },
     len () {
       return Math.min(this.coeff[this.direction], 1)
     },
@@ -60,16 +57,16 @@ export default {
     }
   },
   mounted () {
-    this.initSelf()
     window.addEventListener('resize', this.initSelf)
+    this.$nextTick(() => this.initSelf())
   },
   beforeUnmount () {
     window.removeEventListener('resize', this.initSelf)
   },
   methods: {
     startZooming (position, e) {
+      this.$emit('action', {type: 'zoom', args: [this.direction, position, e]})
       this.zooming = true
-      this.controller.startZooming(this.direction, position, e)
       document.addEventListener('mouseup', () => {
         this.zooming = false
       })
@@ -77,8 +74,8 @@ export default {
     startScrolling (e) {
       if (this.len < 1) {
         // Only allow scrolling when content isn't taking up the whole space.
+        this.$emit('action', {type: 'scroll', args: [this.direction, e]})
         this.scrolling = true
-        this.controller.startScrolling(this.direction, e)
         document.addEventListener('mouseup', () => {
           this.scrolling = false
         })
@@ -105,7 +102,7 @@ export default {
       <div :class="['navigator-controller', 'nav-'+direction, { 'scrolling': scrolling }]"
            :style="scrollbarThumbStyle"
            @mousedown="startScrolling"
-           @dblclick="() => controller.resetZoom(direction)"
+           @dblclick="() => $emit('action', {type: 'resetZoom', args: [direction]})"
       >
         <div :class="['zoom-controller start nav-'+direction]"
              @mousedown.stop.prevent="e => startZooming('start', e)"
@@ -116,21 +113,28 @@ export default {
       </div>
 
       <div :class="['navigator-background nav-'+direction]" :style="scrollbarTrackStyle"
-           @click="e => controller.jumpScroll(direction, e)">
+           @click="e => $emit('action', {type: 'jumpScroll', args: [direction, e]})">
         <slot></slot>
       </div>
     </div>
     <div v-if="fitZoom" class="icon zoom-control-icon"
-         :class="{'active': controller && controller[zoomKey] === controller.self[direction]/controller.content[direction]}"
-         @click="controller.fitZoom(direction)" data-cy="fitZoom" title="Fit content to viewport">
+         :class="{'active': coeff[direction] === 1}"
+         @click="() => $emit('action', {type: 'fitZoom', args: [direction]})"
+         data-cy="fitZoom"
+         title="Fit content to viewport"
+    >
       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-zoom-fit" viewBox="0 0 16 16">
         <path d="M7.79645 3.94645C7.99171 3.75118 8.30829 3.75118 8.50355 3.94645L10.7036 6.14645C10.7973 6.24021 10.85 6.36739 10.85 6.5C10.85 6.63261 10.7973 6.75979 10.7036 6.85355L8.50355 9.05355C8.30829 9.24882 7.99171 9.24882 7.79645 9.05355C7.60118 8.85829 7.60118 8.54171 7.79645 8.34645L9.64289 6.5L7.79645 4.65355C7.60118 4.45829 7.60118 4.14171 7.79645 3.94645Z"/>
         <path d="M5.20355 4.65355C5.39882 4.45829 5.39882 4.14171 5.20355 3.94645C5.00829 3.75118 4.69171 3.75118 4.49645 3.94645L2.29645 6.14645C2.10118 6.34171 2.10118 6.65829 2.29645 6.85355L4.49645 9.05355C4.69171 9.24882 5.00829 9.24882 5.20355 9.05355C5.39882 8.85829 5.39882 8.54171 5.20355 8.34645L3.35711 6.5L5.20355 4.65355Z"/>
         <path fill-rule="evenodd" clip-rule="evenodd" d="M13 6.5C13 7.9382 12.5329 9.2673 11.7422 10.3439C11.7822 10.3734 11.8204 10.4062 11.8566 10.4424L15.7071 14.2929C16.0976 14.6834 16.0976 15.3166 15.7071 15.7071C15.3166 16.0976 14.6834 16.0976 14.2929 15.7071L10.4424 11.8566C10.4062 11.8204 10.3734 11.7822 10.3439 11.7422L10.3448 11.7415C9.26801 12.5327 7.93858 13 6.5 13C2.91015 13 0 10.0899 0 6.5C0 2.91015 2.91015 0 6.5 0C10.0899 0 13 2.91015 13 6.5ZM6.5 12C9.53757 12 12 9.53757 12 6.5C12 3.46243 9.53757 1 6.5 1C3.46243 1 1 3.46243 1 6.5C1 9.53757 3.46243 12 6.5 12Z"/>
       </svg>
     </div>
-    <div v-if="resetZoom" class="icon zoom-control-icon" :class="{'active': controller && controller[zoomKey] === 1}"
-         @click="controller.resetZoom(direction)" data-cy="resetZoom" title="Reset zoom to 100%">
+    <div v-if="resetZoom" class="icon zoom-control-icon"
+         :class="{'active': zoom[direction] === 1}"
+         @click="() => $emit('action', {type: 'resetZoom', args: [direction]})"
+         data-cy="resetZoom"
+         title="Reset zoom to 100%"
+    >
       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-zoom-reset" viewBox="0 0 16 16">
         <path d="M10.3282 2.92184C8.21396 0.807621 4.78614 0.807622 2.67193 2.92184L3.79452 4.04443C3.9568 4.20671 3.85617 4.48463 3.62762 4.50541L0.315731 4.80649C0.14738 4.8218 0.00634227 4.68076 0.0216471 4.51241L0.322728 1.20052C0.343506 0.971963 0.62143 0.871341 0.783712 1.03362L1.9063 2.15621C4.44336 -0.380847 8.55674 -0.380847 11.0938 2.15621C13.3467 4.40915 13.599 7.90512 11.8507 10.4365C11.8527 10.4384 11.8547 10.4404 11.8567 10.4424L15.7072 14.2929C16.0977 14.6834 16.0977 15.3166 15.7072 15.7071C15.3167 16.0976 14.6835 16.0976 14.293 15.7071L10.4752 11.8893C7.92687 13.8654 4.24617 13.6836 1.9063 11.3437C1.22298 10.6604 0.722968 9.86149 0.407503 9.00932C0.303703 8.72892 0.446864 8.41747 0.727263 8.31366C1.00766 8.20986 1.31912 8.35303 1.42292 8.63342C1.68528 9.34216 2.1012 10.0074 2.67193 10.5781C4.78614 12.6923 8.21396 12.6923 10.3282 10.5781C12.4424 8.46387 12.4424 5.03605 10.3282 2.92184Z"/>
       </svg>

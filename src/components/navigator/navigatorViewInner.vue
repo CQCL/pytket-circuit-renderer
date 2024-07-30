@@ -64,7 +64,7 @@ export default {
     }
   },
   mounted () {
-    this.initDimensions()
+    this.$nextTick( () => this.initDimensions())
     window.addEventListener('resize', this.initDimensions)
   },
   beforeUnmount () {

@@ -5,7 +5,7 @@ export default {
   name: 'navigator-view',
   components: {navigatorViewInner},
   props: {
-    active: {type: Boolean, default: false},
+    active: {type: Boolean, default: true},
     // Optionally override the content dimensions
     extContentX: { type: Number, default: undefined },
     extContentY: { type: Number, default: undefined },
