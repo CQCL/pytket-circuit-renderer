@@ -239,7 +239,7 @@ export default {
       :ext-content-x="circuitDimensions.x"
       :ext-content-y="circuitDimensions.y"
       :get-style="getZoomStyling"
-      :active="nested === 0"
+      :active="nested === 0 && !isInlineCircuit"
     >
       <div :class="{
         condensed: condensed,

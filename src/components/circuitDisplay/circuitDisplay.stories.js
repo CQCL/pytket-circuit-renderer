@@ -49,7 +49,7 @@ export const Template = (args) => ({
   template: `
     <div :class="[darkTheme ? 'theme-mode-dark' : 'theme-mode-light']">
       <div class="circuit-display-container theme_variables">
-          <circuit-display :circuit="circuit" />
+          <circuit-display :circuit="circuit" is-inline-circuit />
       </div>
     </div>`
 })
