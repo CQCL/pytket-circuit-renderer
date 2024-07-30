@@ -1,6 +1,5 @@
 <script>
 import { navigator } from './provideKeys'
-import { RefValidator } from '@/components/propValidators'
 import { getScroll, initSelf } from './utils'
 
 export default {
@@ -10,12 +9,12 @@ export default {
   props: {
     direction: { type: String, required: true, validator: (val) => val === 'x' || val === 'y' },
     fitZoom: { type: Boolean, default: false },
-    resetZoom: { type: Boolean, default: false },
+    resetZoom: { type: Boolean, default: false }
   },
   inject: {
     offset: { from: navigator.offset },
     coeff: { from: navigator.coeff },
-    zoom: { from: navigator.zoom },
+    zoom: { from: navigator.zoom }
   },
   emits: ['update:preview-x', 'update:preview-y', 'action'],
   data () {
@@ -45,15 +44,15 @@ export default {
     scrollbarTrackStyle () {
       return this.direction === 'y'
         ? {
-          left: 0,
-          width: `${100 / Math.max(this.coeff.x, 1)}%`,
-          height: '100%'
-        }
+            left: 0,
+            width: `${100 / Math.max(this.coeff.x, 1)}%`,
+            height: '100%'
+          }
         : {
-          top: 0,
-          width: '100%',
-          height: `${100 / Math.max(this.coeff.y, 1)}%`
-        }
+            top: 0,
+            width: '100%',
+            height: `${100 / Math.max(this.coeff.y, 1)}%`
+          }
     }
   },
   mounted () {
@@ -65,7 +64,7 @@ export default {
   },
   methods: {
     startZooming (position, e) {
-      this.$emit('action', {type: 'zoom', args: [this.direction, position, e]})
+      this.$emit('action', { type: 'zoom', args: [this.direction, position, e] })
       this.zooming = true
       document.addEventListener('mouseup', () => {
         this.zooming = false
@@ -74,7 +73,7 @@ export default {
     startScrolling (e) {
       if (this.len < 1) {
         // Only allow scrolling when content isn't taking up the whole space.
-        this.$emit('action', {type: 'scroll', args: [this.direction, e]})
+        this.$emit('action', { type: 'scroll', args: [this.direction, e] })
         this.scrolling = true
         document.addEventListener('mouseup', () => {
           this.scrolling = false
@@ -82,7 +81,7 @@ export default {
       }
     },
     getScroll,
-    initSelf,
+    initSelf
   },
   watch: {
     'self.x' (newVal) {

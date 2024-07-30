@@ -9,7 +9,7 @@ export default {
     extContentX: { type: Number, default: undefined },
     extContentY: { type: Number, default: undefined },
     // Optional, if the styling is to be implemented by the parent.
-    getStyle: { type: Function, default: undefined },
+    getStyle: { type: Function, default: undefined }
   },
   emits: [
     'update:display',
@@ -20,19 +20,19 @@ export default {
   ],
   inject: {
     offset: { from: navigator.offset },
-    zoom: { from: navigator.zoom },
+    zoom: { from: navigator.zoom }
   },
   data () {
     return {
       self: { x: undefined, y: undefined },
-      internalContent: { x: undefined, y: undefined },
+      internalContent: { x: undefined, y: undefined }
     }
   },
   computed: {
     content () {
       return {
         x: this.extContentX ?? this.internalContent.x,
-        y: this.extContentY ?? this.internalContent.y,
+        y: this.extContentY ?? this.internalContent.y
       }
     },
     coeff () {
@@ -57,14 +57,14 @@ export default {
       return {
         width: this.extContentX ? '100%' : 'fit-content',
         height: this.extContentY ? '100%' : 'fit-content',
-        transform: `scale(${this.zoom.x}, ${this.zoom.y})`
-         + `translate(-${this.offset.x * (this.content.x * this.zoom.x)}px, -${this.offset.y * (this.content.y * this.zoom.y)}px)`,
+        transform: `scale(${this.zoom.x}, ${this.zoom.y})` +
+         `translate(-${this.offset.x * (this.content.x * this.zoom.x)}px, -${this.offset.y * (this.content.y * this.zoom.y)}px)`,
         transformOrigin: 'top left'
       }
     }
   },
   mounted () {
-    this.$nextTick( () => this.initDimensions())
+    this.$nextTick(() => this.initDimensions())
     window.addEventListener('resize', this.initDimensions)
   },
   beforeUnmount () {
@@ -88,7 +88,7 @@ export default {
     },
     'content.y' (newVal) {
       this.$emit('update:content-y', newVal)
-    },
+    }
   },
   methods: {
     initDimensions () {
@@ -98,7 +98,7 @@ export default {
     },
     getScroll,
     getCoeff,
-    initSelf,
+    initSelf
   }
 }
 </script>

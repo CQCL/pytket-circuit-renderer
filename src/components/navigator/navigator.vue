@@ -1,7 +1,7 @@
 <script>
 import { navigator } from './provideKeys'
 import { computed } from 'vue'
-import { getCoeff, initSelf } from './utils'
+import { getCoeff } from './utils'
 
 const MAX_COEFF = 100 // (content takes up at least a 1/100 of the available space)
 const MIN_COEFF = 0.02 // (content zooms to at most one 20th)
@@ -28,15 +28,15 @@ export default {
   name: 'navigator-controller',
   props: {
     nViews: { type: Number, default: 1 },
-    keepAspectRatio: { type: Boolean, default: true},
-    overrideStyle: { type: Boolean, default: false},
-    viewFormat: { validator (value) { return ['row', 'column'].includes(value) }, default: 'row'}
+    keepAspectRatio: { type: Boolean, default: true },
+    overrideStyle: { type: Boolean, default: false },
+    viewFormat: { validator (value) { return ['row', 'column'].includes(value) }, default: 'row' }
   },
   provide () {
     return {
       [navigator.offset]: computed(() => this.offset),
       [navigator.coeff]: computed(() => this.coeff),
-      [navigator.zoom]: computed(() => this.zoom),
+      [navigator.zoom]: computed(() => this.zoom)
     }
   },
   data () {
@@ -64,20 +64,20 @@ export default {
       if (this.nViews > 0) {
         return {
           x: Math.max(...this.contents.x.slice(0, this.nViews), 1),
-          y: Math.max(...this.contents.y.slice(0, this.nViews), 1),
+          y: Math.max(...this.contents.y.slice(0, this.nViews), 1)
         }
       }
-      return {x: undefined, y: undefined}
+      return { x: undefined, y: undefined }
     },
     self () {
       if (this.nViews > 0) return { x: this.views.x[0], y: this.views.y[0] }
-      return {x: undefined, y: undefined}
+      return { x: undefined, y: undefined }
     },
     previewLen () {
       // The max offset (px) of the preview bar.
       return {
         x: this.previews.x * (1 - Math.min(this.coeff.x, 1)),
-        y: this.previews.y * (1 - Math.min(this.coeff.y, 1)),
+        y: this.previews.y * (1 - Math.min(this.coeff.y, 1))
       }
     },
     coeff () {
@@ -98,7 +98,7 @@ export default {
       }
       this[key][direction][index] = val
     },
-    handleAction ({type, args}) {
+    handleAction ({ type, args }) {
       switch (type) {
         case 'scroll':
           this.startScrolling(...args)
@@ -194,8 +194,8 @@ export default {
     },
     wheelScroll (e) {
       const noChange = this.intervalScroll(
-          this.previewLen.x !== 0 ? e.deltaX * 0.001 : 0,
-          this.previewLen.y !== 0 ? e.deltaY * 0.01 : 0,
+        this.previewLen.x !== 0 ? e.deltaX * 0.001 : 0,
+        this.previewLen.y !== 0 ? e.deltaY * 0.01 : 0
       )
       if (!noChange) {
         e.stopPropagation()
@@ -204,10 +204,10 @@ export default {
     },
     intervalScroll (xDiff, yDiff) {
       const offsetX = this.adjustOffset(
-        Math.max(0, Math.min(this.offset.x + xDiff, 1)),
+        Math.max(0, Math.min(this.offset.x + xDiff, 1))
       )
       const offsetY = this.adjustOffset(
-        Math.max(0, Math.min(this.offset.y + yDiff, 1)),
+        Math.max(0, Math.min(this.offset.y + yDiff, 1))
       )
       if (this.offset.x === offsetX && this.offset.y === offsetY) {
         return true
@@ -223,13 +223,13 @@ export default {
       }
       const thumbAdjust = (this.previews[direction] - this.previewLen[direction]) / 2
       this.offset[direction] = this.adjustOffset(
-          Math.max(
-            0,
-            Math.min(
-              (mouseOffsets[direction] - thumbAdjust) / this.previewLen[direction],
-              1
-            )
+        Math.max(
+          0,
+          Math.min(
+            (mouseOffsets[direction] - thumbAdjust) / this.previewLen[direction],
+            1
           )
+        )
       )
     },
     stopScrolling () {

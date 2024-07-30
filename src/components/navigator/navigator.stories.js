@@ -1,21 +1,21 @@
-import {computed, ref} from 'vue'
+import { computed, ref } from 'vue'
 import Navigator from './navigator.vue'
 import NavigatorPreview from './navigatorPreview'
 import NavigatorView from './navigatorView'
 import CircuitDisplay from '@/components/circuitDisplay/circuitDisplay'
 import { renderOptions } from '@/components/circuitDisplay/provideKeys'
 import { QIR as qirCirc } from '../../../cypress/fixtures/circuits'
-import circuitDisplay from "@/components/circuitDisplay/circuitDisplay.vue";
+import circuitDisplay from '@/components/circuitDisplay/circuitDisplay.vue'
 
 export default {
-  components: {circuitDisplay},
+  components: { circuitDisplay },
   title: 'Utils/Navigator',
   component: Navigator,
   args: {
     nViews: 1,
     keepAspectRatio: true,
     overrideStyle: false,
-    viewFormat: 'row',
+    viewFormat: 'row'
   }
 }
 
@@ -26,7 +26,7 @@ const TemplateGrad = (args) => ({
     const keepAspectRatio = computed(() => args.keepAspectRatio)
     const overrideStyle = computed(() => args.overrideStyle)
     const viewFormat = computed(() => args.viewFormat)
-    return {nViews, keepAspectRatio, overrideStyle, viewFormat}
+    return { nViews, keepAspectRatio, overrideStyle, viewFormat }
   },
   template: `
     <div class="theme_variables">

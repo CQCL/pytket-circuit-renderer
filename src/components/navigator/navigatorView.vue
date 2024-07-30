@@ -3,14 +3,14 @@ import navigatorViewInner from './navigatorViewInner'
 
 export default {
   name: 'navigator-view',
-  components: {navigatorViewInner},
+  components: { navigatorViewInner },
   props: {
-    active: {type: Boolean, default: true},
+    active: { type: Boolean, default: true },
     // Optionally override the content dimensions
     extContentX: { type: Number, default: undefined },
     extContentY: { type: Number, default: undefined },
     // Optional, if the styling is to be implemented by the parent.
-    getStyle: { type: Function, default: undefined },
+    getStyle: { type: Function, default: undefined }
   },
   emits: [
     'update:display',

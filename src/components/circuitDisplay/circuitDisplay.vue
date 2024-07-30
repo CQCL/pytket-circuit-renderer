@@ -9,7 +9,7 @@ import circuitCommand from './command'
 import { gateInfo, circuitInfo } from '../gateInfo/init'
 import { renderOptions, teleportConfig } from './provideKeys'
 import MathjaxContent from '@/components/mathjaxContent/mathjaxContent.vue'
-import {navigatorView} from "@/components/navigator/init";
+import { navigatorView } from '@/components/navigator/init'
 
 let nCircuits = 0 // circuits needs unique ids.
 
@@ -75,8 +75,8 @@ export default {
       },
       circuitDimensions: {
         x: undefined,
-        y: undefined,
-      },
+        y: undefined
+      }
     }
   },
   computed: {
@@ -219,11 +219,11 @@ export default {
         }
       }
       return {
-        width: `${100 / zoom.x }%`,
+        width: `${100 / zoom.x}%`,
         transform: `scale(${zoom.x})  translate(0, -${scroll.y * 100}%)`,
         transformOrigin: 'top left'
       }
-    },
+    }
   }
 }
 </script>
