@@ -19,7 +19,8 @@ export default {
   props: {
     circuitRaw: { type: Object, required: false, default: undefined },
     circuitElementStr: { type: String, required: false, default: undefined },
-    initRenderOptions: { type: Object, default: () => { return {} } }
+    initRenderOptions: { type: Object, default: () => { return {} } },
+    viewFormat: { validator (value) { return ['row', 'column'].includes(value) }, default: 'row'}
   },
   data () {
     return {
@@ -256,6 +257,7 @@ export default {
       :n-views="nCircuits"
       :ext-content-x="displayedCircuitDimensions.x?.reduce((acc, x) => (acc > x ? acc : x), 0)"
       :ext-content-y="displayedCircuitDimensions.y?.reduce((acc, y) => (acc > y ? acc : y), 0)"
+      :view-format="viewFormat"
       override-style
   >
     <template #menus="{updateX, updateY}">
@@ -316,7 +318,9 @@ export default {
     <template #content="{updateContent, updateView}">
       <div v-for="(circuit, i) in circuits" :key="i"
            @click="menuOptions = false"
-           :style="{width: `calc(100% / ${nCircuits} - 0.5em * ${nCircuits - 1})`}"
+           :style="{
+             [viewFormat == 'row' ? 'width' : 'height']: `calc(100% / ${nCircuits} - 0.5em * ${Math.max(0, nCircuits - 1)})`,
+           }"
       >
         <circuit-display
            @update:content-x="val => updateContent(val, 'x', i)"

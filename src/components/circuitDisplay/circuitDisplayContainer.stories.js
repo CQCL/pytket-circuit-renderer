@@ -13,11 +13,13 @@ export default {
         return !CircuitStories.default.excludeStories.includes(key)
       }),
       control: { type: 'select' }
-    }
+    },
+    viewFormat: { options: ['row', 'column'], control: { type: 'select' }}
   },
   args: {
-    circuitPreset: 'default',
+    circuitPreset: 'Basic',
     circuitRaw: undefined,
+    viewFormat: 'row',
     initOptions: false,
     darkTheme: false,
     transparentBg: false,
@@ -104,6 +106,7 @@ export const MultiCircuit = (args) => ({
       circuitStories: CircuitStories,
       circuitPreset,
       circuitPreset2,
+      viewFormat: args.viewFormat,
       presets: Object.keys(CircuitStories).filter(key => !CircuitStories.default.excludeStories.includes(key)),
       circuitElementStr: '#circuitJSON',
       initRenderOptions: args.initOptions
@@ -122,8 +125,11 @@ export const MultiCircuit = (args) => ({
   },
   template: `<div>
       <div style="position: relative; width: 100%; height: 400px">
-        <circuit-display-container :circuit-element-str="circuitElementStr" :init-render-options="initRenderOptions">
-        </circuit-display-container>
+        <circuit-display-container
+            :circuit-element-str="circuitElementStr"
+            :init-render-options="initRenderOptions"
+            :view-format="viewFormat"
+        ></circuit-display-container>
       </div>
       
       Reactive circuit choices:

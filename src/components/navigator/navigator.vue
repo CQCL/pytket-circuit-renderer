@@ -32,6 +32,7 @@ export default {
     nViews: { type: Number, default: 1 },
     keepAspectRatio: { type: Boolean, default: true},
     overrideStyle: { type: Boolean, default: false},
+    viewFormat: { validator (value) { return ['row', 'column'].includes(value) }, default: 'row'}
   },
   provide () {
     return {
@@ -88,16 +89,8 @@ export default {
       }
     }
   },
-  mounted () {
-    this.initSelf()
-    window.addEventListener('resize', this.initSelf)
-  },
-  beforeUnmount () {
-    window.removeEventListener('resize', this.initSelf)
-  },
   methods: {
     getCoeff,
-    initSelf,
     updatePreview (val, direction) {
       this.previews[direction] = val
     },
@@ -280,7 +273,7 @@ export default {
          @wheel.ctrl.prevent.stop="wheelZoom"
          @wheel.exact="wheelScroll"
     >
-      <div ref="contentSelf" class="no-text-highlighting navigator-views">
+      <div class="no-text-highlighting navigator-views" :style="{'flex-direction': viewFormat}">
         <slot name="content"
               :updateContent="(...props) => updateList('contents', ...props)"
               :updateView="(...props) => updateList('views', ...props)"
@@ -321,10 +314,13 @@ export default {
   gap: 0.5em;
   width: 100%;
   height: 100%;
+  --temp-bg: var(--circuit-background);
+  --temp-bg-dark: var(--circuit-background-dark);
 
   & > :nth-child(2n) {
+    --circuit-background-dark: var(--temp-bg);
+    --circuit-background: var(--temp-bg-dark);
     background: var(--paper);
-    --current-background: var(--paper);
     border-radius: var(--radius);
     overflow: hidden;
   }
