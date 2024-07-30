@@ -40,19 +40,6 @@ export default {
       return this.direction === 'x'
         ? { left: start + '%', width: len + '%' }
         : { top: start + '%', height: len + '%' }
-    },
-    scrollbarTrackStyle () {
-      return this.direction === 'y'
-        ? {
-            left: 0,
-            width: `${100 / Math.max(this.coeff.x, 1)}%`,
-            height: '100%'
-          }
-        : {
-            top: 0,
-            width: '100%',
-            height: `${100 / Math.max(this.coeff.y, 1)}%`
-          }
     }
   },
   mounted () {
@@ -111,7 +98,7 @@ export default {
         ></div>
       </div>
 
-      <div :class="['navigator-background nav-'+direction]" :style="scrollbarTrackStyle"
+      <div :class="['navigator-background nav-'+direction]"
            @click="e => $emit('action', {type: 'jumpScroll', args: [direction, e]})">
         <slot></slot>
       </div>
@@ -167,10 +154,8 @@ export default {
   border-radius: 0.25em;
   overflow: hidden;
 }
-.navigator-preview-x {
+.navigator-preview {
   min-height: 2em;
-}
-.navigator-preview-y {
   min-width: 2em;
 }
 

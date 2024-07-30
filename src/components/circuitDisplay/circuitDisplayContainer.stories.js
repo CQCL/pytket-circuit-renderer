@@ -1,5 +1,5 @@
 import CircuitDisplayContainer from './circuitDisplayContainer.vue'
-import { reactive } from 'vue'
+import { reactive, computed } from 'vue'
 
 // Get sample circuit data
 import * as CircuitStories from './circuitDisplay.stories.js'
@@ -35,9 +35,11 @@ export default {
 export const FromRaw = (args) => ({
   components: { CircuitDisplayContainer },
   setup () {
-    return {
-      circuitRaw: args.circuitRaw ? args.circuitRaw : CircuitStories[args.circuitPreset].args.circuit,
-      initRenderOptions: args.initOptions
+    const circuitRaw = computed(() => {
+      return args.circuitRaw ? args.circuitRaw : CircuitStories[args.circuitPreset].args.circuit
+    })
+    const initRenderOptions = reactive(
+      args.initOptions
         ? {
             darkTheme: args.darkTheme,
             condensed: args.condensed,
@@ -49,7 +51,9 @@ export const FromRaw = (args) => ({
             cropParams: args.cropParams
           }
         : {}
-    }
+    )
+
+    return { circuitRaw, initRenderOptions }
   },
   template: '<circuit-display-container :circuit-raw="circuitRaw" :init-render-options="initRenderOptions"></circuit-display-container>'
 })

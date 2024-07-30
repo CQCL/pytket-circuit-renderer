@@ -239,7 +239,7 @@ export default {
       :ext-content-x="circuitDimensions.x"
       :ext-content-y="circuitDimensions.y"
       :get-style="getZoomStyling"
-      :active="nested === 0"
+      :active="nested === 0 && !isInlineCircuit"
     >
       <div :class="{
         condensed: condensed,
@@ -384,9 +384,6 @@ export default {
 }
 .nested-circuit-container.inline-circuit > .circuit-inner-scroll > div > .circuit-name-tag {
   left: 2.5rem;
-}
-.nested-circuit-container:not(.inline-circuit) > .circuit-inner-scroll > div > .circuit-name-tag {
-  left: 1px;
 }
 .circuit-name-tag,
 .tool-tip-content .nested-circuit-container:hover > .circuit-inner-scroll > div > .circuit-name-tag {
