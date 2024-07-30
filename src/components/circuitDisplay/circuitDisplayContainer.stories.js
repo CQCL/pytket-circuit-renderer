@@ -14,7 +14,7 @@ export default {
       }),
       control: { type: 'select' }
     },
-    viewFormat: { options: ['row', 'column'], control: { type: 'select' }}
+    viewFormat: { options: ['row', 'column'], control: { type: 'select' } }
   },
   args: {
     circuitPreset: 'Basic',
@@ -95,7 +95,6 @@ export const FromDOMReactive = (args) => ({
       </div>
     </div>`
 })
-
 
 export const MultiCircuit = (args) => ({
   components: { CircuitDisplayContainer },

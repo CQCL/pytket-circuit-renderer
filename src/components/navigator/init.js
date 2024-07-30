@@ -5,5 +5,5 @@ import navigatorView from './navigatorView.vue'
 export {
   navigatorController,
   navigatorPreview,
-  navigatorView,
+  navigatorView
 }
