@@ -20,8 +20,8 @@ const Template = (args) => ({
     return { args }
   },
   template: `
-    <div class="circuit-display-container theme_variables" :class="[args.darkTheme ? 'dark' : 'light']">
-      <div class="circuit-container circuit-preview circuit_variables">
+    <div class="circuit-display-container v0-8 theme_variables" :class="[args.darkTheme ? 'dark' : 'light']">
+      <div class="circuit-container v0-8 circuit-preview circuit_variables">
         <controlled-gate v-bind="args" />
       </div>
     </div>`

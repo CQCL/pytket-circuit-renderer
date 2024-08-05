@@ -37,8 +37,8 @@ const Template = (args) => ({
       this.isReady = true
     }
   },
-  template: `<div class="circuit-display-container theme_variables" :class="[darkTheme ? 'dark' : 'light']">
-    <div style="justify-content: flex-start" class="circuit-container circuit-preview circuit_variables condensed">
+  template: `<div class="circuit-display-container theme_variables v0-8" :class="[darkTheme ? 'dark' : 'light']">
+    <div style="justify-content: flex-start" class="circuit-container v0-8 circuit-preview circuit_variables condensed">
       <div class="circuit-inner-scroll" data-cy="command-container">
         <circuit-command :ref="'commandRef'" v-bind="args" @mounted="onMounted">
           <template #gate-info>
