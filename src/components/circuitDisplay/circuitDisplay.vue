@@ -196,7 +196,7 @@ export default {
 </script>
 
 <template>
-  <teleport-container :names="infoModal.teleport.names" ref="teleportParent"
+  <teleport-container :names="infoModal.teleport.names" ref="teleportParent" class="v0-8"
     :class="{condensed: condensed, 'circuit-preview circuit_variables': nested === 0}"
   >
     <div v-if="circuit" tabindex="0" :class="{
@@ -283,23 +283,25 @@ export default {
   </teleport-container>
 </template>
 
-<style>
+<style lang="scss">
 /* FOR DISPLAYING CIRCUITS */
 /* Main preview container */
-.circuit-preview {
+.v0-8.circuit-preview {
     width: 100%;
     height: 100%;
     text-align: center;
     color: black;
     font-size: 1rem;
 }
-.condensed{
+
+.v0-8.condensed {
     display: flex;
     flex-wrap: nowrap;
 }
 
-/* Circuits */
-.circuit-container{
+.v0-8 {
+  /* Circuits */
+  .circuit-container {
     max-width: 100%;
     display: flex;
     flex-flow: row wrap;
@@ -308,83 +310,96 @@ export default {
     margin: auto;
     width: -moz-fit-content;
     width: fit-content;
-}
-.nested-circuit-container:hover > .circuit-inner-scroll > div > .circuit-name-tag {
-  display: block;
-  position: absolute;
-  padding: 0.25em 0.5em;
-  z-index: 2;
-  font-size: x-small;
-  color: var(--box-index-col);
-}
-.circuit-name-tag.circuit-tag-above{
-    top: -1.5em;
-}
-.circuit-name-tag.circuit-tag-below{
-  top: 1px;
-  background: var(--current-circuit-background);
-  border-left: 1px solid var(--box-col);
-}
-.circuit-name-tag {
-  display: none;
-}
+  }
 
-.circuit-preview.condensed > .circuit-container{
+  .nested-circuit-container:hover > .circuit-inner-scroll > div > .circuit-name-tag {
+    display: block;
+    position: absolute;
+    padding: 0.25em 0.5em;
+    z-index: 2;
+    font-size: x-small;
+    color: var(--box-index-col);
+  }
+
+  .circuit-name-tag.circuit-tag-above {
+    top: -1.5em;
+  }
+
+  .circuit-name-tag.circuit-tag-below {
+    top: 1px;
+    background: var(--current-circuit-background);
+    border-left: 1px solid var(--box-col);
+  }
+
+  .circuit-name-tag {
+    display: none;
+  }
+
+  &.circuit-preview.condensed > .circuit-container {
     flex-wrap: nowrap;
     min-width: fit-content;
-}
-.tool-tip-content > .gate_container.nested > .nested-circuit-container,
-.circuit-preview.condensed > .nested-circuit-container{
+  }
+
+  .tool-tip-content > .gate_container.nested > .nested-circuit-container,
+  &.circuit-preview.condensed > .nested-circuit-container {
     background: transparent;
     box-shadow: none;
     width: 100%;
     min-width: unset;
     max-width: unset;
-}
-.circuit-container.nested{
+  }
+
+  .circuit-container.nested {
     position: relative;
     flex-wrap: nowrap;
-}
-.nested-circuit-container{
+  }
+
+  .nested-circuit-container {
     --current-circuit-background: var(--circuit-background);
     display: flex;
     position: relative;
     overflow: auto;
     background: var(--current-circuit-background);
     box-shadow: 0 0 0 var(--box-border-width) var(--box-col) inset;
-}
-.nested-circuit-container.inline-circuit{
-  overflow: hidden
-}
-.nested-circuit-container.odd_nesting{
-    --current-circuit-background: var(--paper);
-}
-.theme_variables.dark .nested-circuit-container:not(.parent){
-    box-shadow: 0 0 0 1px var(--paper-dark) inset;
-}
-.navigator-content .nested-circuit-container.parent{
-  overflow: hidden;
-}
-.nested-circuit-container:focus,
-.nested-circuit-container:focus-visible {
-    box-shadow: inset 0 0 0 6px var(--primary-alpha, #ccffcc);
-}
+  }
 
-.circuit-inner-scroll{
+  .nested-circuit-container.inline-circuit {
+    overflow: hidden
+  }
+
+  .nested-circuit-container.odd_nesting {
+    --current-circuit-background: var(--paper);
+  }
+
+  .theme_variables.dark .nested-circuit-container:not(.parent) {
+    box-shadow: 0 0 0 1px var(--paper-dark) inset;
+  }
+
+  .navigator-content .nested-circuit-container.parent {
+    overflow: hidden;
+  }
+
+  .nested-circuit-container:focus,
+  .nested-circuit-container:focus-visible {
+    box-shadow: inset 0 0 0 6px var(--primary-alpha, #ccffcc);
+  }
+
+  .circuit-inner-scroll {
     overflow: visible;
     width: -moz-fit-content;
     width: fit-content;
     margin: auto 0;
-}
+  }
 
-.circuit-container:not(.nested) > .circuit-layer:nth-child(2),
-.circuit-container:not(.nested) > .circuit-layer:nth-last-child(2),
-.circuit-container.nested > .circuit-layer:nth-child(2),
-.circuit-container.nested > .circuit-layer:nth-last-child(2),
-.gate_container.nested > .circuit-layer:first-child,
-.gate_container.nested > .circuit-layer:nth-last-child(2),
-.gate_container.nested > .circuit-layer:last-child{
+  .circuit-container:not(.nested) > .circuit-layer:nth-child(2),
+  .circuit-container:not(.nested) > .circuit-layer:nth-last-child(2),
+  .circuit-container.nested > .circuit-layer:nth-child(2),
+  .circuit-container.nested > .circuit-layer:nth-last-child(2),
+  .gate_container.nested > .circuit-layer:first-child,
+  .gate_container.nested > .circuit-layer:nth-last-child(2),
+  .gate_container.nested > .circuit-layer:last-child {
     min-width: 10px;
+  }
 }
 </style>
 

@@ -15,7 +15,8 @@
     --box-index-col: var(--text-secondary);
     --box-text-col: var(--text-primary);
   }
-  .theme_variables.light .circuit_variables {
+  .theme_variables.light .circuit_variables,
+  .theme-mode-light > .theme_variables .circuit_variables {
     --spider-border: var(--base-wire-height);
     --wire-col: #{$grey900};
     --c-wire-col: #{$grey400};
@@ -37,7 +38,8 @@
     --z-light: #{$circuit-z-light};
     --z-dark: #{$circuit-z-dark};
   }
-  .theme_variables.dark .circuit_variables {
+  .theme_variables.dark .circuit_variables,
+  .theme-mode-dark > .theme_variables .circuit_variables {
     --spider-border: 0px; // No borders in dark mode.
     --wire-col: #{$grey500};
     --c-wire-col: #{$grey700};
@@ -72,7 +74,8 @@
     }
   }
 
-  .circuit-container {
+  // scope v0.8
+  .v0-8 .circuit-container {
     color: var(--wire-col);
 
     /* Box colours */

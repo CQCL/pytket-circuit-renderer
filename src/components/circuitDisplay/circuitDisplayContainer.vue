@@ -251,7 +251,7 @@ export default {
 </script>
 
 <template>
-  <navigator-controller class="circuit-display-container theme_variables"
+  <navigator-controller class="circuit-display-container theme_variables v0-8"
                         :class="[themeMode, { 'transparent_bg': renderOptions.transparentBg }]"
                         ref="navController" :navigator-previews="navPreviews"
                         :options="{ overrideStyle: true, externalZooming: true, externalScrolling: true, externalContent: true }"
@@ -322,7 +322,7 @@ export default {
 <style scoped lang="scss">
 @import "@/themeVariables.scss";
 
-.circuit-display-container {
+.v0-8.circuit-display-container {
   display: grid;
   grid-template-columns: auto 1fr auto;
   grid-template-rows: auto 1fr;
@@ -339,48 +339,53 @@ export default {
   right: 0;
   background: var(--circuit-background);
 }
+.v0-8 {
+  .download-button {
+    grid-area: download;
+  }
 
-.download-button {
-  grid-area: download;
-}
+  .display-options-container {
+    grid-area: menu;
+    display: flex;
+    flex-direction: row;
+    align-content: flex-start;
+    justify-content: flex-start;
+    align-items: center;
+  }
 
-.display-options-container {
-  grid-area: menu;
-  display: flex;
-  flex-direction: row;
-  align-content: flex-start;
-  justify-content: flex-start;
-  align-items: center;
-}
+  .display-options-menu {
+    position: absolute;
+    top: 3em;
+    bottom: 0;
+    max-height: calc(100% - 5em);
+    height: fit-content;
+    left: 0;
+    margin: 0.6em;
+    background: var(--background);
+    border-radius: 0.4em;
+    box-shadow: 0px 5px 10px 0px rgba($grey900, 0.1);
+    border: 1px solid var(--paper);
+    overflow: auto;
+    z-index: 10;
+  }
 
-.display-options-menu {
-  position: absolute;
-  top: 3em;
-  bottom: 0;
-  max-height: calc(100% - 5em);
-  height: fit-content;
-  left: 0;
-  margin: 0.6em;
-  background: var(--background);
-  border-radius: 0.4em;
-  box-shadow: 0px 5px 10px 0px rgba($grey900, 0.1);
-  border: 1px solid var(--paper);
-  overflow: auto;
-  z-index: 10;
-}
-.display-options-menu-entry {
-  display: flex;
-  padding: 0.4em;
-  border-bottom: 1px solid var(--paper);
-}
-:last-child > .display-options-menu-entry {
-  border-bottom: none;
-}
-.display-options-menu-entry:hover {
-  background: var(--paper);
-}
-.display-options-menu-entry .icon-label {
-  margin: auto 0.4em;
+  .display-options-menu-entry {
+    display: flex;
+    padding: 0.4em;
+    border-bottom: 1px solid var(--paper);
+  }
+
+  :last-child > .display-options-menu-entry {
+    border-bottom: none;
+  }
+
+  .display-options-menu-entry:hover {
+    background: var(--paper);
+  }
+
+  .display-options-menu-entry .icon-label {
+    margin: auto 0.4em;
+  }
 }
 </style>
 
