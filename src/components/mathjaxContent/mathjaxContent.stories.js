@@ -1,4 +1,4 @@
-import { provide } from 'vue'
+import { provide, computed } from 'vue'
 import MathjaxContent from './mathjaxContent.vue'
 import { renderOptions } from '@/components/circuitDisplay/provideKeys'
 import sympyParser from '@/sympyParser/sympy'
@@ -19,7 +19,7 @@ export const Default = (args) => ({
   components: { MathjaxContent },
   setup () {
     provide(renderOptions.interpretMath, args.interpretMath)
-    return { formula: args.formula, inlineCircuit: args.inlineCircuit }
+    return { formula: computed(() => args.formula), inlineCircuit: computed(() => args.inlineCircuit) }
   },
   template: `
     <div class="theme-mode-light">
@@ -37,17 +37,23 @@ export const WithParser = (args) => ({
   components: { MathjaxContent },
   setup () {
     provide(renderOptions.interpretMath, args.interpretMath)
-    let parsedFormula = ''
-    let parseError = false
-    try {
-      parsedFormula = sympyParser.parse(args.formula, {
-        crop: args.crop,
-        flat: args.flat
-      })
-    } catch (e) {
-      parseError = e
+    return {
+      formula: computed(() => args.formula),
+      parsed: computed(() => {
+        let parsedFormula = ''
+        let parseError = false
+        try {
+          parsedFormula = sympyParser.parse(args.formula, {
+            crop: args.crop,
+            flat: args.flat
+          })
+        } catch (e) {
+          parseError = e
+        }
+        return { formula: parsedFormula, error: parseError }
+      }),
+      inlineCircuit: computed(() => args.inlineCircuit)
     }
-    return { formula: args.formula, parsedFormula, parseError, inlineCircuit: args.inlineCircuit }
   },
   template: `
     <div class="theme-mode-light">
@@ -56,13 +62,13 @@ export const WithParser = (args) => ({
             <div>SOURCE:</div>
             <div style="color: var(--text-primary)">{{ formula }}</div>
             <div>RESULT:</div>
-            <div style="color: var(--text-primary)">{{ parsedFormula }}</div>
+            <div style="color: var(--text-primary)">{{ parsed.formula }}</div>
             <div>ERRORS:</div>
-            <div style="color: var(--text-primary)">{{ parseError }}</div>
+            <div style="color: var(--text-primary)">{{ parsed.error }}</div>
             <div>DISPLAY:</div>
             <div style="color: var(--text-primary)">
               <mathjax-content
-                  :formula="'$$' + parsedFormula + '$$'" 
+                  :formula="'$$' + parsed.formula + '$$'" 
                   :fallback="formula" 
                   :inline-circuit="inlineCircuit"
               />

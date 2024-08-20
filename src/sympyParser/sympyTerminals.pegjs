@@ -26,7 +26,6 @@ Integer "int" = _ num:[0-9]+ { return parseInt(num, 10).toString(); }
 
 Float "float" = _ [0-9]* "." [0-9]+ { return parseFloat(text(), 10).toString(); }
 
-Variable "var" = _ varname:[a-z]i+ { return `{${varname}}` }
+Variable "var" = _ varname:[a-z]i+ { return `{${varname.join('')}}` }
 
-_ "whitespace"
-  = [ \t\n\r]*
+_ "whitespace" = [ \t\n\r]*
