@@ -1,5 +1,5 @@
 import CircuitDisplayContainer from './circuitDisplayContainer.vue'
-import { reactive, computed } from 'vue'
+import { computed } from 'vue'
 
 // Get sample circuit data
 import * as CircuitStories from './circuitDisplay.stories.js'
@@ -22,6 +22,7 @@ export default {
     viewFormat: 'row',
     initOptions: false,
     darkTheme: false,
+    systemTheme: true,
     transparentBg: false,
     condensed: false,
     condenseCBits: true,
@@ -38,10 +39,11 @@ export const FromRaw = (args) => ({
     const circuitRaw = computed(() => {
       return args.circuitRaw ? args.circuitRaw : CircuitStories[args.circuitPreset].args.circuit
     })
-    const initRenderOptions = reactive(
-      args.initOptions
+    const initRenderOptions = computed(() => {
+      return args.initOptions
         ? {
             darkTheme: args.darkTheme,
+            systemTheme: args.systemTheme,
             condensed: args.condensed,
             condenseCBits: args.condenseCBits,
             zxStyle: args.zxStyle,
@@ -51,7 +53,7 @@ export const FromRaw = (args) => ({
             cropParams: args.cropParams
           }
         : {}
-    )
+    })
 
     return { circuitRaw, initRenderOptions }
   },
@@ -61,24 +63,26 @@ export const FromRaw = (args) => ({
 export const FromDOMReactive = (args) => ({
   components: { CircuitDisplayContainer },
   setup () {
-    const circuitPreset = reactive({ val: args.circuitPreset })
     return {
       circuitStories: CircuitStories,
-      circuitPreset,
+      circuitPreset: computed(() => { return { val: args.circuitPreset } }),
       presets: Object.keys(CircuitStories).filter(key => !CircuitStories.default.excludeStories.includes(key)),
       circuitElementStr: '#circuitJSON',
-      initRenderOptions: args.initOptions
-        ? {
-            darkTheme: args.darkTheme,
-            condensed: args.condensed,
-            condenseCBits: args.condenseCBits,
-            zxStyle: args.zxStyle,
-            recursive: args.recursive,
-            transparentBg: args.transparentBg,
-            interpretMath: args.interpretMath,
-            cropParams: args.cropParams
-          }
-        : {}
+      initRenderOptions: computed(() => {
+        return args.initOptions
+          ? {
+              darkTheme: args.darkTheme,
+              systemTheme: args.systemTheme,
+              condensed: args.condensed,
+              condenseCBits: args.condenseCBits,
+              zxStyle: args.zxStyle,
+              recursive: args.recursive,
+              transparentBg: args.transparentBg,
+              interpretMath: args.interpretMath,
+              cropParams: args.cropParams
+            }
+          : {}
+      })
     }
   },
   template: `<div>
@@ -103,27 +107,28 @@ export const FromDOMReactive = (args) => ({
 export const MultiCircuit = (args) => ({
   components: { CircuitDisplayContainer },
   setup () {
-    const circuitPreset = reactive({ val: args.circuitPreset })
-    const circuitPreset2 = reactive({ val: args.circuitPreset })
     return {
       circuitStories: CircuitStories,
-      circuitPreset,
-      circuitPreset2,
-      viewFormat: args.viewFormat,
+      circuitPreset: computed(() => { return { val: args.circuitPreset } }),
+      circuitPreset2: computed(() => { return { val: args.circuitPreset } }),
+      viewFormat: computed(() => args.viewFormat),
       presets: Object.keys(CircuitStories).filter(key => !CircuitStories.default.excludeStories.includes(key)),
       circuitElementStr: '#circuitJSON',
-      initRenderOptions: args.initOptions
-        ? {
-            darkTheme: args.darkTheme,
-            condensed: args.condensed,
-            condenseCBits: args.condenseCBits,
-            zxStyle: args.zxStyle,
-            recursive: args.recursive,
-            transparentBg: args.transparentBg,
-            interpretMath: args.interpretMath,
-            cropParams: args.cropParams
-          }
-        : {}
+      initRenderOptions: computed(() => {
+        return args.initOptions
+          ? {
+              darkTheme: args.darkTheme,
+              systemTheme: args.systemTheme,
+              condensed: args.condensed,
+              condenseCBits: args.condenseCBits,
+              zxStyle: args.zxStyle,
+              recursive: args.recursive,
+              transparentBg: args.transparentBg,
+              interpretMath: args.interpretMath,
+              cropParams: args.cropParams
+            }
+          : {}
+      })
     }
   },
   template: `<div>
