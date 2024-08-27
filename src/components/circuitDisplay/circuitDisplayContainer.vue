@@ -273,12 +273,17 @@ export default {
                    @keyup.space="renderOptions[option] = disabledOptions[option] ? renderOptions[option] : !renderOptions[option]"
               >
                 <div :title="options[option].title"
-                     class="icon" :class="{'selected': renderOptions[option], 'disabled': disabledOptions[option]}"
+                     class="icon" :class="{'disabled': disabledOptions[option]}"
                      role="checkbox"
                      v-html="options[option].icon"
                 ></div>
-                <div class="icon-label" :class="{'selected': renderOptions[option], 'disabled': disabledOptions[option]}">
+                <div class="icon-label" style="flex-grow: 1" :class="{'selected': renderOptions[option], 'disabled': disabledOptions[option]}">
                   [[# options[option].title #]]
+                </div>
+                <div class="icon">
+                  <svg v-if="renderOptions[option]" title="check icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2" viewBox="0 0 16 16">
+                    <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0"/>
+                  </svg>
                 </div>
               </div>
             </div>
@@ -402,6 +407,9 @@ export default {
 }
 .display-options-menu-entry .icon-label {
   margin: auto 0.4em;
+}
+.display-options-menu-entry .icon-label.selected {
+  color: hsl(var(--primary));
 }
 </style>
 
