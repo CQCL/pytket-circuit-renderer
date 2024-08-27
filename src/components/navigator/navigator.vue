@@ -342,6 +342,7 @@ export default {
   }
 
   & > :nth-child(2n) {
+    border: 1px solid hsl(var(--border));
     --circuit-background-dark: var(--temp-bg);
     --circuit-background: var(--temp-bg-dark);
     background: var(--paper);
