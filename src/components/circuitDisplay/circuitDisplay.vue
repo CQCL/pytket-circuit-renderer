@@ -285,7 +285,7 @@ export default {
 
           <circuit-info
               v-if="nested === 0 || isInlineCircuit"
-              :style="{position: 'absolute', left: nested === 0 ? 0: '0.5em', top: '0.5em', zIndex: 1}"
+              :style="{position: 'absolute', left: '0.5em', top: '0.5em', zIndex: 1}"
               :command="parentCommand"
               :circuit="circuit"
           ></circuit-info>
