@@ -193,11 +193,7 @@ export default {
       this.$refs.teleportParent.registerTeleport(...args)
     },
     getRenderedCircuitEl () {
-      return {
-        circuit: this.$refs.renderedCircuit,
-        width: this.$refs.renderedCircuit?.clientWidth,
-        height: this.$refs.renderedCircuit?.clientHeight
-      }
+      return this.$refs.renderedCircuitInner
     },
     getDisplayedCircuitDimensions () {
       this.circuitDimensions.x = this.$refs.renderedCircuit?.clientWidth
@@ -296,7 +292,7 @@ export default {
                 <mathjax-content :formula="circuit.name" :fallback="displayName" inline-circuit></mathjax-content>
               </div>
 
-              <div class="circuit-container"
+              <div class="circuit-container" ref="renderedCircuitInner"
                   :class="{nested: nested > 0 || condensed, zx: zxStyle}">
                 <circuit-layer
                     :qubits="true"

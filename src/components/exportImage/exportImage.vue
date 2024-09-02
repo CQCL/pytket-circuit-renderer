@@ -7,7 +7,7 @@ export default {
   emits: ['updated'],
   props: {
     defaultFileName: { type: String, required: false },
-    elementToRender: { validator: RefValidator, required: true },
+    elementsToRender: { validator: RefValidator, required: true },
     baseDimensions: { type: Object, default: () => { return { width: false, height: false } } },
     defaultBackground: { type: String, default: '#ffffff' }
   },
@@ -44,31 +44,33 @@ export default {
           }
         }
       },
+      batchExport: false,
       methods: {
         png: 'toPng',
         jpeg: 'toJpeg',
         svg: 'toSvg'
       },
-      imageUrl: undefined,
+      imageUrls: [],
       fileName: this.defaultFileName ? this.defaultFileName : 'image',
       rendering: false
     }
   },
   computed: {
     resolution () {
-      const width = this.baseDimensions.width ? this.baseDimensions.width : this.elementToRender?.clientWidth
-      const height = this.baseDimensions.height ? this.baseDimensions.height : this.elementToRender?.clientHeight
-      return {
-        width: Math.ceil(width * this.options.scale.value),
-        height: Math.ceil(height * this.options.scale.value)
-      }
+      return this.elementsToRender?.map((elementToRender) => {
+        const width = this.baseDimensions.width ? this.baseDimensions.width : elementToRender.clientWidth
+        const height = this.baseDimensions.height ? this.baseDimensions.height : elementToRender.clientHeight
+        return {
+          width: Math.ceil(width * this.options.scale.value),
+          height: Math.ceil(height * this.options.scale.value)
+        }
+      })
     },
     renderOptions () {
       return {
         cacheBust: true,
         quality: this.options.quality.value,
         bgcolor: this.options.fileType.value === 'jpeg' ? this.defaultBackground : 'transparent',
-        ...this.resolution,
         style: {
           transform: `scale(${this.options.scale.value})`,
           transformOrigin: 'top left'
@@ -78,34 +80,35 @@ export default {
   },
   updated () {
     // If this is in a modal we need to update it explicitly when the image changes.
-    this.$nextTick(() => this.$emit('updated', this.imageUrl))
+    this.$nextTick(() => this.$emit('updated', this.imageUrls))
   },
   methods: {
-    download () {
-      if (this.imageUrl && this.fileName) {
+    download (i) {
+      if (this.imageUrls[i] && this.fileName) {
         const link = document.createElement('a')
-        link.download = `${this.fileName}.${this.options.fileType.value}`
-        link.href = this.imageUrl
+        link.download = `${this.fileName}${this.batchExport ? i : ''}.${this.options.fileType.value}`
+        link.href = this.imageUrls[i]
         link.click()
         link.remove()
       }
     },
-    async renderImage () {
-      try {
-        this.rendering = true
-        const dataUrl = await domToImage[this.methods[this.options.fileType.value]](
-          this.elementToRender,
-          this.renderOptions
+    renderImage () {
+      this.rendering = true
+      this.$nextTick(async () => {
+        const dataUrls = await Promise.all(
+          this.elementsToRender.map((elementToRender, i) => {
+            return domToImage[this.methods[this.options.fileType.value]](
+              elementToRender,
+              { ...this.renderOptions, ...this.resolution[i] }
+            )
+          })
         )
-        this.imageUrl = dataUrl
         this.rendering = false
-      } catch (error) {
-        console.error('render error!', error)
-        this.rendering = false
-      }
+        this.imageUrls = dataUrls.filter(url => !!url)
+      })
     },
     resetState () {
-      this.imageUrl = undefined
+      this.imageUrls = []
       this.options.fileType.value = 'png'
       this.options.scale.value = 1.0
       this.options.quality.value = 1.0
@@ -132,26 +135,42 @@ export default {
             >[[# name #]]</div>
           </div>
         </div>
-        <div class="extra-info">
-          Image size: [[# resolution.width #]]*[[# resolution.height #]]
+        <div v-if="resolution && resolution.length > 0" class="extra-info">
+          Image size: [[# resolution[0].width #]]*[[# resolution[0].height #]]
         </div>
         <div class="row" :style="{borderBottom: 0}">
-          <button class="row-item button" :class="{disabled: typeof elementToRender === 'undefined'}" @click.prevent.stop="renderImage">
+          <button class="row-item button" :class="{disabled: elementsToRender?.length === 0}" @click.prevent.stop="renderImage">
             Generate
           </button>
         </div>
       </form>
     </div>
-    <div :class="{rendering: rendering}">
+    <div v-if="rendering || imageUrls.length > 0" :class="{rendering: rendering}">
       <div>
-        <div class="row-heading">Image</div>
-        <div class="image-preview" v-if="!!imageUrl">
-          <img :src="imageUrl" alt="Image Preview" />
+        <div class="row-heading">Images</div>
+        <p style="display: flex; gap: 1em; align-items: center">
+          <label>File prefix</label>
+          <input style="flex-grow: 1" class="row-item" type="text" v-model="fileName" placeholder="File name"/>
+        </p>
+        <div style="display: flex; gap: 1em; align-items: center; padding-bottom: 1em">
+          Number images
+          <div class="icon" style="border: 1px solid hsl(var(--border));padding: 0" aria-role="checkbox" @click="batchExport = !batchExport">
+            <svg v-if="batchExport" title="check icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2" viewBox="0 0 16 16">
+              <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0"/>
+            </svg>
+          </div>
         </div>
-        <div style="display: flex;padding-top: 1rem">
-          <input class="row-item" type="text" v-model="fileName" placeholder="File name"/>
-          <div style="padding: 0.5em">.[[# options.fileType.value #]]</div>
-          <button :class="{disabled: !imageUrl || !fileName}" @click="download">Save</button>
+
+        <p v-if="rendering && imageUrls.length === 0">Rendering...</p>
+
+        <div v-for="(imageUrl, i) in imageUrls" :key="i" style="padding: 1em 0">
+          <div style="display: flex; gap: 1em; justify-content: flex-end">
+            <div style="padding: 0.5em;text-align:right">[[# fileName #]]<span v-if="batchExport">[[# i #]]</span>.[[# options.fileType.value #]]</div>
+            <button :class="{disabled: !imageUrl || !fileName}" @click="() => download(i)">Save</button>
+          </div>
+          <div class="image-preview">
+            <img :src="imageUrl" alt="Image Preview" />
+          </div>
         </div>
       </div>
     </div>
@@ -196,8 +215,11 @@ export default {
 
 .image-preview{
   width: 100%;
-  max-height: 10em;
+  height: 10em;
   margin: 1em 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .image-preview img{
