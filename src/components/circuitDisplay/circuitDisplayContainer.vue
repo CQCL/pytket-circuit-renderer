@@ -53,7 +53,7 @@ export default {
       },
       themeChanged: 0,
       // Image export
-      circuitEl: null,
+      circuitEls: null,
       circuitDimensions: {
         width: undefined,
         height: undefined
@@ -212,22 +212,16 @@ export default {
         this.embeddedCircuit = circuit
       }
     },
-    getCircuitDims (i) {
-      const { circuit, width, height } = this.circuitDisplayRefs[i].getRenderedCircuitEl()
-      this.circuitEl = circuit
-      this.circuitDimensions.width = width
-      this.circuitDimensions.height = height
-    },
     getDefaultBackground () {
-      if (this.circuitEl) { // compute the current background variable value
-        this.backgroundCol = getComputedStyle(this.circuitEl).getPropertyValue('--background')
+      if (this.circuitEls?.length > 0) { // compute the current background variable value
+        this.backgroundCol = getComputedStyle(this.circuitEls[0]).getPropertyValue('--background')
       } else { // fallback to theme-relative default
         this.backgroundCol = this.renderOptions.darkTheme ? '#000000' : '#ffffff'
       }
     },
     prepareExport () {
       this.$refs.imageExport.resetState()
-      this.getCircuitDims(0)
+      this.circuitEls = this.circuitDisplayRefs.map(circuitRef => circuitRef.getRenderedCircuitEl())
       this.getDefaultBackground()
       this.exportImageModal = true
     },
@@ -311,8 +305,7 @@ export default {
         <export-image ref="imageExport"
                       default-file-name="circuit"
                       :default-background="backgroundCol"
-                      :element-to-render="circuitEl"
-                      :base-dimensions="circuitDimensions"
+                      :elements-to-render="circuitEls"
                       @updated="modalContentUpdate('imageExportModal')">
         </export-image>
       </template>
