@@ -13,6 +13,10 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## Unreleased
 
+## [0.10.1] 2024-09-02
+### Fixed
+- Image export clipping edge of circuit
+
 ## [0.10.0] 2024-09-02
 ### Added
 - Multi-circuit view

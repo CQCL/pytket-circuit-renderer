@@ -195,8 +195,8 @@ export default {
     getRenderedCircuitEl () {
       return {
         circuit: this.$refs.renderedCircuit,
-        width: this.$refs.renderedCircuitDimensions?.clientWidth,
-        height: this.$refs.renderedCircuitDimensions?.clientHeight
+        width: this.$refs.renderedCircuit?.clientWidth,
+        height: this.$refs.renderedCircuit?.clientHeight
       }
     },
     getDisplayedCircuitDimensions () {
@@ -296,7 +296,7 @@ export default {
                 <mathjax-content :formula="circuit.name" :fallback="displayName" inline-circuit></mathjax-content>
               </div>
 
-              <div ref="renderedCircuitDimensions" class="circuit-container"
+              <div class="circuit-container"
                   :class="{nested: nested > 0 || condensed, zx: zxStyle}">
                 <circuit-layer
                     :qubits="true"
