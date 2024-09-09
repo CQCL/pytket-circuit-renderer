@@ -12,6 +12,7 @@
     {"args": [["q", [0]], ["q", [3]], ["c", [1]]], "op": {"signature": ["Q", "Q", "C"], "type": "Barrier"}},
     {"args": [["q", [1]], ["q", [2]]], "op": {"type": "CX"}},
     {"args": [["q", [0]]], "op": {"params": ["0.33"], "type": "Rx"}},
+    {"args": [["q", [1]]], "op": {"params": ["0.33"], "type": "U1"}},
     {"args": [["q", [3]]], "op": {"type": "Sdg"}},
     {"args": [["q", [3]], ["c", [0]]], "op": {"type": "Measure"}},
     {"args": [["q", [3]]], "op": {"type": "Reset"}},
