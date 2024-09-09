@@ -209,7 +209,7 @@ export default {
       }
       const convertMath = {
         X: '\\pi',
-        U1: '`' + paramStr + '`' + '\\pi',
+        U1: paramStr.slice(1, -1) + '\\pi',
         V: '\\pi / 2',
         Vdg: '-\\pi / 2',
         Y: '\\pi',
