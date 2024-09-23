@@ -281,17 +281,17 @@ export default {
 
           <circuit-info
               v-if="nested === 0 || isInlineCircuit"
+              class="circuit-info"
               :style="{position: 'absolute', left: '0.5em', top: '0.5em', zIndex: 1}"
               :command="parentCommand"
               :circuit="circuit"
           ></circuit-info>
+          <div v-if="circuit && circuit.name" class="circuit-name-tag circuit-tag-below">
+            <mathjax-content :formula="circuit.name" :fallback="displayName" inline-circuit></mathjax-content>
+          </div>
 
           <div :class="{'circuit-inner-scroll': condensed}" :style="navigatorStyling">
             <div>
-              <div v-if="circuit && circuit.name" class="circuit-name-tag circuit-tag-below">
-                <mathjax-content :formula="circuit.name" :fallback="displayName" inline-circuit></mathjax-content>
-              </div>
-
               <div class="circuit-container" ref="renderedCircuitInner"
                   :class="{nested: nested > 0 || condensed, zx: zxStyle}">
                 <circuit-layer
@@ -365,25 +365,26 @@ export default {
     width: -moz-fit-content;
     width: fit-content;
 }
-.nested-circuit-container:hover > .circuit-inner-scroll > div > .circuit-name-tag {
-  display: block;
+.circuit-name-tag {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   position: absolute;
-  padding: 0.25em 0.5em;
+  top: -20em;
+  height: 1.8rem;
+  opacity: 0;
+  padding: 0.25em 1em;
   z-index: 2;
   font-size: 0.7em;
   border-radius: var(--radius);
   color: var(--text-primary);
+  background: var(--paper-dark);
+  overflow: hidden;
 }
-.circuit-name-tag.circuit-tag-below{
+.circuit-info:hover + .circuit-name-tag {
   top: 0.5rem;
-  background: hsl(from var(--paper-dark) h s l / 0.9);
-}
-.nested-circuit-container.inline-circuit > .circuit-inner-scroll > div > .circuit-name-tag {
-  left: 2.5rem;
-}
-.circuit-name-tag,
-.tool-tip-content .nested-circuit-container:hover > .circuit-inner-scroll > div > .circuit-name-tag {
-  display: none;
+  left: 2.6rem;
+  opacity: 1;
 }
 
 .circuit-preview.condensed > .circuit-container,
