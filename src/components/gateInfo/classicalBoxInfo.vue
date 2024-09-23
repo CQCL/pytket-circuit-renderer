@@ -47,11 +47,11 @@ export default {
     [[# formatClassicalExp(op.box.exp) #]]
   </chart-def>
 
-  <div v-if="hasClassicalTable">
+  <template  v-if="hasClassicalTable" >
     <chart-def v-for="key in Object.keys(classicalTable)" :key="key" :title="key" hover>
       [[# classicalTable[key] #]]
     </chart-def>
-  </div>
+  </template>
 
   <chart-def v-if="'classical' in op && 'values' in op.classical" title="Values" hover>
     <chart-list :chart="op.classical.values"></chart-list>
