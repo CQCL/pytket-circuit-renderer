@@ -13,6 +13,11 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## Unreleased
 
+## [0.10.2] 2024-09-30
+### Fixed
+- Circuit name covering gates on hover
+- Classical circuit info display
+
 ## [0.10.1] 2024-09-09
 ### Fixed
 - Image export clipping edge of circuit
