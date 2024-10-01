@@ -1,8 +1,10 @@
 import GenericGate from './genericGate.vue'
 import { setupProvideRenderOptions } from './circuitDisplay.stories'
+import { computed } from 'vue'
 
 export default {
   title: 'Circuits/GenericGate',
+  excludeStories: ['setupProvideRenderOptions', 'htmlTemplate'],
   component: GenericGate,
   args: {
     darkTheme: true,
@@ -17,19 +19,38 @@ export default {
 }
 
 const htmlTemplate = `
-  <div :class="[args.darkTheme ? 'theme-mode-dark' : 'theme-mode-light']">
-    <div class="circuit-display-container theme_variables">
+  <div :class="[darkTheme ? 'theme-mode-dark' : 'theme-mode-light']">
+    <div class="circuit-display-container theme_variables border-box">
       <div class="circuit-container circuit-preview circuit_variables">
-        <generic-gate v-bind="args" />
+        <generic-gate
+         :command="command" 
+         :indexed-args="indexedArgs" 
+         :condensed-registers="condensedRegisters"
+         :split="split"
+         :pos-adjust="posAdjust"
+         :link-vertical="linkVertical"
+        />
       </div>
     </div>
   </div>`
+
+const getBaseGateArgs = (args) => {
+  return {
+    darkTheme: computed(() => args.darkTheme),
+    indexedArgs: computed(() => args.indexedArgs),
+    command: computed(() => args.command),
+    condensedRegisters: computed(() => args.condensedRegisters),
+    split: computed(() => args.split),
+    linkVertical: computed(() => args.linkVertical),
+    posAdjust: computed(() => args.posAdjust)
+  }
+}
 
 const Template = (args) => ({
   components: { GenericGate },
   setup () {
     setupProvideRenderOptions(args)
-    return { args }
+    return getBaseGateArgs(args)
   },
   template: htmlTemplate
 })
@@ -397,9 +418,16 @@ const Template2Q = (args) => ({
         condensedRegisters: { c: false }
       }
     }
-    args = { ...args, ...commands[args.opType] }
     setupProvideRenderOptions(args)
-    return { args }
+    const opType = computed(() => args.opType)
+    const baseArgs = getBaseGateArgs(args)
+    return {
+      opType,
+      ...baseArgs,
+      indexedArgs: computed(() => commands[opType.value].indexedArgs),
+      command: computed(() => commands[opType.value].command),
+      condensedRegisters: computed(() => commands[opType.value].condensedRegisters)
+    }
   },
   template: htmlTemplate
 })
@@ -414,8 +442,18 @@ Special2Qubits.argTypes = {
 const Template1Q = (args) => ({
   components: { GenericGate },
   setup () {
-    args = {
-      ...args,
+    setupProvideRenderOptions(args)
+    const baseArgs = getBaseGateArgs(args)
+    const opType = computed(() => args.opType)
+    return {
+      ...baseArgs,
+      opType,
+      command: computed(() => {
+        return {
+          op: { type: opType.value },
+          args: [['q', [0]]]
+        }
+      }),
       indexedArgs: [{
         order: 0,
         pos: 0,
@@ -429,14 +467,8 @@ const Template1Q = (args) => ({
           single: true
         }
       }],
-      command: {
-        op: { type: args.opType },
-        args: [['q', [0]]]
-      },
       condensedRegisters: {}
     }
-    setupProvideRenderOptions(args)
-    return { args }
   },
   template: htmlTemplate
 })

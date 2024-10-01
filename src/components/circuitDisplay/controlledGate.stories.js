@@ -1,5 +1,6 @@
 import ControlledGate from './controlledGate.vue'
 import { setupProvideRenderOptions } from './circuitDisplay.stories'
+import { computed } from 'vue'
 
 export default {
   title: 'Circuits/ControlledGate',
@@ -17,13 +18,18 @@ const Template = (args) => ({
   components: { ControlledGate },
   setup () {
     setupProvideRenderOptions(args)
-    return { args }
+    return {
+      darkTheme: computed(() => args.darkTheme),
+      indexedArgs: computed(() => args.indexedArgs),
+      command: computed(() => args.command),
+      condensedRegisters: computed(() => args.condensedRegisters)
+    }
   },
   template: `
-    <div :class="[args.darkTheme ? 'theme-mode-dark' : 'theme-mode-light']">
+    <div :class="[darkTheme ? 'theme-mode-dark' : 'theme-mode-light']">
       <div class="circuit-display-container theme_variables border-box">
         <div class="circuit-container circuit-preview circuit_variables">
-          <controlled-gate v-bind="args" />
+          <controlled-gate :command="command" :condensed-registers="condensedRegisters" :indexed-args="indexedArgs" />
         </div>
       </div>
     </div>`
@@ -195,12 +201,12 @@ ClassicalControl.args = {
     {
       order: 0,
       pos: [-1, 0, -1],
-      name: ['Global Classical', [2], 'condensed'],
+      name: ['Global Classical', [3], 'condensed'],
       bits: [['c', [0]], ['c', [1]], ['c', [2]], ['d', [0]]],
       flags: {
         classical: true,
         condensed: true,
-        first: true,
+        first: false,
         globalClassical: true,
         last: true,
         single: true

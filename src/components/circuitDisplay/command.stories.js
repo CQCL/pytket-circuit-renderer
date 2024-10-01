@@ -1,4 +1,4 @@
-import { h, ref } from 'vue'
+import { h, ref, computed } from 'vue'
 import CircuitCommand from './command.vue'
 import { setupProvideRenderOptions } from './circuitDisplay.stories'
 
@@ -29,7 +29,16 @@ const Template = (args) => ({
     setupProvideRenderOptions(args)
     const commandRef = ref()
     const isReady = ref(false)
-    return { args, h, commandRef, isReady, darkTheme: args.darkTheme }
+    return {
+      h,
+      commandRef,
+      isReady,
+      darkTheme: computed(() => args.darkTheme),
+      command: computed(() => args.command),
+      registerOrder: computed(() => args.registerOrder),
+      classicalThreshold: computed(() => args.classicalThreshold),
+      condensedRegisters: computed(() => args.condensedRegisters)
+    }
   },
   methods: {
     onMounted () {
@@ -37,11 +46,18 @@ const Template = (args) => ({
       this.isReady = true
     }
   },
-  template: `<div :class="[args.darkTheme ? 'theme-mode-dark' : 'theme-mode-light']">
+  template: `<div :class="[darkTheme ? 'theme-mode-dark' : 'theme-mode-light']">
     <div class="circuit-display-container theme_variables border-box">
       <div style="justify-content: flex-start" class="circuit-container circuit-preview circuit_variables condensed">
         <div class="circuit-inner-scroll" data-cy="command-container">
-          <circuit-command :ref="'commandRef'" v-bind="args" @mounted="onMounted">
+          <circuit-command
+              :ref="'commandRef'"
+              :command="command"
+              :register-order="registerOrder"
+              :classical-threshold="classicalThreshold"
+              :condensed-registers="condensedRegisters"
+              @mounted="onMounted"
+          >
             <template #gate-info>
               <div data-description="placeholder"></div>
             </template>
@@ -83,6 +99,6 @@ Basic.args = {
 export const SubstituteCommand = (command, args) => {
   const story = Template.bind({})
   const { registerOrder, classicalThreshold, condensedRegisters } = args
-  story.args = { command, registerOrder, classicalThreshold, condensedRegisters }
+  story.args = { ...story.args, command, registerOrder, classicalThreshold, condensedRegisters }
   return story
 }
