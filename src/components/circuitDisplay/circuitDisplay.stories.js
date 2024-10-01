@@ -1,4 +1,4 @@
-import { provide } from 'vue'
+import { provide, ref, computed } from 'vue'
 import CircuitDisplay from './circuitDisplay.vue'
 import * as circuitFixtures from '@/../cypress/fixtures/circuits.js'
 import { renderOptions } from './provideKeys'
@@ -16,7 +16,7 @@ export default {
     condenseCBits: true,
     recursive: false,
     condensed: true,
-    nested: 0,
+    nested: 2,
     cropParams: true,
     interpretMath: true,
     circuit: {
@@ -30,13 +30,13 @@ export default {
 }
 
 const setupProvideRenderOptions = function (args) {
-  provide(renderOptions.zxStyle, args.zxStyle)
-  provide(renderOptions.condenseCBits, args.condenseCBits)
-  provide(renderOptions.recursive, args.recursive)
-  provide(renderOptions.condensed, args.condensed)
-  provide(renderOptions.nested, args.nested)
-  provide(renderOptions.interpretMath, args.interpretMath)
-  provide(renderOptions.cropParams, args.cropParams)
+  provide(renderOptions.zxStyle, computed(() => args.zxStyle))
+  provide(renderOptions.condenseCBits, computed(() => args.condenseCBits))
+  provide(renderOptions.recursive, computed(() => args.recursive))
+  provide(renderOptions.condensed, computed(() => args.condensed))
+  provide(renderOptions.nested, computed(() => args.nested))
+  provide(renderOptions.interpretMath, computed(() => args.interpretMath))
+  provide(renderOptions.cropParams, computed(() => args.cropParams))
 }
 export { setupProvideRenderOptions }
 
@@ -44,12 +44,15 @@ export const Template = (args) => ({
   components: { CircuitDisplay },
   setup () {
     setupProvideRenderOptions(args)
-    return { circuit: args.circuit, darkTheme: args.darkTheme }
+    return {
+      circuit: computed(() => args.circuit),
+      darkTheme: computed(() => args.darkTheme)
+    }
   },
   template: `
     <div :class="[darkTheme ? 'theme-mode-dark' : 'theme-mode-light']">
       <div class="circuit-display-container theme_variables">
-          <circuit-display :circuit="circuit" is-inline-circuit />
+        <circuit-display :circuit="circuit" />
       </div>
     </div>`
 })
