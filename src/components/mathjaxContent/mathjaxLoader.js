@@ -4,7 +4,7 @@
   if (!window.MathJax) {
     window.MathJax = {
       loader: {
-        load: ['input/asciimath']
+        load: ['input/asciimath', 'input/tex']
       },
       tex: {
         inlineMath: [['\\(', '\\)']],
