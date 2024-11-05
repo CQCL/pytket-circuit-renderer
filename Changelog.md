@@ -13,6 +13,10 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## Unreleased
 
+## [0.10.3] 2024-11-05
+### Fixed
+- Math display in circuit names now loads Tex settings properly
+
 ## [0.10.2] 2024-09-30
 ### Fixed
 - Circuit name covering gates on hover
