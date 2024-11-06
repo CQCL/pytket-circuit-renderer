@@ -1,0 +1,75 @@
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!-- Download Vue 3-->
+<script type="application/javascript" src="https://cdn.jsdelivr.net/npm/vue@3"></script>
+<!-- Download Circuit Renderer with styles -->
+
+<script type="application/javascript" src="/dist/pytket-circuit-renderer.umd.js"></script>
+<link rel="stylesheet" href="/dist/pytket-circuit-renderer.css">
+</head>
+<body>
+
+
+<div style="
+    position:absolute;
+    top:0;bottom:0;left:0;right:0;
+    margin:auto;resize:both;display:block;overflow:hidden;
+    width:min(500px, 100%);
+    height:min(None,100%);
+    max-width:100%;
+    max-height:100%;">
+
+    <div id="circuit-display-vue-container-47b85fc7-9220-4786-8ecc-45a201ed3f83" class="pytket-circuit-display-container">
+        <div style="display: none">
+            <div id="circuit-json-to-display">{"bits": [], "commands": [{"args": [["q", [0]], ["q", [1]], ["q", [2]]], "op": {"box": {"circuit": {"bits": [], "commands": [{"args": [["q", [0]], ["q", [2]]], "op": {"type": "SWAP"}}, {"args": [["q", [2]]], "op": {"type": "H"}}, {"args": [["q", [2]], ["q", [1]]], "op": {"params": ["-0.5"], "type": "CU1"}}, {"args": [["q", [2]], ["q", [0]]], "op": {"params": ["-0.25"], "type": "CU1"}}, {"args": [["q", [1]]], "op": {"type": "H"}}, {"args": [["q", [1]], ["q", [0]]], "op": {"params": ["-0.5"], "type": "CU1"}}, {"args": [["q", [0]]], "op": {"type": "H"}}], "created_qubits": [], "discarded_qubits": [], "implicit_permutation": [[["q", [0]], ["q", [0]]], [["q", [1]], ["q", [1]]], [["q", [2]], ["q", [2]]]], "name": "$$QFT^2$$", "phase": "0.0", "qubits": [["q", [0]], ["q", [1]], ["q", [2]]]}, "id": "db1677b0-7bbc-47bb-a0d9-6b0451182cbb", "type": "CircBox"}, "type": "CircBox"}}], "created_qubits": [], "discarded_qubits": [], "implicit_permutation": [[["q", [0]], ["q", [0]]], [["q", [1]], ["q", [1]]], [["q", [2]], ["q", [2]]]], "phase": "0.0", "qubits": [["q", [0]], ["q", [1]], ["q", [2]]]}</div>
+        </div>
+        <circuit-display-container
+                :circuit-element-str="'#circuit-json-to-display'"
+                :init-render-options="initRenderOptions"
+                view-format="None"
+        ></circuit-display-container>
+    </div>
+    <script type="application/javascript">
+      const circuitRendererUid = "47b85fc7-9220-4786-8ecc-45a201ed3f83";
+      const displayOptions = JSON.parse('{"zxStyle": true}');
+
+      // Script to initialise the circuit renderer app
+
+const { createApp } = Vue;
+const circuitDisplayContainer = window["pytket-circuit-renderer"].default;
+// Init variables to be shared between circuit display instances
+if (typeof window.pytketCircuitDisplays === "undefined") {
+    window.pytketCircuitDisplays = {};
+}
+// Create the root Vue component
+const app = createApp({
+    delimiters: ['[[#', '#]]'],
+    components: { circuitDisplayContainer },
+    data () {
+      return {
+        initRenderOptions: displayOptions,
+      }
+    }
+})
+app.config.unwrapInjectedRef = true;
+app.mount("#circuit-display-vue-container-"+circuitRendererUid);
+window.pytketCircuitDisplays[circuitRendererUid] = app;
+    </script>
+
+
+</div>
+
+
+</body>
+</html>
+
+
