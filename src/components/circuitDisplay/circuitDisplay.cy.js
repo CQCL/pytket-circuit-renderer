@@ -25,10 +25,13 @@ describe('Circuit display component', () => {
           cy.mount({ name, ...components[name]() })
           waitForRender()
 
-          cy.get('[data-cy-tooltip=active][data-cy-nesting=0]').each($gateInfoButton => {
+          // The nesting depth of the circuit controls the labels we use to find the clickable gate-info.
+          const baseDepth = 2
+
+          cy.get(`[data-cy-tooltip=active][data-cy-nesting=${baseDepth}]`).each($gateInfoButton => {
             cy.wrap($gateInfoButton).scrollIntoView().click()
             // identify the open modal
-            cy.get('[data-cy=teleport-to][data-cy-depth=0]')
+            cy.get(`[data-cy=teleport-to][data-cy-depth=${baseDepth}]`)
               .find('[data-cy-tooltip=close]')
             // Nested gate-infos might have multiple defined within...
               .first()
