@@ -80,6 +80,6 @@ You should then be able to run storybook to manually inspect the components via 
 Automated tests via cypress can be run using `npm run test`.
 
 ### Build
-To compile the component library use `npm run build-lib`.
+To compile the component library use `npm run parser` then `npm run build-lib`.
 Opening `test\index.html` gives an example app that uses the locally built circuit renderer.
 Note that you must be serving the local files, for example by first running `serve .` in the project root directory.
