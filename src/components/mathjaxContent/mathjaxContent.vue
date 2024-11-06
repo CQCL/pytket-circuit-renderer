@@ -1,7 +1,7 @@
 <script>
 // Vue wrapper for Mathjax.
 // Must use this if the formula can change dynamically.
-import './mathjaxLoader'
+import { loadMathjax } from './mathjaxLoader'
 import { renderOptions } from '@/components/circuitDisplay/provideKeys'
 
 let nMJC = 0
@@ -21,16 +21,24 @@ export default {
   data () {
     nMJC++
     return {
-      uid: 'mathjax-content-' + nMJC
+      uid: 'mathjax-content-' + nMJC,
+      ready: false
     }
   },
   watch: {
+    ready () {
+      this.renderMathJax()
+    },
     shouldReRender () {
       this.renderMathJax()
     },
     formula () {
       this.renderMathJax()
     }
+  },
+  async created () {
+    await loadMathjax()
+    this.ready = true
   },
   mounted () {
     this.renderMathJax()
@@ -56,6 +64,7 @@ export default {
     renderMathJax () {
       if (this.isRenderingMath) {
         this.renderContent()
+        // If mathjax isn't loaded yet, wait for it to load
         if (!!window.MathJax && !!window.MathJax.typeset) {
           this.$nextTick(() => {
             window.MathJax.typeset(['[data-uid=' + this.uid + ']'])
