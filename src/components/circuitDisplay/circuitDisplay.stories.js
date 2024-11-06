@@ -1,4 +1,4 @@
-import { provide, ref, computed } from 'vue'
+import { provide, computed } from 'vue'
 import CircuitDisplay from './circuitDisplay.vue'
 import * as circuitFixtures from '@/../cypress/fixtures/circuits.js'
 import { renderOptions } from './provideKeys'
