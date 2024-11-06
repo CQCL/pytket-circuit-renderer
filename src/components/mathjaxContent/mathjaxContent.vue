@@ -64,11 +64,9 @@ export default {
     renderMathJax () {
       if (this.isRenderingMath) {
         this.renderContent()
-        // If mathjax isn't loaded yet, wait for it to load
+        // Only typeset if mathjax has been loaded.
         if (!!window.MathJax && !!window.MathJax.typeset) {
-          this.$nextTick(() => {
-            window.MathJax.typeset(['[data-uid=' + this.uid + ']'])
-          })
+          window.MathJax.typeset(['[data-uid=' + this.uid + ']'])
         }
       }
     }
