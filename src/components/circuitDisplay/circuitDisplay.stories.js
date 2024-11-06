@@ -16,6 +16,7 @@ export default {
     condenseCBits: true,
     recursive: false,
     condensed: true,
+    // Note this is required to allow nice rendering of the circuit inline without a containing element.
     nested: 2,
     cropParams: true,
     interpretMath: true,
