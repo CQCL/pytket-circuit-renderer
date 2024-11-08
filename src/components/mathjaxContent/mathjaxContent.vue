@@ -51,6 +51,10 @@ export default {
       return this.isRenderingMath ? this.formula : this.fallback
     }
   },
+  updated () {
+    // If the DOM changed, we need to re-render mathjax.
+    this.typeset()
+  },
   methods: {
     renderContent () {
       if (this.isRenderingMath) {
@@ -61,13 +65,16 @@ export default {
         }
       }
     },
-    renderMathJax () {
-      if (this.isRenderingMath) {
-        this.renderContent()
-        // Only typeset if mathjax has been loaded.
+    typeset () {
+      // Only typeset if mathjax has been loaded.
         if (!!window.MathJax && !!window.MathJax.typeset) {
           window.MathJax.typeset(['[data-uid=' + this.uid + ']'])
         }
+    },
+    renderMathJax () {
+      if (this.isRenderingMath) {
+        this.renderContent()
+        this.typeset()
       }
     }
   }
