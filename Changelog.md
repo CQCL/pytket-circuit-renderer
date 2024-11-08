@@ -13,6 +13,10 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## Unreleased
 
+## [0.10.5] 2024-11-08
+### Fixed
+- Correctly listen for changes to math content in order to render correctly when changing.
+
 ## [0.10.4] 2024-11-06
 ### Fixed
 - Math display in circuit names now loads Tex settings properly (2): defer and isolate mathjax rendering to only the relevant components.
