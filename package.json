@@ -1,7 +1,7 @@
 {
   "name": "pytket-circuit-renderer",
   "description": "A Vue 3 component for rendering pytket circuits.",
-  "version": "0.10.4",
+  "version": "0.10.5",
   "private": false,
   "author": {
     "name": "Tiffany Duneau",
@@ -59,7 +59,7 @@
     "peggy": "^4.0.3",
     "sass": "^1.56.0",
     "sass-loader": "^10.3.1",
-    "serve": "^14.2.1",
+    "serve": "^14.2.4",
     "storybook": "^8.0.4",
     "vue-loader": "^16.8.3"
   },
