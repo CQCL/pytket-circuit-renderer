@@ -67,9 +67,9 @@ export default {
     },
     typeset () {
       // Only typeset if mathjax has been loaded.
-        if (!!window.MathJax && !!window.MathJax.typeset) {
-          window.MathJax.typeset(['[data-uid=' + this.uid + ']'])
-        }
+      if (!!window.MathJax && !!window.MathJax.typeset) {
+        window.MathJax.typeset(['[data-uid=' + this.uid + ']'])
+      }
     },
     renderMathJax () {
       if (this.isRenderingMath) {
