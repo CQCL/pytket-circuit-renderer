@@ -1,4 +1,4 @@
-/* global cy, it, describe */
+/* global cy, it, describe, expect */
 import { composeStories } from '@storybook/vue3'
 import * as stories from './circuitDisplayContainer.stories.js'
 
@@ -103,8 +103,97 @@ describe('Circuit display container component', () => {
             cy.contains('Box params').should('be.visible')
           })
         })
-        // it('can export the circuit as an image')
       })
     }
+  })
+
+  // Image exporting
+  const fileTypes = [
+    'png',
+    'jpeg',
+    'svg'
+  ]
+  const resolutions = [1, 4]
+  fileTypes.forEach(fileType => {
+    describe(`Exporting ${fileType} image`, () => {
+      resolutions.forEach(resolution => {
+        describe(`x${resolution} resolution`, () => {
+          it('can export a single circuit as an image', () => {
+            cy.viewport(500, 500)
+            cy.mount({ name, ...components.FromRaw({ circuitPreset: 'Basic' }) })
+
+            // Make sure the theme is consistent
+            cy.get('[title="Display Options"]').click()
+            cy.contains('Use system Theme').click()
+            cy.get('[title="Display Options"]').click()
+
+            cy.get('[title="Export"').click()
+            cy.contains('Export circuit as an image')
+
+            cy.get(`[data-cy="option-${fileType.toUpperCase()}"]`).click()
+            cy.get(`[data-cy="option-${resolution}x"]`).click()
+            cy.contains('Generate').click()
+
+            const circuitName = `cy-BASIC-x${resolution}`
+            cy.get('input[data-cy="filename"]').clear().type(circuitName)
+            cy.get(`[data-cy="${circuitName}.${fileType}"]`).click()
+
+            cy.readFile(
+                `cypress/downloads/${circuitName}.${fileType}`,
+                fileType === 'svg' ? null : 'base64'
+            ).then(exportedFile => {
+              if (fileType === 'svg') {
+                // can't compare the svg files, so just check for existence
+              } else {
+                cy.readFile(
+                    `cypress/fixtures/images/${circuitName}.REF.${fileType}`,
+                    fileType === 'svg' ? null : 'base64'
+                ).then(expectedFile => {
+                  expect(exportedFile).equal(expectedFile)
+                })
+              }
+            })
+          })
+          // Only check multiple for png
+          if (fileType === 'png') {
+            it('can export multiple circuits as images', () => {
+              cy.viewport(500, 500)
+              cy.mount({ name, ...components.MultiCircuit({ circuitPresets: ['Basic', 'Params'] }) })
+
+              // Make sure the theme is consistent
+              cy.get('[title="Display Options"]').click()
+              cy.contains('Use system Theme').click()
+              cy.contains('Dark Mode').click()
+              cy.get('[title="Display Options"]').click()
+
+              cy.get('[title="Export"').click()
+              cy.contains('Export circuit as an image')
+
+              cy.get(`[data-cy="option-${fileType.toUpperCase()}"]`).click()
+              cy.get(`[data-cy="option-${resolution}x"]`).click()
+              cy.get('button[title="Generate Image"]').click()
+
+              const circuitName = `cy-MULTI-x${resolution}_`
+              cy.get('input[data-cy="filename"]').clear().type(circuitName)
+              cy.get('[data-cy="number_images"]').click()
+
+              cy.get(`[data-cy="${circuitName}0.${fileType}"]`).click()
+              cy.readFile(`cypress/downloads/${circuitName}0.${fileType}`, 'base64').then(exportedFile => {
+                cy.readFile(`cypress/fixtures/images/${circuitName}0.REF.${fileType}`, 'base64').then(expectedFile => {
+                  expect(exportedFile).equal(expectedFile)
+                })
+              })
+
+              cy.get(`[data-cy="${circuitName}1.${fileType}"]`).click()
+              cy.readFile(`cypress/downloads/${circuitName}1.${fileType}`, 'base64').then(exportedFile => {
+                cy.readFile(`cypress/fixtures/images/${circuitName}1.REF.${fileType}`, 'base64').then(expectedFile => {
+                  expect(exportedFile).equal(expectedFile)
+                })
+              })
+            })
+          }
+        })
+      })
+    })
   })
 })
