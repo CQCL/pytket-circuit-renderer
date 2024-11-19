@@ -120,7 +120,10 @@ export default {
 <template>
     <div :class="{rendering: rendering}">
       <p>Note: when exporting as an SVG, the image is intended for browser display only, and is not displayed by image editors.</p>
-      <p>To get a high quality image for inclusion in slides, you can use a PNG format at higher resolution.</p>
+      <p>
+        To get a high quality image for inclusion in slides, you can use a PNG format at higher resolution
+        (this may take a while).
+      </p>
     </div>
     <div :class="{rendering: rendering}">
       <form :style="{paddingTop: '0.5rem'}">
@@ -162,7 +165,7 @@ export default {
           </div>
         </div>
 
-        <p v-if="rendering && imageUrls.length === 0">Rendering...</p>
+        <p v-if="rendering">Rendering...</p>
 
         <div v-for="(imageUrl, i) in imageUrls" :key="i" style="padding: 1em 0">
           <div class="image-preview">
