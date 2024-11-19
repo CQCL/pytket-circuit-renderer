@@ -169,7 +169,11 @@ export default {
 
         <div v-for="(imageUrl, i) in imageUrls" :key="i" style="padding: 1em 0">
           <div class="image-preview">
-            <img :src="imageUrl" alt="Image Preview" />
+            <img
+                :src="imageUrl"
+                alt="Image Preview"
+                :data-cy="`${fileName}${batchExport ? i : ''}.${options.fileType.value}`"
+            />
           </div>
             <button
                 style="width: 100%; display: flex; gap: 1em; justify-content: center; align-items: center"

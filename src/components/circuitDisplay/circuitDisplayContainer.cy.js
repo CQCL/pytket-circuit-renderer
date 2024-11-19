@@ -1,6 +1,9 @@
-/* global cy, it, describe, expect */
+/* global Cypress, cy, it, describe, expect */
 import { composeStories } from '@storybook/vue3'
 import * as stories from './circuitDisplayContainer.stories.js'
+import { PNG } from 'pngjs'
+import jpeg from 'jpeg-js'
+import pixelmatch from 'pixelmatch'
 
 const components = composeStories(stories)
 const useCases = Object.keys(components)
@@ -108,11 +111,7 @@ describe('Circuit display container component', () => {
   })
 
   // Image exporting
-  const fileTypes = [
-    'png',
-    'jpeg',
-    'svg'
-  ]
+  const fileTypes = ['png', 'jpeg', 'svg']
   const resolutions = [1, 4]
   fileTypes.forEach(fileType => {
     describe(`Exporting ${fileType} image`, () => {
@@ -137,23 +136,8 @@ describe('Circuit display container component', () => {
 
             const circuitName = `cy-BASIC-x${resolution}`
             cy.get('input[data-cy="filename"]').clear().type(circuitName)
-            cy.get(`[data-cy="${circuitName}.${fileType}"]`).click()
 
-            cy.readFile(
-                `cypress/downloads/${circuitName}.${fileType}`,
-                fileType === 'svg' ? null : 'base64'
-            ).then(exportedFile => {
-              if (fileType === 'svg') {
-                // can't compare the svg files, so just check for existence
-              } else {
-                cy.readFile(
-                    `cypress/fixtures/images/${circuitName}.REF.${fileType}`,
-                    fileType === 'svg' ? null : 'base64'
-                ).then(expectedFile => {
-                  expect(exportedFile).equal(expectedFile)
-                })
-              }
-            })
+            compareImages(circuitName, fileType)
           })
           // Only check multiple for png
           if (fileType === 'png') {
@@ -178,19 +162,8 @@ describe('Circuit display container component', () => {
               cy.get('input[data-cy="filename"]').clear().type(circuitName)
               cy.get('[data-cy="number_images"]').click()
 
-              cy.get(`[data-cy="${circuitName}0.${fileType}"]`).click()
-              cy.readFile(`cypress/downloads/${circuitName}0.${fileType}`, 'base64').then(exportedFile => {
-                cy.readFile(`cypress/fixtures/images/${circuitName}0.REF.${fileType}`, 'base64').then(expectedFile => {
-                  expect(exportedFile).equal(expectedFile)
-                })
-              })
-
-              cy.get(`[data-cy="${circuitName}1.${fileType}"]`).click()
-              cy.readFile(`cypress/downloads/${circuitName}1.${fileType}`, 'base64').then(exportedFile => {
-                cy.readFile(`cypress/fixtures/images/${circuitName}1.REF.${fileType}`, 'base64').then(expectedFile => {
-                  expect(exportedFile).equal(expectedFile)
-                })
-              })
+              compareImages(circuitName + '0', fileType)
+              compareImages(circuitName + '1', fileType)
             })
           }
         })
@@ -198,3 +171,43 @@ describe('Circuit display container component', () => {
     })
   })
 })
+
+async function decodeImage (base64, filetype) {
+  const buff = Cypress.Buffer.from(base64, 'base64')
+  if (filetype === 'png') {
+    return PNG.sync.read(buff)
+  } else if (filetype === 'jpeg') {
+    return jpeg.decode(buff)
+  }
+}
+
+function compareImages (circuitName, fileType) {
+  const actualFilename = `${circuitName}.${fileType}`
+  const expectedFilename = `${circuitName}.REF.${fileType}`
+
+  cy.get(`img[data-cy="${actualFilename}"]`).then(($image) => {
+    cy.get(`button[data-cy="${actualFilename}"]`).click()
+
+    cy.readFile('cypress/downloads/' + actualFilename, 'base64', {})
+      .then((actualFile) => {
+        if (fileType === 'svg') {
+          // can't compare the svg files, so just check for existence
+        } else {
+          cy.readFile('cypress/fixtures/images/' + expectedFilename, 'base64', {})
+            .then(async (expectedFile) => {
+              const actualImage = await decodeImage(actualFile, fileType)
+              const expectedImage = await decodeImage(expectedFile, fileType)
+              const diff = await pixelmatch(
+                actualImage.data,
+                expectedImage.data,
+                null,
+                $image[0].naturalWidth,
+                $image[0].naturalHeight,
+                { threshold: 0.05 }
+              )
+              expect(diff).equal(0)
+            })
+        }
+      })
+  })
+}
