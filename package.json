@@ -48,6 +48,8 @@
     "@vue/cli-plugin-eslint": "~5.0.0",
     "@vue/cli-service": "^5.0.8",
     "babel-loader": "^8.2.5",
+    "browserify-zlib": "^0.2.0",
+    "buffer": "^6.0.3",
     "cypress": "^13.7.1",
     "eslint": "^8.22.0",
     "eslint-config-standard": "^17.0.0",
@@ -55,13 +57,18 @@
     "eslint-plugin-n": "^15.2.4",
     "eslint-plugin-promise": "^6.0.0",
     "eslint-plugin-vue": "^9.3.0",
+    "jpeg-js": "^0.4.4",
     "node-sass": "^9.0.0",
+    "path-browserify": "^1.0.1",
     "peggy": "^4.0.3",
+    "pixelmatch": "^6.0.0",
     "sass": "^1.56.0",
     "sass-loader": "^10.3.1",
     "serve": "^14.2.4",
     "storybook": "^8.0.4",
-    "vue-loader": "^16.8.3"
+    "stream-browserify": "^3.0.0",
+    "vue-loader": "^16.8.3",
+    "webpack": "^5.96.1"
   },
   "eslintConfig": {
     "root": true,
