@@ -122,10 +122,11 @@ describe('Circuit display container component', () => {
             cy.viewport(500, 500)
             cy.mount({ name, ...components.FromRaw({ circuitPreset: 'Basic' }) })
 
-            // Make sure the theme is consistent
+            // Make sure the theme/viewport is consistent
             cy.get('[title="Display Options"]').click()
             cy.contains('Use system Theme').click()
             cy.get('[title="Display Options"]').click()
+            cy.get('[data-cy="resetZoom"]').click()
 
             cy.get('[title="Export"').click()
             cy.contains('Export circuit as an image')
