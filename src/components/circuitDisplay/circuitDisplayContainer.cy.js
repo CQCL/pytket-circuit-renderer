@@ -197,6 +197,8 @@ function compareImages (circuitName, fileType) {
             .then(async (expectedFile) => {
               const actualImage = await decodeImage(actualFile, fileType)
               const expectedImage = await decodeImage(expectedFile, fileType)
+              expect(actualImage.width).equal(expectedImage.width).equal($image[0].naturalWidth)
+              expect(actualImage.height).equal(expectedImage.height).equal($image[0].naturalHeight)
               const diff = await pixelmatch(
                 actualImage.data,
                 expectedImage.data,
