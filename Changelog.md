@@ -13,6 +13,10 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## Unreleased
 
+## [0.10.6] 2024-11-19
+### Fixed
+- Correct exported circuit image when using a higher resolution.
+
 ## [0.10.5] 2024-11-08
 ### Fixed
 - Correctly listen for changes to math content in order to render correctly when changing.
