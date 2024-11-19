@@ -290,7 +290,7 @@ export default {
             <mathjax-content :formula="circuit.name" :fallback="displayName" inline-circuit></mathjax-content>
           </div>
 
-          <div :class="{'circuit-inner-scroll': condensed}" :style="navigatorStyling">
+          <div :class="{'circuit-inner-scroll': condensed}" ref="renderedCircuitInner" :style="navigatorStyling">
             <div>
               <div class="circuit-container" ref="renderedCircuitInner"
                   :class="{nested: nested > 0 || condensed, zx: zxStyle}">

@@ -130,6 +130,7 @@ export default {
             <div v-for="(value, name) in option.options" :key="name"
                  class="tab-option" :class="{selected: option.value === value}"
                  tabindex="0" role="radio"
+                 :data-cy="`option-${name}`"
                  @click="option.value = value"
                  @keyup.space="option.value = value"
             >[[# name #]]</div>
@@ -139,7 +140,7 @@ export default {
           Image size: [[# resolution[0].width #]]*[[# resolution[0].height #]]
         </div>
         <div class="row" :style="{borderBottom: 0}">
-          <button class="row-item button" :class="{disabled: elementsToRender?.length === 0}" @click.prevent.stop="renderImage">
+          <button title="Generate Image" class="row-item button" :class="{disabled: elementsToRender?.length === 0}" @click.prevent.stop="renderImage">
             Generate
           </button>
         </div>
@@ -150,11 +151,11 @@ export default {
         <div class="row-heading">Images</div>
         <p style="display: flex; gap: 1em; align-items: center">
           <label>File prefix</label>
-          <input style="flex-grow: 1" class="row-item" type="text" v-model="fileName" placeholder="File name"/>
+          <input style="flex-grow: 1" class="row-item" type="text" v-model="fileName" placeholder="File name" data-cy="filename"/>
         </p>
         <div style="display: flex; gap: 1em; align-items: center; padding-bottom: 1em">
           Number images
-          <div class="icon" style="border: 1px solid hsl(var(--border));padding: 0" aria-role="checkbox" @click="batchExport = !batchExport">
+          <div class="icon" style="border: 1px solid hsl(var(--border));padding: 0" title="Number exported files" data-cy="number_images" aria-role="checkbox" @click="batchExport = !batchExport">
             <svg v-if="batchExport" title="check icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2" viewBox="0 0 16 16">
               <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0"/>
             </svg>
@@ -164,13 +165,23 @@ export default {
         <p v-if="rendering && imageUrls.length === 0">Rendering...</p>
 
         <div v-for="(imageUrl, i) in imageUrls" :key="i" style="padding: 1em 0">
-          <div style="display: flex; gap: 1em; justify-content: flex-end">
-            <div style="padding: 0.5em;text-align:right">[[# fileName #]]<span v-if="batchExport">[[# i #]]</span>.[[# options.fileType.value #]]</div>
-            <button :class="{disabled: !imageUrl || !fileName}" @click="() => download(i)">Save</button>
-          </div>
           <div class="image-preview">
             <img :src="imageUrl" alt="Image Preview" />
           </div>
+            <button
+                style="width: 100%; display: flex; gap: 1em; justify-content: center; align-items: center"
+                :class="{disabled: !imageUrl || !fileName}"
+                @click="() => download(i)"
+                title="Export circuit"
+                :data-cy="`${fileName}${batchExport ? i : ''}.${options.fileType.value}`"
+            >
+              <div class="icon" style="color: var(--background); padding: 0">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16"><path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/><path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/></svg>
+              </div>
+              <div>
+                [[# fileName #]]<span v-if="batchExport">[[# i #]]</span>.[[# options.fileType.value #]]
+              </div>
+            </button>
         </div>
       </div>
     </div>
@@ -216,7 +227,7 @@ export default {
 .image-preview{
   width: 100%;
   height: 10em;
-  margin: 1em 0;
+  margin-top: 1em;
   display: flex;
   justify-content: center;
   align-items: center;
