@@ -111,8 +111,8 @@ describe('Circuit display container component', () => {
   })
 
   // Image exporting
-  const fileTypes = ['png']
-  const resolutions = [1]
+  const fileTypes = ['png', 'jpeg', 'svg']
+  const resolutions = [1, 4]
   fileTypes.forEach(fileType => {
     describe(`Exporting ${fileType} image`, () => {
       resolutions.forEach(resolution => {
@@ -219,12 +219,21 @@ function compareImages (circuitName, fileType) {
 
       // Check that a file is downloaded
       cy.readFile('cypress/downloads/' + actualFilename, 'base64', {})
+        .then(async (actualFile) => {
+          if (fileType === 'svg') {
+            // can't compare the svg files, so just check for existence
+          } else {
+            const actualImage = await decodeImage(actualFile, fileType)
+            expect(actualImage.width).equal($image[0].naturalWidth)
+            expect(actualImage.height).equal($image[0].naturalHeight)
+          }
+        })
 
       // Compare image preview screenshot to reference image
       cy.readFile('cypress/fixtures/images/' + expectedScreenshotFilename, 'base64', {})
         .then((expectedFile) => {
           // Check the screenshot of the image preview.
-          cy.readFile(`cypress/screenshots/${actualFilename}.png`, 'base64', {})
+          cy.readFile(`cypress/screenshots/circuitDisplayContainer.cy.js/${actualFilename}.png`, 'base64', {})
             .then(async (actualScreenshot) => {
               const actualImage = await decodeImage(actualScreenshot, 'png')
               const expectedImage = await decodeImage(expectedFile, 'png')
