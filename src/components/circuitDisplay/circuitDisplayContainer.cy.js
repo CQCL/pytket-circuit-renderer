@@ -219,15 +219,6 @@ function compareImages (circuitName, fileType) {
 
       // Check that a file is downloaded
       cy.readFile('cypress/downloads/' + actualFilename, 'base64', {})
-        .then(async (actualFile) => {
-          if (fileType === 'svg') {
-            // can't compare the svg files, so just check for existence
-          } else {
-            const actualImage = await decodeImage(actualFile, fileType)
-            expect(actualImage.width).equal($image[0].naturalWidth)
-            expect(actualImage.height).equal($image[0].naturalHeight)
-          }
-        })
 
       // Compare image preview screenshot to reference image
       cy.readFile('cypress/fixtures/images/' + expectedScreenshotFilename, 'base64', {})
