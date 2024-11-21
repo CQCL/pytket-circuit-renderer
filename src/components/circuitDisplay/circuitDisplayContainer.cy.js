@@ -183,7 +183,7 @@ async function decodeImage (base64, filetype) {
 
 function compareImages (circuitName, fileType) {
   const actualFilename = `${circuitName}.${fileType}`
-  const expectedFilename = `${circuitName}.REF.${fileType}`
+  // const expectedFilename = `${circuitName}.REF.${fileType}`
   const expectedScreenshotFilename = `${circuitName}.${fileType}.SCREENSHOT-REF.png`
 
   cy.get(`img[data-cy="${actualFilename}"]`)
@@ -241,5 +241,5 @@ function compareImages (circuitName, fileType) {
               expect(diff).equal(0)
             })
         })
-  })
+    })
 }
