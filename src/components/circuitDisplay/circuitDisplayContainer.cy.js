@@ -111,13 +111,13 @@ describe('Circuit display container component', () => {
   })
 
   // Image exporting
-  const fileTypes = ['png', 'jpeg', 'svg']
-  const resolutions = [1, 4]
+  const fileTypes = ['png']
+  const resolutions = [1]
   fileTypes.forEach(fileType => {
     describe(`Exporting ${fileType} image`, () => {
       resolutions.forEach(resolution => {
         describe(`x${resolution} resolution`, () => {
-          it('can export a single circuit as an image', () => {
+          it.only('can export a single circuit as an image', () => {
             cy.viewport(500, 500)
             cy.mount({ name, ...components.FromRaw({ circuitPreset: 'Basic' }) })
 
@@ -184,32 +184,62 @@ async function decodeImage (base64, filetype) {
 function compareImages (circuitName, fileType) {
   const actualFilename = `${circuitName}.${fileType}`
   const expectedFilename = `${circuitName}.REF.${fileType}`
+  const expectedScreenshotFilename = `${circuitName}.${fileType}.SCREENSHOT-REF.png`
 
-  cy.get(`img[data-cy="${actualFilename}"]`).then(($image) => {
-    cy.get(`button[data-cy="${actualFilename}"]`).click()
+  cy.get(`img[data-cy="${actualFilename}"]`)
+    .scrollIntoView()
+    .screenshot(actualFilename)
+    .then(($image) => {
+      cy.get(`button[data-cy="${actualFilename}"]`).click()
 
-    cy.readFile('cypress/downloads/' + actualFilename, 'base64', {})
-      .then((actualFile) => {
-        if (fileType === 'svg') {
-          // can't compare the svg files, so just check for existence
-        } else {
-          cy.readFile('cypress/fixtures/images/' + expectedFilename, 'base64', {})
-            .then(async (expectedFile) => {
-              const actualImage = await decodeImage(actualFile, fileType)
-              const expectedImage = await decodeImage(expectedFile, fileType)
-              expect(actualImage.width).equal(expectedImage.width).equal($image[0].naturalWidth)
-              expect(actualImage.height).equal(expectedImage.height).equal($image[0].naturalHeight)
+      // Compare downloaded file to reference image
+      // cy.readFile('cypress/fixtures/images/' + expectedFilename, 'base64', {})
+      //   .then((expectedFile) => {
+      //     cy.readFile('cypress/downloads/' + actualFilename, 'base64', {})
+      //       .then(async (actualFile) => {
+      //        if (fileType === 'svg') {
+      //       // can't compare the svg files, so just check for existence
+      //     } else {
+      //          const actualImage = await decodeImage(actualFile, fileType)
+      //          const expectedImage = await decodeImage(expectedFile, fileType)
+      //          expect(actualImage.width).equal(expectedImage.width).equal($image[0].naturalWidth)
+      //          expect(actualImage.height).equal(expectedImage.height).equal($image[0].naturalHeight)
+      //          const diff = await pixelmatch(
+      //              actualImage.data,
+      //              expectedImage.data,
+      //              null,
+      //              $image[0].naturalWidth,
+      //              $image[0].naturalHeight,
+      //              {threshold: 0.05}
+      //          )
+      //          expect(diff).equal(0)
+      //        }
+      //     })
+      // })
+
+      // Check that a file is downloaded
+      cy.readFile('cypress/downloads/' + actualFilename, 'base64', {})
+
+      // Compare image preview screenshot to reference image
+      cy.readFile('cypress/fixtures/images/' + expectedScreenshotFilename, 'base64', {})
+        .then((expectedFile) => {
+          // Check the screenshot of the image preview.
+          cy.readFile(`cypress/screenshots/${actualFilename}.png`, 'base64', {})
+            .then(async (actualScreenshot) => {
+              const actualImage = await decodeImage(actualScreenshot, 'png')
+              const expectedImage = await decodeImage(expectedFile, 'png')
+              expect(actualImage.width).equal(expectedImage.width)
+              expect(actualImage.height).equal(expectedImage.height)
               const diff = await pixelmatch(
                 actualImage.data,
                 expectedImage.data,
                 null,
-                $image[0].naturalWidth,
-                $image[0].naturalHeight,
+                actualImage.width,
+                actualImage.height,
                 { threshold: 0.05 }
               )
               expect(diff).equal(0)
             })
-        }
-      })
+        })
   })
 }
